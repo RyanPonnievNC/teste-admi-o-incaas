@@ -1,0 +1,31 @@
+<div class="min-h-screen bg-gray-100">
+  <nav class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold text-gray-800">
+        Jurídico Pro App
+      </h1>
+
+      <div class="flex gap-4">
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="font-bold underline"
+          class="text-blue-600 hover:underline"
+        >
+          Dashboard
+        </a>
+
+        <a
+          routerLink="/processos"
+          routerLinkActive="font-bold underline"
+          class="text-blue-600 hover:underline"
+        >
+          Processos
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto py-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>
