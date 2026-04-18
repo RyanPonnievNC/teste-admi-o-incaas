@@ -1,77 +1,182 @@
-<form
-  [formGroup]="form"
-  (ngSubmit)="salvar()"
-  class="border p-4 rounded-lg shadow space-y-4 bg-white"
->
-  <h2 class="text-xl font-semibold">
-    {{ editandoId !== null ? 'Editar Processo' : 'Cadastrar Processo' }}
-  </h2>
+<div class="p-6 space-y-8">
+  <h1 class="text-2xl font-bold">
+    Gestão de Processos
+  </h1>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-      <label class="block mb-2 font-medium">Número</label>
-      <input
-        type="text"
-        formControlName="numero"
-        class="w-full border rounded px-3 py-2"
-      />
-      <p
-        *ngIf="form.get('numero')?.touched && form.get('numero')?.invalid"
-        class="text-red-500 text-sm mt-1"
-      >
-        O número do processo é obrigatório.
-      </p>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="salvar()"
+    class="border p-4 rounded-lg shadow space-y-4 bg-white"
+  >
+    <h2 class="text-xl font-semibold">
+      {{ editandoId !== null ? 'Editar Processo' : 'Cadastrar Processo' }}
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-2 font-medium">Número</label>
+        <input
+          type="text"
+          formControlName="numero"
+          class="w-full border rounded px-3 py-2"
+        />
+        <p
+          *ngIf="form.get('numero')?.touched && form.get('numero')?.invalid"
+          class="text-red-500 text-sm mt-1"
+        >
+          O número do processo é obrigatório.
+        </p>
+      </div>
+
+      <div>
+        <label class="block mb-2 font-medium">Cliente</label>
+        <input
+          type="text"
+          formControlName="cliente"
+          class="w-full border rounded px-3 py-2"
+        />
+        <p
+          *ngIf="form.get('cliente')?.touched && form.get('cliente')?.invalid"
+          class="text-red-500 text-sm mt-1"
+        >
+          O nome do cliente é obrigatório.
+        </p>
+      </div>
     </div>
 
     <div>
-      <label class="block mb-2 font-medium">Cliente</label>
-      <input
-        type="text"
-        formControlName="cliente"
+      <label class="block mb-2 font-medium">Descrição</label>
+      <textarea
+        formControlName="descricao"
+        rows="4"
         class="w-full border rounded px-3 py-2"
-      />
+      ></textarea>
+    </div>
+
+    <div>
+      <label class="block mb-2 font-medium">Status</label>
+      <select
+        formControlName="status"
+        class="w-full border rounded px-3 py-2"
+      >
+        <option value="NENHUM">Selecione um status</option>
+        <option value="ATIVO">ATIVO</option>
+        <option value="FINALIZADO">FINALIZADO</option>
+        <option value="SUSPENSO">SUSPENSO</option>
+      </select>
       <p
-        *ngIf="form.get('cliente')?.touched && form.get('cliente')?.invalid"
+        *ngIf="form.get('status')?.touched && form.get('status')?.value === 'NENHUM'"
         class="text-red-500 text-sm mt-1"
       >
-        O nome do cliente é obrigatório.
+        Selecione um status válido.
       </p>
+    </div>
+
+    <div class="flex gap-2" style="border: 1px solid black; padding: 5px; margin: 5px; border-radius: 10px; width: 15%; background: rgb(245, 245, 245); display: flex; justify-content: center;">
+      <p-button
+        type="submit"
+        [label]="editandoId !== null ? 'Atualizar /' : 'Salvar Processo'"
+      ></p-button>
+
+      <p-button
+        *ngIf="editandoId !== null"
+        type="button"
+        label="Cancelar"
+        severity="secondary"
+        (onClick)="cancelarEdicao()"
+      ></p-button>
+    </div>
+  </form>
+
+  <div class="bg-white rounded-lg shadow border p-4 space-y-4">
+    <h2 class="text-xl font-semibold">Filtros</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block mb-2 font-medium">Filtrar por cliente</label>
+        <input
+          type="text"
+          [(ngModel)]="filtroCliente"
+          [ngModelOptions]="{ standalone: true }"
+          (input)="aplicarFiltros()"
+          class="w-full border rounded px-3 py-2"
+          placeholder="Digite o nome do cliente"
+        />
+      </div>
+
+      <div>
+        <label class="block mb-2 font-medium">Filtrar por status</label>
+        <select
+          [(ngModel)]="filtroStatus"
+          [ngModelOptions]="{ standalone: true }"
+          (change)="aplicarFiltros()"
+          class="w-full border rounded px-3 py-2"
+        >
+          <option value="">Todos</option>
+          <option value="ATIVO">ATIVO</option>
+          <option value="FINALIZADO">FINALIZADO</option>
+          <option value="SUSPENSO">SUSPENSO</option>
+        </select>
+      </div>
+
+      <div class="flex items-end">
+        <p-button
+          label="Limpar filtros"
+          severity="secondary"
+          (onClick)="limparFiltros()"
+        ></p-button>
+      </div>
     </div>
   </div>
 
-  <div>
-    <label class="block mb-2 font-medium">Descrição</label>
-    <textarea
-      formControlName="descricao"
-      rows="4"
-      class="w-full border rounded px-3 py-2"
-    ></textarea>
-  </div>
+  <div class="bg-white rounded-lg shadow border p-4">
+    <h2 class="text-xl font-semibold mb-4">Lista de Processos</h2>
 
-  <div>
-    <label class="block mb-2 font-medium">Status</label>
-    <select
-      formControlName="status"
-      class="w-full border rounded px-3 py-2"
+    <p-table
+      [value]="processosFiltrados"
+      [paginator]="true"
+      [rows]="5"
+      [tableStyle]="{ 'min-width': '60rem' }"
+      responsiveLayout="scroll"
     >
-      <option value="ATIVO">ATIVO</option>
-      <option value="FINALIZADO">FINALIZADO</option>
-      <option value="SUSPENSO">SUSPENSO</option>
-    </select>
-  </div>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Número</th>
+          <th>Cliente</th>
+          <th>Status</th>
+          <th>Criação</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
 
-  <div class="flex gap-2" style="border: 1px solid black; width: 11%; padding: 5px; border-radius: 5px; background-color: rgb(245, 245, 245);">
-    <p-button
-      type="submit"
-      [label]="editandoId !== null ? 'Atualizar Processo' : 'Salvar Processo'"
-    ></p-button>
+      <ng-template pTemplate="body" let-p>
+        <tr>
+          <td>{{ p.numero }}</td>
+          <td>{{ p.cliente }}</td>
+          <td>
+            <p-tag
+              [value]="p.status"
+              [severity]="getStatusSeverity(p.status)"
+            ></p-tag>
+          </td>
+          <td>{{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="flex gap-2">
+            <p-button
+              icon="pi pi-pencil"
+              severity="warn"
+              [text]="true"
+              (onClick)="editar(p)"
+            ></p-button>
 
-    <p-button
-      *ngIf="editandoId !== null"
-      type="button"
-      label="Cancelar"
-      severity="secondary"
-      (onClick)="cancelarEdicao()"
-    ></p-button>
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [text]="true"
+              (onClick)="excluir(p.id)"
+            ></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
-</form>
+</div>

@@ -15,6 +15,7 @@ import { ProcessoService } from '../../core/services/processo.service';
 import { Processo } from '../../models/processo.model';
 
 type StatusProcesso = 'ATIVO' | 'FINALIZADO' | 'SUSPENSO';
+type StatusFormulario = 'NENHUM' | StatusProcesso;
 
 @Component({
   selector: 'app-processos',
@@ -44,7 +45,7 @@ export class ProcessosComponent implements OnInit {
     numero: ['', Validators.required],
     cliente: ['', Validators.required],
     descricao: [''],
-    status: ['ATIVO' as StatusProcesso, Validators.required]
+    status: ['NENHUM' as StatusFormulario, Validators.required]
   });
 
   ngOnInit() {
@@ -55,12 +56,12 @@ export class ProcessosComponent implements OnInit {
   }
 
   salvar() {
-    if (this.form.invalid) {
+    const valor = this.form.getRawValue();
+
+    if (this.form.invalid || valor.status === 'NENHUM') {
       this.form.markAllAsTouched();
       return;
     }
-
-    const valor = this.form.getRawValue();
 
     if (this.editandoId !== null) {
       const processoExistente = this.service.getById(this.editandoId);
@@ -72,7 +73,7 @@ export class ProcessosComponent implements OnInit {
         numero: valor.numero,
         cliente: valor.cliente,
         descricao: valor.descricao,
-        status: valor.status
+        status: valor.status as StatusProcesso
       });
 
       this.cancelarEdicao();
@@ -84,14 +85,14 @@ export class ProcessosComponent implements OnInit {
       numero: valor.numero,
       cliente: valor.cliente,
       descricao: valor.descricao,
-      status: valor.status
+      status: valor.status as StatusProcesso
     });
 
     this.form.reset({
       numero: '',
       cliente: '',
       descricao: '',
-      status: 'ATIVO'
+      status: 'NENHUM'
     });
 
     this.aplicarFiltros();
@@ -115,22 +116,22 @@ export class ProcessosComponent implements OnInit {
       numero: '',
       cliente: '',
       descricao: '',
-      status: 'ATIVO'
+      status: 'NENHUM'
     });
   }
 
   excluir(id: number) {
-  const confirmou = window.confirm('Tem certeza que deseja excluir este processo?');
+    const confirmou = window.confirm('Tem certeza que deseja excluir este processo?');
 
-  if (!confirmou) return;
+    if (!confirmou) return;
 
-  if (this.editandoId === id) {
-    this.cancelarEdicao();
+    if (this.editandoId === id) {
+      this.cancelarEdicao();
+    }
+
+    this.service.delete(id);
+    this.aplicarFiltros();
   }
-
-  this.service.delete(id);
-  this.aplicarFiltros();
-}
 
   aplicarFiltros() {
     this.processosFiltrados = this.processos.filter(processo => {
