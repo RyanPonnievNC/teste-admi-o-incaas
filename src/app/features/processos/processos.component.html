@@ -1,25 +1,49 @@
+<!-- Container principal da página -->
+<!-- Aplica espaçamento interno e distância vertical entre os blocos -->
 <div class="p-6 space-y-8">
-  <h1 class="text-2xl font-bold border border-black rounded px-4 py-2" style="width: 24%; display: flex; justify-self: center;">
+
+  <!-- Título principal da tela -->
+  <h1
+    class="text-2xl font-bold border border-black rounded px-4 py-2"
+    style="width: 24%; display: flex; justify-self: left;"
+  >
     Gestão de Processos
   </h1>
 
+  <!-- Formulário principal -->
+  <!-- [formGroup] conecta o HTML ao formulário reativo do TypeScript -->
+  <!-- (ngSubmit) executa a função salvar() ao enviar -->
   <form
     [formGroup]="form"
     (ngSubmit)="salvar()"
     class="border p-4 rounded-lg shadow space-y-4 bg-white"
   >
+
+    <!-- Título dinâmico -->
+    <!-- Mostra "Editar Processo" quando existe um id em edição -->
+    <!-- Caso contrário, mostra "Cadastrar Processo" -->
     <h2 class="text-xl font-semibold">
       {{ editandoId !== null ? 'Editar Processo' : 'Cadastrar Processo' }}
     </h2>
 
+    <!-- Grid para organizar os campos Número e Cliente -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Campo Número -->
       <div>
+
+        <!-- Rótulo do campo -->
         <label class="block mb-2 font-medium">Número</label>
+
+        <!-- Input ligado ao controle "numero" do formulário -->
         <input
           type="text"
           formControlName="numero"
           class="w-full border rounded px-3 py-2"
         />
+
+        <!-- Mensagem de erro -->
+        <!-- Só aparece se o campo foi tocado e estiver inválido -->
         <p
           *ngIf="form.get('numero')?.touched && form.get('numero')?.invalid"
           class="text-red-500 text-sm mt-1"
@@ -28,13 +52,21 @@
         </p>
       </div>
 
+      <!-- Campo Cliente -->
       <div>
+
+        <!-- Rótulo do campo -->
         <label class="block mb-2 font-medium">Cliente</label>
+
+        <!-- Input ligado ao controle "cliente" do formulário -->
         <input
           type="text"
           formControlName="cliente"
           class="w-full border rounded px-3 py-2"
         />
+
+        <!-- Mensagem de erro -->
+        <!-- Só aparece se o campo foi tocado e estiver inválido -->
         <p
           *ngIf="form.get('cliente')?.touched && form.get('cliente')?.invalid"
           class="text-red-500 text-sm mt-1"
@@ -42,10 +74,16 @@
           O nome do cliente é obrigatório.
         </p>
       </div>
+
     </div>
 
+    <!-- Campo de descrição -->
     <div>
+
+      <!-- Rótulo do campo -->
       <label class="block mb-2 font-medium">Descrição</label>
+
+      <!-- Área de texto ligada ao controle "descricao" -->
       <textarea
         formControlName="descricao"
         rows="4"
@@ -53,17 +91,28 @@
       ></textarea>
     </div>
 
+    <!-- Campo de status -->
     <div>
+
+      <!-- Rótulo do campo -->
       <label class="block mb-2 font-medium">Status</label>
+
+      <!-- Select ligado ao controle "status" -->
       <select
         formControlName="status"
         class="w-full border rounded px-3 py-2"
       >
+        <!-- Valor padrão -->
         <option value="NENHUM">Selecione um status</option>
+
+        <!-- Opções válidas -->
         <option value="ATIVO">ATIVO</option>
         <option value="FINALIZADO">FINALIZADO</option>
         <option value="SUSPENSO">SUSPENSO</option>
       </select>
+
+      <!-- Mensagem de erro -->
+      <!-- Aparece quando o usuário tocou no campo, mas manteve "NENHUM" -->
       <p
         *ngIf="form.get('status')?.touched && form.get('status')?.value === 'NENHUM'"
         class="text-red-500 text-sm mt-1"
@@ -72,12 +121,22 @@
       </p>
     </div>
 
-    <div class="flex gap-2" style="border: 1px solid black; padding: 5px; margin: 5px; border-radius: 10px; width: 15%; background: rgb(245, 245, 245); display: flex; justify-content: center;">
+    <!-- Área dos botões do formulário -->
+    <div
+      class="flex gap-2"
+      style="border: 1px solid black; padding: 5px; margin: 5px; border-radius: 10px; width: 15%; background: rgb(245, 245, 245); display: flex; justify-content: center;"
+    >
+
+      <!-- Botão principal -->
+      <!-- Se estiver editando, mostra "Atualizar /" -->
+      <!-- Caso contrário, mostra "Salvar Processo" -->
       <p-button
         type="submit"
         [label]="editandoId !== null ? 'Atualizar /' : 'Salvar Processo'"
       ></p-button>
 
+      <!-- Botão de cancelar edição -->
+      <!-- Só aparece quando existe um processo sendo editado -->
       <p-button
         *ngIf="editandoId !== null"
         type="button"
@@ -86,14 +145,27 @@
         (onClick)="cancelarEdicao()"
       ></p-button>
     </div>
+
   </form>
 
+  <!-- Bloco de filtros -->
   <div class="bg-white rounded-lg shadow border p-4 space-y-4">
+
+    <!-- Título da seção -->
     <h2 class="text-xl font-semibold">Filtros</h2>
 
+    <!-- Grid para organizar os filtros -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- Filtro por cliente -->
       <div>
+
+        <!-- Rótulo do filtro -->
         <label class="block mb-2 font-medium">Filtrar por cliente</label>
+
+        <!-- Campo de busca -->
+        <!-- Usa ngModel standalone porque não faz parte do formulário reativo -->
+        <!-- A cada digitação, executa aplicarFiltros() -->
         <input
           type="text"
           [(ngModel)]="filtroCliente"
@@ -104,8 +176,14 @@
         />
       </div>
 
+      <!-- Filtro por status -->
       <div>
+
+        <!-- Rótulo do filtro -->
         <label class="block mb-2 font-medium">Filtrar por status</label>
+
+        <!-- Select com as opções de status -->
+        <!-- Quando o valor muda, executa aplicarFiltros() -->
         <select
           [(ngModel)]="filtroStatus"
           [ngModelOptions]="{ standalone: true }"
@@ -119,6 +197,7 @@
         </select>
       </div>
 
+      <!-- Botão para limpar todos os filtros -->
       <div class="flex items-end">
         <p-button
           label="Limpar filtros"
@@ -126,12 +205,18 @@
           (onClick)="limparFiltros()"
         ></p-button>
       </div>
+
     </div>
   </div>
 
+  <!-- Bloco da tabela de processos -->
   <div class="bg-white rounded-lg shadow border p-4">
+
+    <!-- Título da tabela -->
     <h2 class="text-xl font-semibold mb-4">Lista de Processos</h2>
 
+    <!-- Tabela PrimeNG -->
+    <!-- Exibe a lista já filtrada -->
     <p-table
       [value]="processosFiltrados"
       [paginator]="true"
@@ -139,6 +224,8 @@
       [tableStyle]="{ 'min-width': '60rem' }"
       responsiveLayout="scroll"
     >
+
+      <!-- Cabeçalho da tabela -->
       <ng-template pTemplate="header">
         <tr>
           <th>Número</th>
@@ -149,18 +236,32 @@
         </tr>
       </ng-template>
 
+      <!-- Corpo da tabela -->
+      <!-- let-p representa cada processo da lista -->
       <ng-template pTemplate="body" let-p>
         <tr>
+
+          <!-- Número do processo -->
           <td>{{ p.numero }}</td>
+
+          <!-- Nome do cliente -->
           <td>{{ p.cliente }}</td>
+
+          <!-- Status do processo com cor visual -->
           <td>
             <p-tag
               [value]="p.status"
               [severity]="getStatusSeverity(p.status)"
             ></p-tag>
           </td>
+
+          <!-- Data de criação formatada -->
           <td>{{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
+
+          <!-- Ações disponíveis -->
           <td class="flex gap-2">
+
+            <!-- Botão para editar o processo -->
             <p-button
               icon="pi pi-pencil"
               severity="warn"
@@ -168,15 +269,18 @@
               (onClick)="editar(p)"
             ></p-button>
 
+            <!-- Botão para excluir o processo -->
             <p-button
               icon="pi pi-trash"
               severity="danger"
               [text]="true"
               (onClick)="excluir(p.id)"
             ></p-button>
+
           </td>
         </tr>
       </ng-template>
+
     </p-table>
   </div>
 </div>

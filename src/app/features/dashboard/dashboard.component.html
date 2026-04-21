@@ -1,61 +1,118 @@
+<!-- Container principal da página do dashboard -->
+<!-- Aplica espaçamento interno e distância vertical entre as seções -->
 <div class="p-6 space-y-8">
+
+  <!-- Bloco do título principal -->
   <div>
-    <h1 class="text-3xl font-bold border border-black rounded px-4 py-2" style="display: flex; justify-self: center;"> Dashboard Jurídico</h1>
+
+    <!-- Título central do dashboard -->
+    <!-- Usa classes de tamanho, borda, arredondamento e espaçamento -->
+    <h1
+      class="text-3xl font-bold border border-black rounded px-4 py-2"
+      style="display: flex; justify-self: left;"
+    >
+      Dashboard Jurídico
+    </h1>
+
   </div>
 
+  <!-- Grid com os cards de resumo -->
+  <!-- No mobile fica em 1 coluna, no tablet em 2 e em telas maiores em 4 -->
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+
+    <!-- Card com o total geral de processos -->
     <div class="rounded-xl shadow border p-4 bg-white">
       <p class="text-sm text-gray-500">Total de Processos</p>
       <h2 class="text-3xl font-bold mt-2">{{ total }}</h2>
     </div>
 
+    <!-- Card com a quantidade de processos ativos -->
     <div class="rounded-xl shadow border p-4 bg-white">
       <p class="text-sm text-gray-500">Ativos</p>
       <h2 class="text-3xl font-bold mt-2">{{ ativos }}</h2>
     </div>
 
+    <!-- Card com a quantidade de processos finalizados -->
     <div class="rounded-xl shadow border p-4 bg-white">
       <p class="text-sm text-gray-500">Finalizados</p>
       <h2 class="text-3xl font-bold mt-2">{{ finalizados }}</h2>
     </div>
 
+    <!-- Card com a quantidade de processos suspensos -->
     <div class="rounded-xl shadow border p-4 bg-white">
       <p class="text-sm text-gray-500">Suspensos</p>
       <h2 class="text-3xl font-bold mt-2">{{ suspensos }}</h2>
     </div>
+
   </div>
 
+  <!-- Grid com duas áreas principais do dashboard -->
+  <!-- Uma para gráfico e outra para a lista dos últimos processos -->
   <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-    <div class="rounded-xl shadow border p-4 bg-white">
-      <h2 class="text-xl font-semibold mb-4">Processos por Status</h2>
 
+    <!-- Card do gráfico -->
+    <div class="rounded-xl shadow border p-4 bg-white">
+
+      <!-- Título da seção -->
+      <h2 class="text-xl font-semibold mb-4">
+        Processos por Status
+      </h2>
+
+      <!-- Container com altura fixa para o gráfico -->
       <div class="h-80">
+
+        <!-- Componente de gráfico do PrimeNG -->
+        <!-- Exibe um gráfico de barras usando os dados e opções vindos do TypeScript -->
         <p-chart
           type="bar"
           [data]="chartData"
           [options]="chartOptions"
         ></p-chart>
+
       </div>
     </div>
 
+    <!-- Card com os últimos processos cadastrados -->
     <div class="rounded-xl shadow border p-4 bg-white">
-      <h2 class="text-xl font-semibold mb-4">Últimos 5 Processos</h2>
 
+      <!-- Título da seção -->
+      <h2 class="text-xl font-semibold mb-4">
+        Últimos 5 Processos
+      </h2>
+
+      <!-- Exibe a lista somente se existir pelo menos 1 processo -->
+      <!-- Caso contrário, mostra o template chamado "vazio" -->
       <div class="space-y-3" *ngIf="ultimosCinco.length > 0; else vazio">
+
+        <!-- Percorre a lista de últimos processos -->
+        <!-- Cada item da lista é armazenado na variável p -->
         <div
           *ngFor="let p of ultimosCinco"
           class="border rounded-lg p-3"
         >
+
+          <!-- Número do processo -->
           <p><strong>Número:</strong> {{ p.numero }}</p>
+
+          <!-- Nome do cliente -->
           <p><strong>Cliente:</strong> {{ p.cliente }}</p>
+
+          <!-- Status atual do processo -->
           <p><strong>Status:</strong> {{ p.status }}</p>
+
+          <!-- Data de criação formatada -->
           <p><strong>Criação:</strong> {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</p>
+
         </div>
       </div>
 
+      <!-- Template exibido quando não houver processos -->
       <ng-template #vazio>
-        <p class="text-gray-500">Nenhum processo encontrado.</p>
+        <p class="text-gray-500">
+          Nenhum processo encontrado.
+        </p>
       </ng-template>
+
     </div>
   </div>
 </div>
