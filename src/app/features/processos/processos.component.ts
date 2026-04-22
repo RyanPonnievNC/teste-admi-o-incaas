@@ -1,18 +1,14 @@
 // Importa recursos principais do Angular
-// - Component: cria o componente
-// - OnInit: executa lógica quando o componente é iniciado
-// - inject: injeta dependências sem usar constructor
 import { Component, OnInit, inject } from '@angular/core';
 
-// Importa funcionalidades comuns do Angular
-// Exemplo: diretivas como *ngIf e *ngFor
+// Importa recursos básicos para diretivas como *ngIf e *ngFor
 import { CommonModule } from '@angular/common';
 
-// Importa recursos de formulários
-// - FormsModule: usado com ngModel
-// - NonNullableFormBuilder: cria formulário reativo sem valores nulos
-// - ReactiveFormsModule: permite usar formGroup e formControlName
-// - Validators: fornece validações prontas, como required
+// Importa módulos de formulário do Angular
+// - FormsModule: usado no ngModel
+// - NonNullableFormBuilder: cria formulário tipado sem null
+// - ReactiveFormsModule: usado no formGroup e formControlName
+// - Validators: valida campos obrigatórios
 import {
   FormsModule,
   NonNullableFormBuilder,
@@ -20,37 +16,31 @@ import {
   Validators
 } from '@angular/forms';
 
-// Importa a tabela do PrimeNG
+// Importa componentes do PrimeNG usados nesta tela
 import { TableModule } from 'primeng/table';
-
-// Importa o botão do PrimeNG
 import { ButtonModule } from 'primeng/button';
-
-// Importa a tag do PrimeNG para exibir status com destaque visual
 import { TagModule } from 'primeng/tag';
 
-// Importa o serviço responsável por gerenciar os processos
+// Importa o service de processos
 import { ProcessoService } from '../../core/services/processo.service';
 
-// Importa a tipagem do processo
+// Importa o model Processo
 import { Processo } from '../../models/processo.model';
 
-// Tipo com os status válidos de um processo
+// Tipo dos status reais de um processo
 type StatusProcesso = 'ATIVO' | 'FINALIZADO' | 'SUSPENSO';
 
-// Tipo usado no formulário
-// Inclui "NENHUM" para representar a opção padrão do select
+// Tipo usado só no formulário, incluindo NENHUM
 type StatusFormulario = 'NENHUM' | StatusProcesso;
 
-// Decorador com as configurações do componente
 @Component({
-  // Nome da tag usada no HTML
+  // Nome da tag do componente
   selector: 'app-processos',
 
-  // Define que o componente é standalone
+  // Componente standalone
   standalone: true,
 
-  // Módulos necessários para o template funcionar
+  // Módulos usados pelo HTML
   imports: [
     CommonModule,
     FormsModule,
@@ -60,38 +50,35 @@ type StatusFormulario = 'NENHUM' | StatusProcesso;
     TagModule
   ],
 
-  // Arquivo HTML ligado a este componente
-  templateUrl: './processos.component.html'
+  // Arquivo HTML
+  templateUrl: './processos.component.html',
+
+  // Arquivo SCSS
+  styleUrl: './processos.component.scss'
 })
-
-// Classe principal do componente
 export class ProcessosComponent implements OnInit {
-
-  // Injeta o construtor de formulários reativos
+  // Cria formulário de forma tipada
   private fb = inject(NonNullableFormBuilder);
 
-  // Injeta o serviço de processos
+  // Injeta o service dos processos
   private service = inject(ProcessoService);
 
   // Lista completa de processos
   processos: Processo[] = [];
 
-  // Lista de processos após aplicação dos filtros
+  // Lista filtrada exibida na tabela
   processosFiltrados: Processo[] = [];
 
-  // Guarda o id do processo que está sendo editado
-  // Se for null, significa que estamos em modo de cadastro
+  // Guarda o ID do processo em edição
   editandoId: number | null = null;
 
-  // Texto do filtro por cliente
+  // Filtro por cliente
   filtroCliente = '';
 
   // Filtro por status
-  // Pode ser vazio quando nenhum status foi escolhido
   filtroStatus: '' | StatusProcesso = '';
 
-  // Formulário reativo principal
-  // Cada campo representa uma informação do processo
+  // Formulário reativo
   form = this.fb.group({
     numero: ['', Validators.required],
     cliente: ['', Validators.required],
@@ -99,45 +86,38 @@ export class ProcessosComponent implements OnInit {
     status: ['NENHUM' as StatusFormulario, Validators.required]
   });
 
-  // Método executado automaticamente quando o componente inicia
+  // Executa quando a tela abre
   ngOnInit() {
-
-    // Busca todos os processos no serviço
+    // Escuta a lista do service
     this.service.getAll().subscribe(data => {
-
-      // Armazena os dados recebidos
+      // Guarda todos os processos
       this.processos = data;
 
-      // Aplica os filtros para preencher a lista visível
+      // Aplica filtros iniciais
       this.aplicarFiltros();
     });
   }
 
-  // Método responsável por salvar um processo
-  // Pode cadastrar um novo ou atualizar um existente
+  // Salva novo processo ou atualiza um existente
   salvar() {
-
-    // Pega os valores atuais do formulário
+    // Pega os valores do formulário
     const valor = this.form.getRawValue();
 
-    // Impede o salvamento se o formulário for inválido
-    // ou se o status ainda estiver como "NENHUM"
+    // Se formulário estiver inválido ou status for NENHUM, bloqueia
     if (this.form.invalid || valor.status === 'NENHUM') {
       this.form.markAllAsTouched();
       return;
     }
 
-    // Se existir um id em edição, atualiza o processo atual
+    // Se estiver editando um processo já existente
     if (this.editandoId !== null) {
-
-      // Busca o processo original pelo id
+      // Busca o processo antigo pelo ID
       const processoExistente = this.service.getById(this.editandoId);
 
-      // Se não encontrar, interrompe a execução
+      // Se não encontrar, interrompe
       if (!processoExistente) return;
 
-      // Atualiza o processo mantendo os dados antigos
-      // e substituindo os campos editados
+      // Atualiza os dados mantendo id e dataCriacao
       this.service.update({
         ...processoExistente,
         numero: valor.numero,
@@ -146,15 +126,15 @@ export class ProcessosComponent implements OnInit {
         status: valor.status as StatusProcesso
       });
 
-      // Sai do modo de edição
+      // Sai do modo edição
       this.cancelarEdicao();
 
-      // Atualiza a lista filtrada
+      // Reaplica filtros
       this.aplicarFiltros();
       return;
     }
 
-    // Se não estiver editando, adiciona um novo processo
+    // Se não estiver editando, cria novo processo
     this.service.add({
       numero: valor.numero,
       cliente: valor.cliente,
@@ -162,7 +142,7 @@ export class ProcessosComponent implements OnInit {
       status: valor.status as StatusProcesso
     });
 
-    // Reseta o formulário para o estado inicial
+    // Limpa formulário
     this.form.reset({
       numero: '',
       cliente: '',
@@ -170,17 +150,16 @@ export class ProcessosComponent implements OnInit {
       status: 'NENHUM'
     });
 
-    // Atualiza a lista filtrada
+    // Atualiza lista filtrada
     this.aplicarFiltros();
   }
 
-  // Método chamado ao clicar em editar
+  // Preenche formulário com dados do processo selecionado
   editar(processo: Processo) {
-
-    // Guarda o id do processo em edição
+    // Marca qual processo está sendo editado
     this.editandoId = processo.id;
 
-    // Preenche o formulário com os dados do processo selecionado
+    // Preenche o formulário
     this.form.setValue({
       numero: processo.numero,
       cliente: processo.cliente,
@@ -189,13 +168,10 @@ export class ProcessosComponent implements OnInit {
     });
   }
 
-  // Cancela o modo de edição e limpa o formulário
+  // Cancela edição e limpa formulário
   cancelarEdicao() {
-
-    // Remove o id de edição
     this.editandoId = null;
 
-    // Restaura os valores iniciais do formulário
     this.form.reset({
       numero: '',
       cliente: '',
@@ -204,68 +180,53 @@ export class ProcessosComponent implements OnInit {
     });
   }
 
-  // Exclui um processo pelo id
+  // Exclui processo
   excluir(id: number) {
-
-    // Mostra uma confirmação antes de excluir
+    // Confirma com usuário antes de excluir
     const confirmou = window.confirm('Tem certeza que deseja excluir este processo?');
 
-    // Se o usuário cancelar, interrompe a exclusão
     if (!confirmou) return;
 
-    // Se o processo excluído for o mesmo que está em edição,
-    // sai do modo de edição
+    // Se estiver editando esse mesmo processo, sai da edição
     if (this.editandoId === id) {
       this.cancelarEdicao();
     }
 
-    // Remove o processo do serviço
+    // Remove do service
     this.service.delete(id);
 
-    // Atualiza a lista filtrada
+    // Reaplica filtros
     this.aplicarFiltros();
   }
 
-  // Aplica os filtros de cliente e status
+  // Filtra processos por cliente e status
   aplicarFiltros() {
-
-    // Filtra a lista completa de processos
     this.processosFiltrados = this.processos.filter(processo => {
-
-      // Verifica se o cliente atende ao filtro digitado
       const clienteOk =
         !this.filtroCliente ||
         processo.cliente.toLowerCase().includes(this.filtroCliente.toLowerCase());
 
-      // Verifica se o status atende ao filtro selecionado
       const statusOk =
         !this.filtroStatus || processo.status === this.filtroStatus;
 
-      // Só mantém o processo se os dois critérios forem verdadeiros
       return clienteOk && statusOk;
     });
   }
 
-  // Limpa todos os filtros e mostra novamente todos os processos
+  // Limpa filtros
   limparFiltros() {
     this.filtroCliente = '';
     this.filtroStatus = '';
     this.aplicarFiltros();
   }
 
-  // Retorna a cor visual da tag com base no status do processo
+  // Define cor visual da tag conforme status
   getStatusSeverity(status: StatusProcesso): 'success' | 'danger' | 'warn' {
     switch (status) {
-
-      // Status ativo recebe cor de sucesso
       case 'ATIVO':
         return 'success';
-
-      // Status finalizado recebe cor de perigo
       case 'FINALIZADO':
         return 'danger';
-
-      // Status suspenso recebe cor de aviso
       case 'SUSPENSO':
         return 'warn';
     }

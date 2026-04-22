@@ -1,92 +1,48 @@
-<!-- Container principal da página com espaçamento interno e distância entre seções -->
-<div class="p-6 space-y-8">
+<!-- Container principal da página de clientes -->
+<div class="clientes">
 
-  <!-- Cabeçalho da página -->
-  <!-- Organiza em coluna no mobile e em linha no desktop -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-
-    <!-- Bloco de título e subtítulo -->
+  <!-- Cabeçalho com título e card total -->
+  <div class="clientes__header">
     <div>
-
-      <!-- Título principal da página -->
-      <h1 class="text-2xl font-bold border border-black rounded px-4 py-2" style="width: 38%">
-        Clientes
-      </h1>
-
-      <!-- Texto explicativo abaixo do título -->
-      <p class="text-gray-600">
-        Lista de clientes cadastrados e seus processos
-      </p>
-
+      <h1 class="clientes__title">Clientes</h1>
+      <p class="clientes__subtitle">Lista de clientes cadastrados e seus processos</p>
     </div>
 
-    <!-- Card exibindo o total de clientes cadastrados -->
-    <div class="bg-white border rounded-lg shadow px-4 py-3">
-
-      <!-- Texto informativo -->
-      <p class="text-sm text-gray-500">
-        Total de clientes
-      </p>
-
-      <!-- Valor vindo do TypeScript -->
-      <p class="text-2xl font-bold">
-        {{ totalClientes }}
-      </p>
-
+    <div class="clientes-total-card">
+      <p class="clientes-total-card__label">Total de clientes</p>
+      <p class="clientes-total-card__value">{{ totalClientes }}</p>
     </div>
-
   </div>
 
-  <!-- Card da área de busca -->
-  <div class="bg-white rounded-lg shadow border p-4 space-y-4">
+  <!-- Painel de busca -->
+  <div class="clientes-panel">
+    <h2 class="clientes-panel__title">Buscar cliente</h2>
 
-    <!-- Título da seção -->
-    <h2 class="text-xl font-semibold">
-      Buscar cliente
-    </h2>
-
-    <!-- Grid responsivo -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-      <!-- Campo de texto ocupando 2 colunas no desktop -->
-      <div class="md:col-span-2">
-
-        <!-- Input ligado ao ngModel -->
-        <!-- Sempre que digitar, executa aplicarBusca() -->
+    <div class="clientes-search">
+      <div class="form-field form-field--wide">
         <input
           type="text"
           [(ngModel)]="busca"
           (input)="aplicarBusca()"
-          class="w-full border rounded px-3 py-2"
+          class="form-field__input"
           placeholder="Digite o nome do cliente"
         />
-
       </div>
 
-      <!-- Botão para limpar a busca -->
       <div>
-
         <p-button
           label="Limpar busca"
           severity="secondary"
           (onClick)="limparBusca()"
         ></p-button>
-
       </div>
-
     </div>
-
   </div>
 
-  <!-- Card da tabela de clientes -->
-  <div class="bg-white rounded-lg shadow border p-4">
+  <!-- Tabela de clientes -->
+  <div class="clientes-panel">
+    <h2 class="clientes-panel__title">Lista de clientes</h2>
 
-    <!-- Título da tabela -->
-    <h2 class="text-xl font-semibold mb-4">
-      Lista de clientes
-    </h2>
-
-    <!-- Tabela PrimeNG -->
     <p-table
       [value]="clientesFiltrados"
       [paginator]="true"
@@ -94,8 +50,6 @@
       [tableStyle]="{ 'min-width': '40rem' }"
       responsiveLayout="scroll"
     >
-
-      <!-- Cabeçalho da tabela -->
       <ng-template pTemplate="header">
         <tr>
           <th>Nome do cliente</th>
@@ -103,15 +57,9 @@
         </tr>
       </ng-template>
 
-      <!-- Corpo da tabela -->
-      <!-- let-cliente representa cada item da lista -->
       <ng-template pTemplate="body" let-cliente>
         <tr>
-
-          <!-- Nome do cliente -->
           <td>{{ cliente }}</td>
-
-          <!-- Botão para visualizar processos -->
           <td>
             <p-button
               label="Ver processos"
@@ -120,47 +68,31 @@
               (onClick)="selecionarCliente(cliente)"
             ></p-button>
           </td>
-
         </tr>
       </ng-template>
-
     </p-table>
-
   </div>
 
-  <!-- Bloco exibido somente se existir cliente selecionado -->
+  <!-- Painel que mostra os processos do cliente selecionado -->
   <div
     *ngIf="clienteSelecionado"
-    class="bg-white rounded-lg shadow border p-4 space-y-4"
+    class="clientes-panel"
   >
-
-    <!-- Cabeçalho da área de detalhes -->
-    <div class="flex items-center justify-between gap-4">
-
-      <!-- Nome do cliente selecionado -->
+    <div class="clientes-detail-header">
       <div>
-
-        <h2 class="text-xl font-semibold">
-          Processos de {{ clienteSelecionado }}
-        </h2>
-
-        <!-- Quantidade de processos -->
-        <p class="text-gray-600">
+        <h2 class="clientes-panel__title">Processos de {{ clienteSelecionado }}</h2>
+        <p class="clientes__subtitle">
           Total de processos: {{ processosDoCliente.length }}
         </p>
-
       </div>
 
-      <!-- Botão para fechar detalhes -->
       <p-button
         label="Fechar"
         severity="secondary"
         (onClick)="fecharDetalhes()"
       ></p-button>
-
     </div>
 
-    <!-- Tabela de processos do cliente -->
     <p-table
       [value]="processosDoCliente"
       [paginator]="true"
@@ -168,8 +100,6 @@
       [tableStyle]="{ 'min-width': '60rem' }"
       responsiveLayout="scroll"
     >
-
-      <!-- Cabeçalho -->
       <ng-template pTemplate="header">
         <tr>
           <th>Número</th>
@@ -179,35 +109,19 @@
         </tr>
       </ng-template>
 
-      <!-- Corpo -->
-      <!-- let-p representa cada processo -->
       <ng-template pTemplate="body" let-p>
         <tr>
-
-          <!-- Número do processo -->
           <td>{{ p.numero }}</td>
-
-          <!-- Descrição -->
           <td>{{ p.descricao }}</td>
-
-          <!-- Status com Tag colorida -->
           <td>
             <p-tag
               [value]="p.status"
               [severity]="getStatusSeverity(p.status)"
             ></p-tag>
           </td>
-
-          <!-- Data formatada -->
-          <td>
-            {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}
-          </td>
-
+          <td>{{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
         </tr>
       </ng-template>
-
     </p-table>
-
   </div>
-
 </div>

@@ -1,0 +1,165 @@
+/* Área geral do dashboard */
+.dashboard {
+
+  /* Espaçamento interno */
+  padding: 1.5rem;
+
+  /* Organiza em coluna */
+  display: flex;
+
+  /* Elementos um abaixo do outro */
+  flex-direction: column;
+
+  /* Espaço entre os blocos */
+  gap: 2rem;
+}
+
+/* Cabeçalho do dashboard */
+.dashboard__header {
+
+  /* Organiza título e subtítulo em coluna */
+  display: flex;
+
+  flex-direction: column;
+
+  /* Espaço entre título e subtítulo */
+  gap: 0.25rem;
+}
+
+/* Título principal */
+.dashboard__title {
+
+  /* Tamanho grande */
+  font-size: 1.875rem;
+
+  /* Negrito forte */
+  font-weight: 700;
+
+  /*Bordas*/
+  border: 2px solid black;
+  border-radius: 5px;
+
+  /*Dimenções*/
+  padding: 5px 10px;
+
+  /*Tamanho*/
+  width: fit-content;
+
+}
+
+/* Texto auxiliar */
+.dashboard__subtitle {
+
+  /* Cinza suave */
+  color: #6b7280;
+}
+
+/* Grade dos cards */
+.dashboard__cards {
+
+  /* Usa grid */
+  display: grid;
+
+  /* Começa com uma coluna em telas pequenas */
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  /* Espaço entre cards */
+  gap: 1rem;
+}
+
+/* Card individual */
+.dashboard-card {
+
+  /* Fundo branco */
+  background-color: #ffffff;
+
+  /* Borda leve */
+  border: 1px solid #e5e7eb;
+
+  /* Cantos arredondados */
+  border-radius: 0.75rem;
+
+  /* Sombra suave */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* Espaçamento interno */
+  padding: 1rem;
+}
+
+/* Texto pequeno do card */
+.dashboard-card__label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Número principal do card */
+.dashboard-card__value {
+  margin-top: 0.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+/* Área dos painéis inferiores */
+.dashboard__content {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+/* Painel branco reutilizável */
+.dashboard-panel {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+}
+
+/* Título dos painéis */
+.dashboard-panel__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Área reservada ao gráfico */
+.dashboard-panel__chart {
+  height: 20rem;
+}
+
+/* Lista dos últimos processos */
+.dashboard-panel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Card individual do processo */
+.dashboard-process-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+/* Texto quando não há itens */
+.dashboard-panel__empty {
+  color: #6b7280;
+}
+
+/* Em telas médias, cards ficam em 2 colunas */
+@media (min-width: 768px) {
+  .dashboard__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Em telas grandes, cards ficam em 4 colunas e painéis em 2 colunas */
+@media (min-width: 1280px) {
+  .dashboard__cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .dashboard__content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

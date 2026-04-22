@@ -1,45 +1,34 @@
-// Importa recursos principais do Angular
-// - Component: cria o componente
-// - OnInit: executa lógica quando o componente inicia
-// - inject: injeta serviços sem usar constructor
+// Importa recursos do Angular
 import { Component, OnInit, inject } from '@angular/core';
 
-// Importa funcionalidades comuns do Angular
-// Exemplo: diretivas como *ngIf e *ngFor usadas no HTML
+// Importa recursos básicos do Angular
 import { CommonModule } from '@angular/common';
 
-// Importa suporte ao ngModel para trabalhar com formulário simples
+// Importa FormsModule para usar ngModel
 import { FormsModule } from '@angular/forms';
 
-// Importa o módulo da tabela do PrimeNG
+// Importa módulos do PrimeNG usados na tela
 import { TableModule } from 'primeng/table';
-
-// Importa o módulo de botões do PrimeNG
 import { ButtonModule } from 'primeng/button';
-
-// Importa o módulo de tags do PrimeNG
-// Ele é usado para exibir o status com destaque visual
 import { TagModule } from 'primeng/tag';
 
-// Importa o serviço responsável por fornecer os processos
+// Importa o service dos processos
 import { ProcessoService } from '../../core/services/processo.service';
 
-// Importa a tipagem do processo
+// Importa o model Processo
 import { Processo } from '../../models/processo.model';
 
-// Cria um tipo para limitar os status permitidos
-// Isso ajuda a evitar erros de digitação no código
+// Tipo dos status do processo
 type StatusProcesso = 'ATIVO' | 'FINALIZADO' | 'SUSPENSO';
 
-// Decorador que define as configurações do componente
 @Component({
-  // Nome da tag usada no HTML para este componente
+  // Nome da tag do componente
   selector: 'app-clientes',
 
-  // Define que o componente é standalone
+  // Define como standalone
   standalone: true,
 
-  // Lista os módulos necessários para o HTML funcionar
+  // Módulos usados no HTML
   imports: [
     CommonModule,
     FormsModule,
@@ -48,101 +37,82 @@ type StatusProcesso = 'ATIVO' | 'FINALIZADO' | 'SUSPENSO';
     TagModule
   ],
 
-  // Arquivo HTML associado a este componente
-  templateUrl: './clientes.component.html'
+  // Arquivo HTML
+  templateUrl: './clientes.component.html',
+
+  // Arquivo SCSS
+  styleUrl: './clientes.component.scss'
 })
-
-// Classe principal do componente
 export class ClientesComponent implements OnInit {
-
-  // Injeta o serviço de processos
+  // Injeta service dos processos
   private service = inject(ProcessoService);
 
-  // Armazena todos os processos recebidos do serviço
+  // Lista completa de processos
   processos: Processo[] = [];
 
-  // Lista completa de nomes de clientes, sem repetição
+  // Lista de nomes únicos de clientes
   clientes: string[] = [];
 
-  // Lista de clientes depois da busca/filtro
+  // Lista filtrada pela busca
   clientesFiltrados: string[] = [];
 
-  // Texto digitado no campo de busca
+  // Texto digitado na busca
   busca = '';
 
-  // Guarda o nome do cliente atualmente selecionado
-  // Pode ser null quando nenhum cliente estiver aberto
+  // Cliente atualmente selecionado
   clienteSelecionado: string | null = null;
 
-  // Armazena os processos do cliente selecionado
+  // Processos pertencentes ao cliente selecionado
   processosDoCliente: Processo[] = [];
 
-  // Quantidade total de clientes únicos
+  // Total de clientes únicos
   totalClientes = 0;
 
-  // Método executado automaticamente quando o componente inicia
+  // Executa quando a tela abre
   ngOnInit() {
-
-    // Busca todos os processos no serviço
+    // Escuta todos os processos
     this.service.getAll().subscribe(data => {
-
-      // Salva todos os processos recebidos
       this.processos = data;
 
-      // Cria a lista de clientes únicos
-      // Etapas:
-      // 1. pega apenas o nome do cliente de cada processo
-      // 2. remove espaços extras com trim()
-      // 3. filtra nomes vazios
-      // 4. remove duplicados com Set
-      // 5. ordena em ordem alfabética
+      // Gera lista única de nomes de clientes
       this.clientes = [...new Set(
         data
           .map(processo => processo.cliente.trim())
           .filter(cliente => cliente.length > 0)
       )].sort((a, b) => a.localeCompare(b));
 
-      // Atualiza a quantidade total de clientes
+      // Conta total de clientes únicos
       this.totalClientes = this.clientes.length;
 
-      // Aplica a busca atual para atualizar a lista visível
+      // Aplica busca inicial
       this.aplicarBusca();
 
-      // Se já existir um cliente selecionado,
-      // atualiza novamente os processos dele
+      // Se já havia cliente selecionado, atualiza processos dele
       if (this.clienteSelecionado) {
         this.selecionarCliente(this.clienteSelecionado);
       }
     });
   }
 
-  // Método responsável por filtrar os clientes pela busca digitada
+  // Filtra clientes pela busca digitada
   aplicarBusca() {
-
-    // Remove espaços no início/fim e transforma em minúsculo
-    // para facilitar a comparação
     const termo = this.busca.trim().toLowerCase();
 
-    // Filtra os clientes que contêm o texto digitado
     this.clientesFiltrados = this.clientes.filter(cliente =>
       cliente.toLowerCase().includes(termo)
     );
   }
 
-  // Limpa o campo de busca e restaura a lista completa
+  // Limpa campo de busca
   limparBusca() {
     this.busca = '';
     this.aplicarBusca();
   }
 
-  // Seleciona um cliente e carrega os processos dele
+  // Mostra os processos do cliente clicado
   selecionarCliente(nomeCliente: string) {
-
-    // Salva o nome do cliente selecionado
     this.clienteSelecionado = nomeCliente;
 
-    // Filtra apenas os processos desse cliente
-    // Depois ordena do mais recente para o mais antigo
     this.processosDoCliente = this.processos
       .filter(processo => processo.cliente.trim() === nomeCliente)
       .sort(
@@ -151,30 +121,19 @@ export class ClientesComponent implements OnInit {
       );
   }
 
-  // Fecha a área de detalhes do cliente
+  // Fecha o painel de detalhes
   fecharDetalhes() {
-
-    // Remove o cliente selecionado
     this.clienteSelecionado = null;
-
-    // Limpa a lista de processos exibida
     this.processosDoCliente = [];
   }
 
-  // Define a cor visual da tag de status
-  // com base no status recebido
+  // Define cor da tag conforme status
   getStatusSeverity(status: StatusProcesso): 'success' | 'danger' | 'warn' {
     switch (status) {
-
-      // Processos ativos ficam com cor de sucesso
       case 'ATIVO':
         return 'success';
-
-      // Processos finalizados ficam com cor de perigo
       case 'FINALIZADO':
         return 'danger';
-
-      // Processos suspensos ficam com cor de aviso
       case 'SUSPENSO':
         return 'warn';
     }

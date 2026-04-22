@@ -1,0 +1,118 @@
+/* Classe principal da aplicação inteira */
+.app-shell {
+
+  /* Garante que a aplicação ocupe no mínimo toda a altura da tela */
+  min-height: 100vh;
+
+  /* Define a cor de fundo geral do sistema */
+  background-color: #f3f4f6;
+}
+
+/* Barra superior do sistema */
+.app-navbar {
+
+  /* Fundo branco da navbar */
+  background-color: rgb(19, 33, 70);
+
+  /* Sombra suave para destacar a barra */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Área interna da navbar */
+.app-navbar__content {
+
+  /* Largura máxima do conteúdo */
+  max-width: 72rem;
+
+  /* Centraliza horizontalmente */
+  margin: 0 auto;
+
+  /* Espaçamento interno vertical e horizontal */
+  padding: 1rem 1.5rem;
+
+  /* Organiza os elementos lado a lado */
+  display: flex;
+
+  /* Alinha verticalmente ao centro */
+  align-items: center;
+
+  /* Joga título para um lado e links para o outro */
+  justify-content: space-between;
+
+  /* Espaço entre os elementos */
+  gap: 1rem;
+}
+
+/* Título do sistema */
+.app-navbar__title {
+
+  /*Tamanho da imagem*/
+  width: 72px;
+  height: 72px;
+}
+
+/* Área que contém os links do menu */
+.app-navbar__links {
+
+  /* Organiza links em linha */
+  display: flex;
+
+  /* Espaço entre os links */
+  gap: 1rem;
+
+  /* Permite quebrar linha se a tela ficar pequena */
+  flex-wrap: wrap;
+}
+
+/* Estilo base de cada link do menu */
+.app-navbar__link {
+
+  /* Cor azul */
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px 20px;
+
+  /* Remove sublinhado padrão */
+  text-decoration: none;
+
+  /* Peso médio da fonte */
+  font-weight: 500;
+}
+
+/* Efeito quando o mouse passa por cima */
+.app-navbar__link:hover {
+
+  /* Adiciona sublinhado */
+  text-decoration: underline;
+}
+
+/* Classe aplicada ao link ativo */
+.app-navbar__link--active {
+
+  /* Deixa mais forte visualmente */
+  font-weight: 700;
+
+  /* Sublinha para indicar página atual */
+  text-decoration: underline;
+}
+
+/* Área principal onde as páginas são exibidas */
+.app-main {
+
+  /* Mesma largura máxima do topo */
+  max-width: 72rem;
+
+  /* Centraliza o conteúdo */
+  margin: 0 auto;
+
+  /* Espaçamento vertical */
+  padding: 1.5rem 0;
+}
+
+/* Container usado nas animações das páginas */
+.app-page-transition {
+
+  /* Necessário para trabalhar com elementos absolutos na animação */
+  position: relative;
+}

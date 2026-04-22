@@ -1,0 +1,103 @@
+/* Área principal da tela */
+.processos {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Título principal */
+.processos__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+
+  /*Bordas*/
+  border: 2px solid black;
+  border-radius: 5px;
+
+  /*Dimenções*/
+  padding: 5px 10px;
+
+  /*Tamanho*/
+  width: fit-content;
+  
+}
+
+/* Blocos principais brancos */
+.processos-form,
+.processos-panel {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+}
+
+/* Títulos internos */
+.processos-form__title,
+.processos-panel__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Grade do topo do formulário e filtros */
+.processos-form__grid,
+.processos-filtros {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* Botões lado a lado */
+.processos-form__actions,
+.processos-table__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Alinha botão de filtros embaixo */
+.processos-filtros__button {
+  display: flex;
+  align-items: end;
+}
+
+/* Campo geral */
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label do campo */
+.form-field__label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Aparência dos campos */
+.form-field__input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  background-color: #ffffff;
+}
+
+/* Mensagem de erro */
+.form-field__error {
+  margin-top: 0.25rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+}
+
+/* Em telas médias, divide melhor o espaço */
+@media (min-width: 768px) {
+  .processos-form__grid,
+  .processos-filtros {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .processos-filtros {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}

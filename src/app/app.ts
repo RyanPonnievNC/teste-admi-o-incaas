@@ -1,42 +1,84 @@
-// Importa o decorator Component do Angular
-// Ele é usado para transformar a classe em um componente Angular
+// Importa Component do Angular
 import { Component } from '@angular/core';
 
-// Importa recursos de rotas do Angular
-// - RouterLink: cria links de navegação
-// - RouterLinkActive: aplica classe quando rota estiver ativa
-// - RouterOutlet: local onde as páginas serão carregadas
+// Importa recursos de rota
 import {
   RouterLink,
   RouterLinkActive,
   RouterOutlet
 } from '@angular/router';
 
-// Decorador com as configurações do componente principal
-@Component({
+// Importa recursos de animação do Angular
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  query,
+  group
+} from '@angular/animations';
 
-  // Nome da tag HTML deste componente
-  // Geralmente usada no index.html como <app-root>
+@Component({
+  // Nome da tag principal da aplicação
   selector: 'app-root',
 
-  // Define que o componente é standalone
-  // Ou seja, não precisa estar dentro de AppModule
+  // Define como standalone
   standalone: true,
 
-  // Lista os recursos usados no HTML deste componente
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive
-  ],
+  // Importa módulos usados no HTML
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
 
-  // Arquivo HTML principal da aplicação
+  // Arquivo HTML
   templateUrl: './app.html',
 
-  // Arquivo de estilos SCSS do componente
-  styleUrl: './app.scss'
-})
+  // Arquivo SCSS
+  styleUrl: './app.scss',
 
-// Classe principal da aplicação
-// Este é o primeiro componente carregado ao abrir o sistema
-export class AppComponent {}
+  // Lista de animações do componente
+  animations: [
+    trigger('routeAnimations', [
+      transition('* <=> *', [
+        style({ position: 'relative' }),
+
+        query(':enter, :leave', [
+          style({
+            position: 'absolute',
+            width: '100%'
+          })
+        ], { optional: true }),
+
+        group([
+          query(':leave', [
+            animate(
+              '250ms ease',
+              style({
+                opacity: 0,
+                transform: 'translateX(-20px)'
+              })
+            )
+          ], { optional: true }),
+
+          query(':enter', [
+            style({
+              opacity: 0,
+              transform: 'translateX(20px)'
+            }),
+            animate(
+              '250ms ease',
+              style({
+                opacity: 1,
+                transform: 'translateX(0)'
+              })
+            )
+          ], { optional: true })
+        ])
+      ])
+    ])
+  ]
+})
+export class AppComponent {
+  // Prepara a rota atual para usar nas animações
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.['animation'];
+  }
+}
