@@ -1,63 +1,163 @@
-<!-- Container principal de toda a aplicação -->
+<!--
+  app.html
+
+  Este é o arquivo principal do layout do sistema.
+  Ele controla:
+  - a barra lateral esquerda
+  - os links de navegação
+  - o botão Login/Sair
+  - a área onde as páginas aparecem
+  - a animação entre páginas
+  - a caixa de mensagem de login/logout
+-->
+
+<!-- Container principal da aplicação inteira -->
 <div class="app-shell">
 
-  <!-- Barra de navegação no topo -->
-  <nav class="app-navbar">
+  <!-- Barra lateral do sistema -->
+  <header class="app-navbar">
 
-    <!-- Área interna da navbar para alinhar título e links -->
+    <!-- Conteúdo interno da sidebar -->
     <div class="app-navbar__content">
 
-      <!-- Título do sistema -->
-      <h1 class="app-navbar__title">
-        <img src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png" alt="Jurídico Pro App">
-      </h1>
+      <!-- Área do logo/marca do sistema -->
+      <div class="app-navbar__brand">
 
-      <!-- Grupo de links do menu -->
-      <div class="app-navbar__links">
+        <!-- Ícone jurídico do sistema -->
+        <div class="app-navbar__title">
+          <img src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png" alt="Jurídico Pro">
+        </div>
 
-        <!-- Link para a página Dashboard -->
-        <!-- routerLink define para qual rota vai -->
-        <!-- routerLinkActive aplica a classe quando essa rota estiver ativa -->
+      </div>
+
+      <!-- Área dos links principais do menu -->
+      <nav class="app-navbar__links">
+
+        <!-- Link para o Dashboard -->
         <a
           routerLink="/dashboard"
           routerLinkActive="app-navbar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="app-navbar__link"
         >
           Dashboard
         </a>
 
-        <!-- Link para a página Processos -->
+        <!-- Link para a página de Processos -->
         <a
           routerLink="/processos"
           routerLinkActive="app-navbar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="app-navbar__link"
         >
           Processos
         </a>
 
-        <!-- Link para a página Clientes -->
+        <!-- Link para a página de Clientes -->
         <a
           routerLink="/clientes"
           routerLinkActive="app-navbar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="app-navbar__link"
         >
           Clientes
         </a>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Área principal onde as páginas serão exibidas -->
+      </nav>
+
+      <!-- Área inferior da sidebar -->
+      <div class="app-navbar__footer">
+
+        <!-- Botão Área de Login aparece quando o usuário NÃO está logado -->
+        <button
+          *ngIf="!estaLogado()"
+          type="button"
+          class="app-navbar__login"
+          (click)="irParaLogin()"
+        >
+          Área de Login
+        </button>
+
+        <!-- Botão Sair aparece quando o usuário está logado -->
+        <button
+          *ngIf="estaLogado()"
+          type="button"
+          class="app-navbar__logout"
+          (click)="sair()"
+        >
+          Sair
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Área principal onde as páginas aparecem -->
   <main class="app-main">
 
-    <!-- Div usada para aplicar animação de transição entre rotas -->
-    <!-- prepareRoute(outlet) pega a rota atual -->
-    <!-- [@routeAnimations] ativa a animação criada no app.ts -->
-    <div [@routeAnimations]="prepareRoute(outlet)" class="app-page-transition">
+    <!--
+      Container responsável pela animação entre páginas.
 
-      <!-- Local onde o Angular renderiza a página atual -->
-      <!-- #outlet cria uma referência do router-outlet -->
+      [@routeAnimations]:
+      ativa a animação criada no app.ts.
+
+      prepareRoute(outlet):
+      identifica a rota atual.
+
+      #outlet="outlet":
+      cria uma referência ao router-outlet.
+    -->
+    <div
+      [@routeAnimations]="prepareRoute(outlet)"
+      class="app-page-transition"
+    >
+
+      <!-- Aqui o Angular carrega Dashboard, Processos, Clientes ou Login -->
       <router-outlet #outlet="outlet"></router-outlet>
+
     </div>
+
   </main>
+
+  <!-- Caixa de mensagem do sistema -->
+  <div
+    *ngIf="toastVisivel"
+    class="app-toast"
+    [class.app-toast--success]="toastTipo === 'success'"
+    [class.app-toast--info]="toastTipo === 'info'"
+  >
+
+    <!-- Ícone da caixa -->
+    <div class="app-toast__icon">
+      {{ toastTipo === 'success' ? '✅' : '👋' }}
+    </div>
+
+    <!-- Conteúdo textual da caixa -->
+    <div class="app-toast__content">
+
+      <!-- Título da mensagem -->
+      <strong class="app-toast__title">
+        {{ toastTitulo }}
+      </strong>
+
+      <!-- Descrição da mensagem -->
+      <span class="app-toast__message">
+        {{ toastMensagem }}
+      </span>
+
+    </div>
+
+    <!-- Botão para fechar manualmente a caixa -->
+    <button
+      type="button"
+      class="app-toast__close"
+      (click)="fecharToast()"
+    >
+      ×
+    </button>
+
+  </div>
+
 </div>

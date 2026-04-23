@@ -1,7 +1,17 @@
+// Importa o tipo Routes do Angular
 import { Routes } from '@angular/router';
+
+// Importa o componente Dashboard
 import { DashboardComponent } from './features/dashboard/dashboard.component';
+
+// Importa o componente Processos
 import { ProcessosComponent } from './features/processos/processos.component';
+
+// Importa o componente Clientes
 import { ClientesComponent } from './features/clientes/clientes.component';
+
+// Importa o componente Login
+import { LoginComponent } from './features/login/login.component';
 
 // Cria e exporta a lista de rotas do sistema
 // Essas rotas controlam qual página será aberta
@@ -39,5 +49,21 @@ export const routes: Routes = [
   {
     path: 'clientes',
     component: ClientesComponent
+  },
+
+  // Rota da página de Login
+  // URL:
+  // /login
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+
+  // Se digitar qualquer rota errada,
+  // volta para o Dashboard
+  {
+    path: '**',
+    redirectTo: 'dashboard'
   }
+
 ];

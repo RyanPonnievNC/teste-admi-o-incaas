@@ -1,141 +1,420 @@
-/* Classe principal da aplicação inteira */
-.app-shell {
+/*
+  app.scss
 
-  /* Garante que a aplicação ocupe no mínimo toda a altura da tela */
+  Este arquivo controla o visual principal da aplicação:
+  - sidebar lateral
+  - links do menu
+  - link ativo
+  - botão Área de Login
+  - botão Sair
+  - área principal
+  - caixa de mensagem de login/logout
+*/
+
+/* Container principal da aplicação inteira */
+.app-shell {
   min-height: 100vh;
 
-  /* Define a cor de fundo geral do sistema */
   background-color: #f3f4f6;
-
-  margin-left: 250px;
-  padding: 2rem;
 }
 
-/* Barra superior do sistema */
+/* Barra lateral do sistema */
 .app-navbar {
-
-  /* Fundo branco da navbar */
   background-color: rgb(19, 33, 70);
 
-  /* Sombra suave para destacar a barra */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-/* Área interna da navbar */
+/* Conteúdo interno da sidebar */
 .app-navbar__content {
-
-  /* Largura fixa da barra lateral */
   width: 250px;
 
-  /* Altura total da tela */
   height: 100vh;
 
-  /* Fundo escuro elegante */
   background: rgb(19, 33, 70);
 
-  /* Espaçamento interno */
   padding: 1.5rem;
 
-  /* Organiza itens em coluna */
   display: flex;
 
-  /* Um item embaixo do outro */
   flex-direction: column;
 
-  /* Alinha à esquerda */
-  align-items: flex-start;
+  align-items: center;
 
-  /* Começa do topo */
   justify-content: flex-start;
 
-  /* Espaço entre itens */
   gap: 1rem;
 
-  /* Fixa na lateral esquerda */
   position: fixed;
 
-  /* Cola no topo */
   top: 0;
 
-  /* Cola na esquerda */
   left: 0;
+
+  z-index: 20;
 }
 
-/* Título do sistema */
-.app-navbar__title {
+/* Área do logo */
+.app-navbar__brand {
+  width: 100%;
 
-  /*Tamanho da imagem*/
+  display: flex;
+
+  justify-content: center;
+
+  margin-bottom: 1rem;
+}
+
+/* Logo/título visual do sistema */
+.app-navbar__title {
   width: 72px;
+
   height: 72px;
 
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 1rem;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: #ffffff;
+
+  font-size: 2.4rem;
 }
 
 /* Área que contém os links do menu */
 .app-navbar__links {
+  width: 100%;
 
-  /* Organiza links em linha */
   display: flex;
 
-  /* Espaço entre os links */
-  gap: 1rem;
+  flex-direction: column;
 
-  /* Permite quebrar linha se a tela ficar pequena */
-  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 1rem;
 
   position: relative;
 
   top: 10px;
 }
 
-/* Estilo base de cada link do menu */
+/* Estilo padrão de cada link do menu */
 .app-navbar__link {
+  width: 170px;
 
-  /* Cor azul */
-  color: white;
-  border: 1px solid white;
-  border-radius: 5px;
-  padding: 10px 20px;
+  min-height: 52px;
 
-  /* Remove sublinhado padrão */
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #ffffff;
+
+  border: 1px solid #ffffff;
+
+  border-radius: 6px;
+
+  padding: 12px 20px;
+
+  text-align: center;
+
   text-decoration: none;
 
-  /* Peso médio da fonte */
+  font-size: 1.05rem;
+
   font-weight: 500;
+
+  transition: 0.2s ease;
 }
 
-/* Efeito quando o mouse passa por cima */
+/* Efeito quando o mouse passa por cima do link */
 .app-navbar__link:hover {
+  background: rgba(255, 255, 255, 0.08);
 
-  /* Adiciona sublinhado */
   text-decoration: underline;
+
+  transform: translateY(-2px);
 }
 
-/* Classe aplicada ao link ativo */
+/* Link ativo com cores invertidas */
 .app-navbar__link--active {
+  background: #ffffff;
 
-  /* Deixa mais forte visualmente */
+  color: rgb(19, 33, 70);
+
+  border-color: #ffffff;
+
+  font-weight: 800;
+
+  text-decoration: none;
+
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+}
+
+/* Hover do link ativo */
+.app-navbar__link--active:hover {
+  background: #ffffff;
+
+  color: rgb(19, 33, 70);
+
+  text-decoration: none;
+
+  transform: translateY(-2px);
+}
+
+/* Rodapé do menu lateral */
+.app-navbar__footer {
+  width: 100%;
+
+  margin-top: auto;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+/* Botão Área de Login */
+.app-navbar__login {
+  width: 170px;
+
+  min-height: 52px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid #ffffff;
+
+  border-radius: 6px;
+
+  padding: 12px 20px;
+
+  background: #ffffff;
+
+  color: rgb(19, 33, 70);
+
+  font-size: 1rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão Área de Login */
+.app-navbar__login:hover {
+  background: #e5e7eb;
+
+  border-color: #e5e7eb;
+
+  transform: translateY(-2px);
+}
+
+/* Botão Sair */
+.app-navbar__logout {
+  width: 170px;
+
+  min-height: 52px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  border-radius: 6px;
+
+  padding: 12px 20px;
+
+  background: transparent;
+
+  color: #ffffff;
+
+  font-size: 1rem;
+
   font-weight: 700;
 
-  /* Sublinha para indicar página atual */
-  text-decoration: underline;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão Sair */
+.app-navbar__logout:hover {
+  background: rgba(220, 38, 38, 0.9);
+
+  border-color: rgba(220, 38, 38, 0.9);
+
+  transform: translateY(-2px);
 }
 
 /* Área principal onde as páginas são exibidas */
 .app-main {
-
-  /* Mesma largura máxima do topo */
   max-width: 72rem;
 
-  /* Centraliza o conteúdo */
-  margin: 0 auto;
+  margin-left: 250px;
 
-  /* Espaçamento vertical */
-  padding: 1.5rem 0;
+  padding: 1.5rem 2rem;
 }
 
 /* Container usado nas animações das páginas */
 .app-page-transition {
-
-  /* Necessário para trabalhar com elementos absolutos na animação */
   position: relative;
+}
+
+/* Caixa de mensagem do sistema */
+.app-toast {
+  width: 360px;
+
+  min-height: 82px;
+
+  position: fixed;
+
+  right: 24px;
+
+  bottom: 24px;
+
+  z-index: 100;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  padding: 1rem;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+
+  animation: toast-enter 0.25s ease;
+}
+
+/* Caixa quando a mensagem é de sucesso */
+.app-toast--success {
+  border-left: 6px solid #16a34a;
+}
+
+/* Caixa quando a mensagem é informativa */
+.app-toast--info {
+  border-left: 6px solid rgb(19, 33, 70);
+}
+
+/* Ícone da caixa */
+.app-toast__icon {
+  width: 42px;
+
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f3f4f6;
+
+  font-size: 1.4rem;
+}
+
+/* Área dos textos da caixa */
+.app-toast__content {
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.25rem;
+}
+
+/* Título da caixa */
+.app-toast__title {
+  color: #111827;
+
+  font-size: 0.98rem;
+
+  font-weight: 800;
+}
+
+/* Mensagem menor da caixa */
+.app-toast__message {
+  color: #6b7280;
+
+  font-size: 0.9rem;
+
+  line-height: 1.4;
+}
+
+/* Botão de fechar a caixa */
+.app-toast__close {
+  width: 28px;
+
+  height: 28px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #6b7280;
+
+  font-size: 1.4rem;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão de fechar */
+.app-toast__close:hover {
+  background: #f3f4f6;
+
+  color: #111827;
+}
+
+/* Animação de entrada da caixa */
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+/* Responsividade da caixa em telas menores */
+@media (max-width: 640px) {
+  .app-toast {
+    width: calc(100% - 2rem);
+
+    right: 1rem;
+
+    bottom: 1rem;
+  }
 }

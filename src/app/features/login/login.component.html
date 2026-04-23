@@ -1,0 +1,79 @@
+<!-- Página completa de login -->
+<section class="login-page">
+
+  <!-- Card central do login -->
+  <div class="login-card">
+
+    <!-- Área visual do sistema -->
+    <div class="login-card__brand">
+
+      <!-- Ícone jurídico -->
+      <div class="login-card__icon">
+        <img src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png" alt="Jurídico Pro">
+      </div>
+
+      <!-- Título do sistema -->
+      <h1 class="login-card__title">
+        Jurídico Pro
+      </h1>
+
+      <!-- Texto abaixo do título -->
+      <p class="login-card__subtitle">
+        Acesse sua conta para continuar
+      </p>
+
+    </div>
+
+    <!-- Formulário visual de login -->
+    <form class="login-form">
+
+      <!-- Campo de usuário -->
+      <div class="login-form__group">
+
+        <!-- Nome do campo -->
+        <label class="login-form__label">
+          Usuário
+        </label>
+
+        <!-- Input do usuário -->
+        <input
+          type="text"
+          class="login-form__input"
+          placeholder="Digite seu usuário"
+          name="usuario"
+        />
+
+      </div>
+
+      <!-- Campo de senha -->
+      <div class="login-form__group">
+
+        <!-- Nome do campo -->
+        <label class="login-form__label">
+          Senha
+        </label>
+
+        <!-- Input de senha -->
+        <input
+          type="password"
+          class="login-form__input"
+          placeholder="Digite sua senha"
+          name="senha"
+        />
+
+      </div>
+
+      <!-- Botão de entrar -->
+      <button
+        type="button"
+        class="login-form__button"
+        (click)="entrar()"
+      >
+        Entrar
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
