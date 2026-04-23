@@ -1,4 +1,54 @@
 /* You can add global styles to this file, and also import other style files */
+/* Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Estilo geral */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+
+/* ===================================== */
+/* TRANSIÇÃO ENTRE PÁGINAS */
+/* ===================================== */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: ease;
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out-page;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in-page;
+}
+
+@keyframes fade-out-page {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes fade-in-page {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

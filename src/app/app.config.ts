@@ -1,47 +1,58 @@
-// Importa tipos e funções principais do Angular Core
+// Importa o tipo principal de configuração do Angular
 import {
-  // Tipo usado para definir a configuração global da aplicação
   ApplicationConfig,
 
-  // Ativa captura global de erros do navegador
-  // Ajuda a exibir erros no console e tratar falhas gerais
+  // Ativa tratamento global de erros
   provideBrowserGlobalErrorListeners,
 
-  // Configura como Angular detecta mudanças na interface
+  // Melhora performance da detecção de mudanças
   provideZoneChangeDetection
+
 } from '@angular/core';
 
-// Importa função para registrar as rotas do sistema
-import { provideRouter } from '@angular/router';
 
-// Importa função para habilitar HttpClient
-// Necessário para chamadas API futuramente
+// Importa sistema de rotas + transição entre páginas
+import {
+
+  // Ativa as rotas do projeto
+  provideRouter,
+
+  // Ativa animação ao trocar de página
+  withViewTransitions
+
+} from '@angular/router';
+
+
+// Importa suporte para requisições HTTP (API)
 import { provideHttpClient } from '@angular/common/http';
 
-// Importa lista de rotas criadas no app.routes.ts
+
+// Importa suas rotas cadastradas
 import { routes } from './app.routes';
 
-// Cria objeto de configuração global da aplicação
+
+// Cria configuração principal do app
 export const appConfig: ApplicationConfig = {
 
-  // Providers = serviços/configurações globais disponíveis no projeto inteiro
+  // Recursos globais do sistema
   providers: [
 
-    // Habilita escuta global de erros no navegador
+    // Captura erros globais
     provideBrowserGlobalErrorListeners(),
 
-    // Configura detecção de mudanças otimizada
-    // eventCoalescing: agrupa múltiplos eventos para melhorar performance
+    // Otimiza eventos do Angular
     provideZoneChangeDetection({
       eventCoalescing: true
     }),
 
-    // Registra sistema de rotas
-    // Dashboard / Processos / Clientes
-    provideRouter(routes),
+    // Libera uso de APIs
+    provideHttpClient(),
 
-    // Habilita HttpClient globalmente
-    // Permitirá GET, POST, PUT, DELETE futuramente
-    provideHttpClient()
+    // Ativa rotas + transição suave entre páginas
+    provideRouter(
+      routes,
+      withViewTransitions()
+    )
+
   ]
 };
