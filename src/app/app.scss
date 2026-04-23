@@ -6,6 +6,9 @@
 
   /* Define a cor de fundo geral do sistema */
   background-color: #f3f4f6;
+
+  margin-left: 250px;
+  padding: 2rem;
 }
 
 /* Barra superior do sistema */
@@ -21,26 +24,41 @@
 /* Área interna da navbar */
 .app-navbar__content {
 
-  /* Largura máxima do conteúdo */
-  max-width: 72rem;
+  /* Largura fixa da barra lateral */
+  width: 250px;
 
-  /* Centraliza horizontalmente */
-  margin: 0 auto;
+  /* Altura total da tela */
+  height: 100vh;
 
-  /* Espaçamento interno vertical e horizontal */
-  padding: 1rem 1.5rem;
+  /* Fundo escuro elegante */
+  background: rgb(19, 33, 70);
 
-  /* Organiza os elementos lado a lado */
+  /* Espaçamento interno */
+  padding: 1.5rem;
+
+  /* Organiza itens em coluna */
   display: flex;
 
-  /* Alinha verticalmente ao centro */
-  align-items: center;
+  /* Um item embaixo do outro */
+  flex-direction: column;
 
-  /* Joga título para um lado e links para o outro */
-  justify-content: space-between;
+  /* Alinha à esquerda */
+  align-items: flex-start;
 
-  /* Espaço entre os elementos */
+  /* Começa do topo */
+  justify-content: flex-start;
+
+  /* Espaço entre itens */
   gap: 1rem;
+
+  /* Fixa na lateral esquerda */
+  position: fixed;
+
+  /* Cola no topo */
+  top: 0;
+
+  /* Cola na esquerda */
+  left: 0;
 }
 
 /* Título do sistema */
@@ -49,6 +67,7 @@
   /*Tamanho da imagem*/
   width: 72px;
   height: 72px;
+
 }
 
 /* Área que contém os links do menu */
@@ -62,6 +81,10 @@
 
   /* Permite quebrar linha se a tela ficar pequena */
   flex-wrap: wrap;
+
+  position: relative;
+
+  top: 10px;
 }
 
 /* Estilo base de cada link do menu */
