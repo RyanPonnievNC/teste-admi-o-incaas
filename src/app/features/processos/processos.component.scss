@@ -1,103 +1,430 @@
-/* Área principal da tela */
+/*
+  processos.component.scss
+
+  Este arquivo controla o visual da tela de processos:
+  - título da página
+  - formulário de cadastro/edição
+  - campos
+  - botão Salvar Processo
+  - filtros
+  - tabela
+  - botões de ação
+*/
+
+/* Container principal da tela */
 .processos {
-  padding: 1.5rem;
+  width: 100%;
+
   display: flex;
+
   flex-direction: column;
-  gap: 2rem;
+
+  gap: 1.5rem;
 }
 
-/* Título principal */
+/* Título principal da página */
 .processos__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-
-  /*Bordas*/
-  border: 2px solid black;
-  border-radius: 5px;
-
-  /*Dimenções*/
-  padding: 5px 10px;
-
-  /*Tamanho*/
   width: fit-content;
-  
-}
 
-/* Blocos principais brancos */
-.processos-form,
-.processos-panel {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 1rem;
-}
+  margin: 0;
 
-/* Títulos internos */
-.processos-form__title,
-.processos-panel__title {
+  padding: 0.55rem 0.85rem;
+
+  border: 2px solid #111827;
+
+  border-radius: 4px;
+
+  color: #000000;
+
   font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+
+  font-weight: 800;
+
+  background: #ffffff;
 }
 
-/* Grade do topo do formulário e filtros */
-.processos-form__grid,
-.processos-filtros {
+/* Formulário principal */
+.processos-form {
+  width: 100%;
+
+  padding: 1.25rem;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Título do formulário */
+.processos-form__title {
+  margin: 0 0 1rem;
+
+  color: #000000;
+
+  font-size: 1rem;
+
+  font-weight: 800;
+}
+
+/* Grade dos campos principais */
+.processos-form__grid {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 1rem;
 }
 
-/* Botões lado a lado */
-.processos-form__actions,
-.processos-table__actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Alinha botão de filtros embaixo */
-.processos-filtros__button {
-  display: flex;
-  align-items: end;
-}
-
-/* Campo geral */
+/* Grupo de campo */
 .form-field {
+  width: 100%;
+
   display: flex;
+
   flex-direction: column;
+
+  gap: 0.4rem;
 }
 
-/* Label do campo */
+/* Label dos campos */
 .form-field__label {
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  color: #000000;
+
+  font-size: 0.85rem;
+
+  font-weight: 600;
 }
 
-/* Aparência dos campos */
+/* Inputs, textarea e select */
 .form-field__input {
   width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
-  background-color: #ffffff;
+
+  min-height: 38px;
+
+  padding: 0.65rem 0.75rem;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #000000;
+
+  font-size: 0.9rem;
+
+  outline: none;
+
+  transition: 0.2s ease;
 }
 
-/* Mensagem de erro */
+/* Efeito ao clicar nos campos */
+.form-field__input:focus {
+  border-color: rgb(19, 33, 70);
+
+  box-shadow: 0 0 0 3px rgba(19, 33, 70, 0.12);
+}
+
+/* Campo descrição */
+.form-field__textarea {
+  resize: vertical;
+
+  min-height: 90px;
+}
+
+/* Mensagem de erro dos campos */
 .form-field__error {
-  margin-top: 0.25rem;
-  color: #ef4444;
-  font-size: 0.875rem;
+  margin: 0.15rem 0 0;
+
+  color: #dc2626;
+
+  font-size: 0.8rem;
+
+  font-weight: 600;
 }
 
-/* Em telas médias, divide melhor o espaço */
-@media (min-width: 768px) {
-  .processos-form__grid,
-  .processos-filtros {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Área dos botões do formulário */
+.processos-form__actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  margin-top: 1rem;
+}
+
+/* Botão Salvar/Atualizar Processo */
+.processos-form__submit-button {
+  border: 2px solid rgb(19, 33, 70);
+
+  border-radius: 8px;
+
+  padding: 0.75rem 1.25rem;
+
+  background: #ffffff;
+
+  color: rgb(19, 33, 70);
+
+  font-size: 0.95rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão Salvar/Atualizar Processo */
+.processos-form__submit-button:hover {
+  background: rgb(19, 33, 70);
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+}
+
+/* Clique do botão Salvar/Atualizar Processo */
+.processos-form__submit-button:active {
+  transform: translateY(0);
+}
+
+/* Botão cancelar */
+.processos-form__cancel-button {
+  border: 2px solid #6b7280;
+
+  border-radius: 8px;
+
+  padding: 0.75rem 1.25rem;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 0.95rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão cancelar */
+.processos-form__cancel-button:hover {
+  background: #6b7280;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+}
+
+/* Clique do botão cancelar */
+.processos-form__cancel-button:active {
+  transform: translateY(0);
+}
+
+/* Painel branco de filtros e tabela */
+.processos-panel {
+  width: 100%;
+
+  padding: 1.25rem;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Título dos painéis */
+.processos-panel__title {
+  margin: 0 0 1rem;
+
+  color: #000000;
+
+  font-size: 1rem;
+
+  font-weight: 800;
+}
+
+/* Área dos filtros */
+.processos-filtros {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr auto;
+
+  align-items: end;
+
+  gap: 1rem;
+}
+
+/* Container do botão de limpar filtros */
+.processos-filtros__button {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: flex-start;
+}
+
+/* Botão limpar filtros */
+.processos-filtros__clear-button {
+  border: 2px solid rgb(19, 33, 70);
+
+  border-radius: 8px;
+
+  padding: 0.65rem 1rem;
+
+  background: #ffffff;
+
+  color: rgb(19, 33, 70);
+
+  font-size: 0.9rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão limpar filtros */
+.processos-filtros__clear-button:hover {
+  background: rgb(19, 33, 70);
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+}
+
+/* Ajuste geral da tabela PrimeNG */
+:host ::ng-deep .p-datatable {
+  font-size: 0.9rem;
+}
+
+/* Cabeçalho da tabela */
+:host ::ng-deep .p-datatable thead th {
+  padding: 0.65rem 0.5rem;
+
+  border-bottom: 1px solid #111827;
+
+  color: #000000;
+
+  font-weight: 700;
+
+  background: #ffffff;
+}
+
+/* Linhas da tabela */
+:host ::ng-deep .p-datatable tbody td {
+  padding: 0.55rem 0.5rem;
+
+  border-bottom: 1px solid #111827;
+
+  color: #000000;
+}
+
+/* Área dos botões editar/excluir */
+.processos-table__actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+}
+
+/* Botões de ação da tabela */
+.processos-table__action-button {
+  width: 30px;
+
+  height: 30px;
+
+  border: 1px solid transparent;
+
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #111827;
+
+  cursor: pointer;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 1rem;
+
+  transition: 0.2s ease;
+}
+
+/* Hover geral dos botões de ação */
+.processos-table__action-button:hover {
+  transform: translateY(-1px);
+}
+
+/* Botão editar */
+.processos-table__action-button--edit:hover {
+  border-color: #f59e0b;
+
+  background: #fef3c7;
+
+  color: #92400e;
+}
+
+/* Botão excluir */
+.processos-table__action-button--delete:hover {
+  border-color: #dc2626;
+
+  background: #fee2e2;
+
+  color: #991b1b;
+}
+
+/* Paginação do PrimeNG */
+:host ::ng-deep .p-paginator {
+  padding: 0.5rem 0 0;
+
+  background: transparent;
+
+  border: none;
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .processos-form__grid {
+    grid-template-columns: 1fr;
   }
 
   .processos-filtros {
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr;
+  }
+
+  .processos-filtros__button {
+    justify-content: stretch;
+  }
+
+  .processos-filtros__clear-button {
+    width: 100%;
   }
 }

@@ -1,69 +1,69 @@
 // Importa o tipo Routes do Angular
 import { Routes } from '@angular/router';
 
-// Importa o componente Dashboard
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-
-// Importa o componente Processos
-import { ProcessosComponent } from './features/processos/processos.component';
-
-// Importa o componente Clientes
+// Importa o componente da página de clientes
 import { ClientesComponent } from './features/clientes/clientes.component';
 
-// Importa o componente Login
+// Importa o componente da página dashboard
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+
+// Importa o componente da página de login
 import { LoginComponent } from './features/login/login.component';
 
-// Cria e exporta a lista de rotas do sistema
-// Essas rotas controlam qual página será aberta
+// Importa o componente da página de processos
+import { ProcessosComponent } from './features/processos/processos.component';
+
+// Importa o guard que permite admin e visitante
+import { authGuard } from './core/guards/auth.guard';
+
+// Importa o guard que permite apenas admin
+import { adminGuard } from './core/guards/admin.guard';
+
+// Cria e exporta a lista de rotas
 export const routes: Routes = [
 
-  // Quando acessar a raiz do site:
-  // http://localhost:4200/
-  // será redirecionado para:
-  // http://localhost:4200/dashboard
+  // Rota inicial do sistema
+  // Agora o usuário sempre começa pela tela de login
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
 
-  // Rota da página Dashboard
-  // URL:
-  // /dashboard
-  {
-    path: 'dashboard',
-    component: DashboardComponent
-  },
-
-  // Rota da página de Processos
-  // URL:
-  // /processos
-  {
-    path: 'processos',
-    component: ProcessosComponent
-  },
-
-  // Rota da página de Clientes
-  // URL:
-  // /clientes
-  {
-    path: 'clientes',
-    component: ClientesComponent
-  },
-
-  // Rota da página de Login
-  // URL:
-  // /login
+  // Rota da tela de login
   {
     path: 'login',
     component: LoginComponent
   },
 
-  // Se digitar qualquer rota errada,
-  // volta para o Dashboard
+  // Rota do Dashboard
+  // Admin e visitante podem acessar
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard]
+  },
+
+  // Rota de Clientes
+  // Admin e visitante podem acessar
+  {
+    path: 'clientes',
+    component: ClientesComponent,
+    canActivate: [authGuard]
+  },
+
+  // Rota de Processos
+  // Apenas administrador pode acessar
+  {
+    path: 'processos',
+    component: ProcessosComponent,
+    canActivate: [adminGuard]
+  },
+
+  // Qualquer rota inválida volta para login
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: 'login'
   }
 
 ];

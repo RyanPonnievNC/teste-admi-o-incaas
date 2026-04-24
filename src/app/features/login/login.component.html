@@ -7,9 +7,15 @@
     <!-- Área visual do sistema -->
     <div class="login-card__brand">
 
-      <!-- Ícone jurídico -->
+      <!-- Imagem oficial do sistema Jurídico Pro -->
       <div class="login-card__icon">
-        <img src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png" alt="Jurídico Pro">
+
+        <img
+          src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png"
+          alt="Jurídico Pro"
+          class="login-card__logo"
+        />
+
       </div>
 
       <!-- Título do sistema -->
@@ -17,30 +23,47 @@
         Jurídico Pro
       </h1>
 
-      <!-- Texto abaixo do título -->
-      <p class="login-card__subtitle">
-        Acesse sua conta para continuar
+      <!-- Texto da tela de login -->
+      <p
+        *ngIf="!modoCadastroAdmin"
+        class="login-card__subtitle"
+      >
+        Entre como administrador ou acesse como visitante.
+      </p>
+
+      <!-- Texto da tela de cadastro -->
+      <p
+        *ngIf="modoCadastroAdmin"
+        class="login-card__subtitle"
+      >
+        Cadastre uma nova conta administrativa com código de verificação.
       </p>
 
     </div>
 
-    <!-- Formulário visual de login -->
-    <form class="login-form">
+    <!-- Formulário de login -->
+    <form
+      *ngIf="!modoCadastroAdmin"
+      class="login-form"
+      autocomplete="off"
+    >
 
       <!-- Campo de usuário -->
       <div class="login-form__group">
 
         <!-- Nome do campo -->
         <label class="login-form__label">
-          Usuário
+          Usuário administrador
         </label>
 
         <!-- Input do usuário -->
         <input
           type="text"
           class="login-form__input"
-          placeholder="Digite seu usuário"
-          name="usuario"
+          placeholder="Digite o usuário admin"
+          name="loginUsuarioAdmin"
+          autocomplete="off"
+          [(ngModel)]="usuario"
         />
 
       </div>
@@ -57,19 +80,243 @@
         <input
           type="password"
           class="login-form__input"
-          placeholder="Digite sua senha"
-          name="senha"
+          placeholder="Digite a senha"
+          name="loginSenhaAdmin"
+          autocomplete="new-password"
+          [(ngModel)]="senha"
         />
 
       </div>
 
-      <!-- Botão de entrar -->
+      <!-- Mensagem de erro -->
+      <p
+        *ngIf="mensagemErro"
+        class="login-form__error"
+      >
+        {{ mensagemErro }}
+      </p>
+
+      <!-- Mensagem de sucesso -->
+      <p
+        *ngIf="mensagemSucesso"
+        class="login-form__success"
+      >
+        {{ mensagemSucesso }}
+      </p>
+
+      <!-- Botão de entrar como administrador -->
       <button
         type="button"
         class="login-form__button"
-        (click)="entrar()"
+        (click)="entrarComoAdmin()"
       >
-        Entrar
+        Entrar como administrador
+      </button>
+
+      <!-- Separador visual -->
+      <div class="login-form__divider">
+        ou
+      </div>
+
+      <!-- Botão de entrar como visitante -->
+      <button
+        type="button"
+        class="login-form__visitor-button"
+        (click)="entrarComoVisitante()"
+      >
+        Entrar como visitante
+      </button>
+
+      <!-- Botão para abrir cadastro admin -->
+      <button
+        type="button"
+        class="login-form__create-button"
+        (click)="abrirCadastroAdmin()"
+      >
+        Criar conta admin
+      </button>
+
+    </form>
+
+    <!-- Formulário de cadastro de admin -->
+    <form
+      *ngIf="modoCadastroAdmin"
+      class="login-form"
+      autocomplete="off"
+    >
+
+      <!-- Campo nome -->
+      <div class="login-form__group">
+
+        <!-- Label nome -->
+        <label class="login-form__label">
+          Nome
+        </label>
+
+        <!-- Input nome -->
+        <input
+          type="text"
+          class="login-form__input"
+          placeholder="Digite o nome"
+          name="cadastroNomeAdmin"
+          autocomplete="off"
+          [(ngModel)]="cadastroNome"
+        />
+
+      </div>
+
+      <!-- Campo sobrenome -->
+      <div class="login-form__group">
+
+        <!-- Label sobrenome -->
+        <label class="login-form__label">
+          Sobrenome
+        </label>
+
+        <!-- Input sobrenome -->
+        <input
+          type="text"
+          class="login-form__input"
+          placeholder="Digite o sobrenome"
+          name="cadastroSobrenomeAdmin"
+          autocomplete="off"
+          [(ngModel)]="cadastroSobrenome"
+        />
+
+      </div>
+
+      <!-- Campo idade -->
+      <div class="login-form__group">
+
+        <!-- Label idade -->
+        <label class="login-form__label">
+          Idade
+        </label>
+
+        <!-- Input idade -->
+        <input
+          type="number"
+          class="login-form__input"
+          placeholder="Digite a idade"
+          name="cadastroIdadeAdmin"
+          autocomplete="off"
+          [(ngModel)]="cadastroIdade"
+        />
+
+      </div>
+
+      <!-- Campo CPF -->
+      <div class="login-form__group">
+
+        <!-- Label CPF -->
+        <label class="login-form__label">
+          CPF
+        </label>
+
+        <!-- Input CPF -->
+        <input
+          type="text"
+          class="login-form__input"
+          placeholder="Digite o CPF"
+          name="cadastroCpfAdmin"
+          autocomplete="off"
+          [(ngModel)]="cadastroCpf"
+        />
+
+      </div>
+
+      <!-- Campo usuário -->
+      <div class="login-form__group">
+
+        <!-- Label usuário -->
+        <label class="login-form__label">
+          Usuário
+        </label>
+
+        <!-- Input usuário -->
+        <input
+          type="text"
+          class="login-form__input"
+          placeholder="Crie um usuário admin"
+          name="cadastroUsuarioAdmin"
+          autocomplete="off"
+          [(ngModel)]="cadastroUsuario"
+        />
+
+      </div>
+
+      <!-- Campo senha -->
+      <div class="login-form__group">
+
+        <!-- Label senha -->
+        <label class="login-form__label">
+          Senha
+        </label>
+
+        <!-- Input senha -->
+        <input
+          type="password"
+          class="login-form__input"
+          placeholder="Crie uma senha"
+          name="cadastroSenhaAdmin"
+          autocomplete="new-password"
+          [(ngModel)]="cadastroSenha"
+        />
+
+      </div>
+
+      <!-- Campo código de verificação -->
+      <div class="login-form__group">
+
+        <!-- Label código -->
+        <label class="login-form__label">
+          Código de verificação
+        </label>
+
+        <!-- Input código -->
+        <input
+          type="password"
+          class="login-form__input"
+          placeholder="Digite o código de verificação"
+          name="cadastroCodigoVerificacaoAdmin"
+          autocomplete="new-password"
+          [(ngModel)]="cadastroCodigoVerificacao"
+        />
+
+      </div>
+
+      <!-- Mensagem de erro -->
+      <p
+        *ngIf="mensagemErro"
+        class="login-form__error"
+      >
+        {{ mensagemErro }}
+      </p>
+
+      <!-- Mensagem de sucesso -->
+      <p
+        *ngIf="mensagemSucesso"
+        class="login-form__success"
+      >
+        {{ mensagemSucesso }}
+      </p>
+
+      <!-- Botão criar conta -->
+      <button
+        type="button"
+        class="login-form__button"
+        (click)="criarContaAdmin()"
+      >
+        Criar conta admin
+      </button>
+
+      <!-- Botão voltar -->
+      <button
+        type="button"
+        class="login-form__visitor-button"
+        (click)="voltarParaLogin()"
+      >
+        Voltar para login
       </button>
 
     </form>

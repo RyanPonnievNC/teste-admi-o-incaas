@@ -1,21 +1,11 @@
-<!--
-  app.html
-
-  Este é o arquivo principal do layout do sistema.
-  Ele controla:
-  - a barra lateral esquerda
-  - os links de navegação
-  - o botão Login/Sair
-  - a área onde as páginas aparecem
-  - a animação entre páginas
-  - a caixa de mensagem de login/logout
--->
-
 <!-- Container principal da aplicação inteira -->
 <div class="app-shell">
 
   <!-- Barra lateral do sistema -->
-  <header class="app-navbar">
+  <header
+    *ngIf="!isLoginPage()"
+    class="app-navbar"
+  >
 
     <!-- Conteúdo interno da sidebar -->
     <div class="app-navbar__content">
@@ -23,9 +13,15 @@
       <!-- Área do logo/marca do sistema -->
       <div class="app-navbar__brand">
 
-        <!-- Ícone jurídico do sistema -->
+        <!-- Imagem oficial do sistema Jurídico Pro -->
         <div class="app-navbar__title">
-          <img src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png" alt="Jurídico Pro">
+
+          <img
+            src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png"
+            alt="Jurídico Pro"
+            class="app-navbar__logo"
+          />
+
         </div>
 
       </div>
@@ -43,16 +39,6 @@
           Dashboard
         </a>
 
-        <!-- Link para a página de Processos -->
-        <a
-          routerLink="/processos"
-          routerLinkActive="app-navbar__link--active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="app-navbar__link"
-        >
-          Processos
-        </a>
-
         <!-- Link para a página de Clientes -->
         <a
           routerLink="/clientes"
@@ -63,20 +49,21 @@
           Clientes
         </a>
 
+        <!-- Link para Processos aparece apenas para administrador -->
+        <a
+          *ngIf="ehAdmin()"
+          routerLink="/processos"
+          routerLinkActive="app-navbar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="app-navbar__link"
+        >
+          Processos
+        </a>
+
       </nav>
 
       <!-- Área inferior da sidebar -->
       <div class="app-navbar__footer">
-
-        <!-- Botão Área de Login aparece quando o usuário NÃO está logado -->
-        <button
-          *ngIf="!estaLogado()"
-          type="button"
-          class="app-navbar__login"
-          (click)="irParaLogin()"
-        >
-          Área de Login
-        </button>
 
         <!-- Botão Sair aparece quando o usuário está logado -->
         <button
@@ -95,26 +82,18 @@
   </header>
 
   <!-- Área principal onde as páginas aparecem -->
-  <main class="app-main">
+  <main
+    class="app-main"
+    [class.app-main--login]="isLoginPage()"
+  >
 
-    <!--
-      Container responsável pela animação entre páginas.
-
-      [@routeAnimations]:
-      ativa a animação criada no app.ts.
-
-      prepareRoute(outlet):
-      identifica a rota atual.
-
-      #outlet="outlet":
-      cria uma referência ao router-outlet.
-    -->
+    <!-- Container responsável pela animação entre páginas -->
     <div
       [@routeAnimations]="prepareRoute(outlet)"
       class="app-page-transition"
     >
 
-      <!-- Aqui o Angular carrega Dashboard, Processos, Clientes ou Login -->
+      <!-- Aqui o Angular carrega Login, Dashboard, Clientes ou Processos -->
       <router-outlet #outlet="outlet"></router-outlet>
 
     </div>

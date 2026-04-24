@@ -7,8 +7,8 @@ import { CanActivateFn, Router } from '@angular/router';
 // Importa o serviço de autenticação
 import { AuthService } from '../services/auth.service';
 
-// Guard que permite acesso apenas para quem entrou como admin ou visitante
-export const authGuard: CanActivateFn = () => {
+// Guard que permite acesso apenas para administradores
+export const adminGuard: CanActivateFn = () => {
 
   // Injeta o serviço de autenticação
   const authService = inject(AuthService);
@@ -16,13 +16,13 @@ export const authGuard: CanActivateFn = () => {
   // Injeta o Router para redirecionar o usuário
   const router = inject(Router);
 
-  // Se o usuário estiver logado, libera a rota
-  if (authService.estaLogado()) {
+  // Se for administrador, libera a rota
+  if (authService.ehAdmin()) {
     return true;
   }
 
-  // Se não estiver logado, manda para a tela de login
-  router.navigate(['/login']);
+  // Se não for administrador, manda para o Dashboard
+  router.navigate(['/dashboard']);
 
   // Bloqueia a rota
   return false;

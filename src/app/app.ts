@@ -1,10 +1,10 @@
-// Importa Component para criar o componente principal do Angular
+// Importa Component para criar o componente principal
 import { Component } from '@angular/core';
 
-// Importa NgIf para permitir usar *ngIf no app.html
+// Importa NgIf para usar *ngIf no HTML
 import { NgIf } from '@angular/common';
 
-// Importa recursos de navegação do Angular
+// Importa recursos de rota do Angular
 import {
   NavigationEnd,
   Router,
@@ -13,7 +13,7 @@ import {
   RouterOutlet
 } from '@angular/router';
 
-// Importa o operador filter para filtrar eventos do Router
+// Importa filter para filtrar eventos de navegação
 import { filter } from 'rxjs';
 
 // Importa recursos de animação do Angular
@@ -26,15 +26,18 @@ import {
   group
 } from '@angular/animations';
 
+// Importa o serviço de autenticação
+import { AuthService } from './core/services/auth.service';
+
 // Define o componente principal da aplicação
 @Component({
-  // Nome da tag principal usada no index.html
+  // Nome da tag usada no index.html
   selector: 'app-root',
 
   // Define que este componente é standalone
   standalone: true,
 
-  // Importa recursos usados dentro do app.html
+  // Importa recursos usados no app.html
   imports: [
     NgIf,
     RouterOutlet,
@@ -42,27 +45,20 @@ import {
     RouterLinkActive
   ],
 
-  // Arquivo HTML principal do componente
+  // Arquivo HTML principal
   templateUrl: './app.html',
 
-  // Arquivo SCSS principal do componente
+  // Arquivo SCSS principal
   styleUrl: './app.scss',
 
-  // Lista de animações usadas no componente
+  // Animações da aplicação
   animations: [
-
-    // Cria uma animação chamada routeAnimations
     trigger('routeAnimations', [
-
-      // Executa a animação em qualquer troca de rota
       transition('* <=> *', [
-
-        // Define que o container da página terá posição relativa
         style({
           position: 'relative'
         }),
 
-        // Seleciona a página que entra e a página que sai
         query(
           ':enter, :leave',
           [
@@ -76,10 +72,7 @@ import {
           }
         ),
 
-        // Executa a animação da página antiga e da nova ao mesmo tempo
         group([
-
-          // Anima a página antiga saindo
           query(
             ':leave',
             [
@@ -96,7 +89,6 @@ import {
             }
           ),
 
-          // Anima a página nova entrando
           query(
             ':enter',
             [
@@ -117,64 +109,62 @@ import {
               optional: true
             }
           )
-
         ])
-
       ])
-
     ])
-
   ]
 })
 export class AppComponent {
 
-  // Controla se a caixa de mensagem aparece ou não
+  // Controla se a mensagem aparece
   toastVisivel = false;
 
-  // Guarda o título da caixa de mensagem
+  // Guarda o título da mensagem
   toastTitulo = '';
 
-  // Guarda a mensagem menor da caixa
+  // Guarda o texto da mensagem
   toastMensagem = '';
 
-  // Controla o tipo visual da caixa
+  // Guarda o tipo da mensagem
   toastTipo: 'success' | 'info' = 'success';
 
-  // Guarda o temporizador usado para esconder a caixa automaticamente
+  // Guarda o temporizador da mensagem
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
-  // Injeta o Router para navegar entre páginas e observar mudanças de rota
-  constructor(private router: Router) {
+  // Injeta Router e AuthService
+  constructor(
+    private router: Router,
+    public authService: AuthService
+  ) {
 
-    // Observa as mudanças de rota da aplicação
+    // Observa mudanças de rota
     this.router.events
       .pipe(
-        // Filtra apenas o evento de finalização da navegação
         filter((event): event is NavigationEnd => event instanceof NavigationEnd)
       )
       .subscribe(() => {
 
-        // Busca uma mensagem salva temporariamente no navegador
+        // Busca mensagem temporária salva
         const toastSalvo = localStorage.getItem('appToast');
 
-        // Se existir uma mensagem salva, ela será mostrada
+        // Se existir mensagem salva, mostra na tela
         if (toastSalvo) {
 
-          // Converte o texto salvo em objeto JavaScript
+          // Converte texto em objeto
           const toast = JSON.parse(toastSalvo) as {
             titulo: string;
             mensagem: string;
             tipo: 'success' | 'info';
           };
 
-          // Mostra a caixa de mensagem na tela
+          // Mostra a mensagem
           this.mostrarToast(
             toast.titulo,
             toast.mensagem,
             toast.tipo
           );
 
-          // Remove a mensagem salva para ela não repetir toda hora
+          // Remove a mensagem para não repetir
           localStorage.removeItem('appToast');
 
         }
@@ -183,64 +173,79 @@ export class AppComponent {
 
   }
 
-  // Prepara a rota atual para a animação funcionar
+  // Prepara a rota atual para animação
   prepareRoute(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.['animation'];
   }
 
-  // Verifica se o usuário está logado
-  estaLogado(): boolean {
-    return localStorage.getItem('logado') === 'true';
+  // Verifica se a rota atual é a tela de login
+  isLoginPage(): boolean {
+    return this.router.url === '/login';
   }
 
-  // Leva o usuário para a página de login
+  // Verifica se o usuário está logado
+  estaLogado(): boolean {
+    return this.authService.estaLogado();
+  }
+
+  // Verifica se o usuário é administrador
+  ehAdmin(): boolean {
+    return this.authService.ehAdmin();
+  }
+
+  // Verifica se o usuário é visitante
+  ehVisitante(): boolean {
+    return this.authService.ehVisitante();
+  }
+
+  // Vai para a tela de login
   irParaLogin() {
     this.router.navigate(['/login']);
   }
 
-  // Função executada ao clicar no botão Sair
+  // Sai da conta
   sair() {
 
-    // Remove o login salvo no navegador
-    localStorage.removeItem('logado');
+    // Remove os dados de login
+    this.authService.logout();
 
-    // Mostra uma mensagem de saída
+    // Mostra mensagem de saída
     this.mostrarToast(
-      'Sessão encerrada com segurança',
-      'Até logo! Você saiu da sua conta.',
+      'Sessão encerrada',
+      'Você saiu da sua conta com segurança.',
       'info'
     );
 
-    // Redireciona o usuário para o Dashboard
-    this.router.navigate(['/dashboard']);
+    // Volta para login
+    this.router.navigate(['/login']);
 
   }
 
-  // Mostra a caixa de mensagem na tela
+  // Mostra uma caixa de mensagem
   mostrarToast(
     titulo: string,
     mensagem: string,
     tipo: 'success' | 'info'
   ) {
 
-    // Se já existir um temporizador, ele será limpo
+    // Limpa temporizador antigo
     if (this.toastTimer) {
       clearTimeout(this.toastTimer);
     }
 
-    // Define o título da caixa
+    // Define título
     this.toastTitulo = titulo;
 
-    // Define a mensagem da caixa
+    // Define mensagem
     this.toastMensagem = mensagem;
 
-    // Define o tipo da caixa
+    // Define tipo
     this.toastTipo = tipo;
 
-    // Faz a caixa aparecer
+    // Mostra caixa
     this.toastVisivel = true;
 
-    // Esconde a caixa automaticamente depois de 3 segundos
+    // Esconde automaticamente depois de 3 segundos
     this.toastTimer = setTimeout(() => {
       this.toastVisivel = false;
     }, 3000);
@@ -250,10 +255,10 @@ export class AppComponent {
   // Fecha a caixa manualmente
   fecharToast() {
 
-    // Esconde a caixa
+    // Esconde caixa
     this.toastVisivel = false;
 
-    // Se existir temporizador, limpa ele
+    // Limpa temporizador
     if (this.toastTimer) {
       clearTimeout(this.toastTimer);
     }
