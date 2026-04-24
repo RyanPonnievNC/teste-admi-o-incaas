@@ -26,6 +26,43 @@
 
       </div>
 
+      <!-- Cartão com dados do usuário logado -->
+      <section
+        *ngIf="estaLogado()"
+        class="app-user-card"
+      >
+
+        <!-- Nome completo do usuário -->
+        <strong class="app-user-card__name">
+          {{ authService.nomeCompletoUsuario() }}
+        </strong>
+
+        <!-- Perfil do usuário -->
+        <span
+          class="app-user-card__badge"
+          [class.app-user-card__badge--admin]="ehAdmin()"
+          [class.app-user-card__badge--visitor]="ehVisitante()"
+        >
+          {{ authService.perfilUsuario() }}
+        </span>
+
+        <!-- Dados extras da conta -->
+        <div class="app-user-card__details">
+
+          <!-- Idade do usuário -->
+          <span>
+            Idade: {{ authService.idadeUsuario() }}
+          </span>
+
+          <!-- CPF mascarado do usuário -->
+          <span>
+            CPF: {{ authService.cpfMascarado() }}
+          </span>
+
+        </div>
+
+      </section>
+
       <!-- Área dos links principais do menu -->
       <nav class="app-navbar__links">
 

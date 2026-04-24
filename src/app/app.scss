@@ -3,6 +3,7 @@
 
   Este arquivo controla o visual principal da aplicação:
   - sidebar lateral
+  - cartão do usuário
   - links do menu
   - link ativo
   - botão Sair
@@ -33,7 +34,7 @@
 
   background: rgb(19, 33, 70);
 
-  padding: 1.5rem;
+  padding: 1rem;
 
   display: flex;
 
@@ -43,7 +44,7 @@
 
   justify-content: flex-start;
 
-  gap: 1rem;
+  gap: 0.85rem;
 
   position: fixed;
 
@@ -52,6 +53,27 @@
   left: 0;
 
   z-index: 20;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+}
+
+/* Personalização da barra de rolagem da sidebar */
+.app-navbar__content::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Fundo da barra de rolagem */
+.app-navbar__content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Parte móvel da barra de rolagem */
+.app-navbar__content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.35);
+
+  border-radius: 999px;
 }
 
 /* Área do logo */
@@ -62,7 +84,9 @@
 
   justify-content: center;
 
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
+
+  flex-shrink: 0;
 }
 
 /* Container visual do logo do sistema */
@@ -95,6 +119,86 @@
   display: block;
 }
 
+/* Cartão do usuário logado */
+.app-user-card {
+  width: 100%;
+
+  padding: 0.85rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: #ffffff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  flex-shrink: 0;
+}
+
+/* Nome do usuário */
+.app-user-card__name {
+  color: #ffffff;
+
+  font-size: 0.95rem;
+
+  font-weight: 800;
+
+  text-align: center;
+
+  line-height: 1.3;
+}
+
+/* Selo do perfil */
+.app-user-card__badge {
+  width: fit-content;
+
+  margin: 0 auto;
+
+  padding: 0.25rem 0.6rem;
+
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+
+  font-weight: 800;
+}
+
+/* Selo de administrador */
+.app-user-card__badge--admin {
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+/* Selo de visitante */
+.app-user-card__badge--visitor {
+  background: #dbeafe;
+
+  color: #1e40af;
+}
+
+/* Área de detalhes do usuário */
+.app-user-card__details {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: 0.78rem;
+
+  text-align: center;
+}
+
 /* Área que contém os links do menu */
 .app-navbar__links {
   width: 100%;
@@ -105,18 +209,20 @@
 
   align-items: center;
 
-  gap: 1rem;
+  gap: 0.8rem;
 
   position: relative;
 
-  top: 10px;
+  top: 0;
+
+  flex-shrink: 0;
 }
 
 /* Estilo padrão de cada link do menu */
 .app-navbar__link {
   width: 170px;
 
-  min-height: 52px;
+  min-height: 50px;
 
   display: flex;
 
@@ -130,7 +236,7 @@
 
   border-radius: 6px;
 
-  padding: 12px 20px;
+  padding: 10px 18px;
 
   text-align: center;
 
@@ -182,18 +288,22 @@
 .app-navbar__footer {
   width: 100%;
 
-  margin-top: auto;
+  margin-top: 1rem;
+
+  padding-bottom: 1rem;
 
   display: flex;
 
   justify-content: center;
+
+  flex-shrink: 0;
 }
 
 /* Botão Sair */
 .app-navbar__logout {
   width: 170px;
 
-  min-height: 52px;
+  min-height: 50px;
 
   display: flex;
 
@@ -205,7 +315,7 @@
 
   border-radius: 6px;
 
-  padding: 12px 20px;
+  padding: 10px 18px;
 
   background: transparent;
 

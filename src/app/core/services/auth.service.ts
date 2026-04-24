@@ -31,7 +31,7 @@ export interface ContaAdmin {
 })
 export class AuthService {
 
-  // Código obrigatório para permitir criar uma nova conta admin
+  // Código obrigatório para criar uma nova conta admin
   private readonly codigoVerificacaoAdmin = 'tpmc1208';
 
   // Conta administradora padrão do sistema
@@ -160,7 +160,7 @@ export class AuthService {
       };
     }
 
-    // Verifica se a senha tem tamanho mínimo
+    // Verifica se a senha tem pelo menos 6 caracteres
     if (!senha || senha.length < 6) {
       return {
         sucesso: false,
@@ -221,39 +221,37 @@ export class AuthService {
     };
   }
 
-  // Lista todos os administradores disponíveis
-  listarAdministradores(): ContaAdmin[] {
+listarAdministradores(): ContaAdmin[] {
 
-    // Busca contas salvas no navegador
-    const contasSalvas = localStorage.getItem('contasAdmin');
+  localStorage.removeItem('contasAdmin');
+  localStorage.removeItem('usuarioAtual');
+  localStorage.removeItem('logado');
+  localStorage.removeItem('appToast');
 
-    // Se não existir nenhuma conta salva, cria lista com o admin padrão
-    if (!contasSalvas) {
-      const listaInicial = [this.adminPadrao];
+  const contasSalvas = localStorage.getItem('contasAdmin');
 
-      localStorage.setItem('contasAdmin', JSON.stringify(listaInicial));
+  if (!contasSalvas) {
+    const listaInicial = [this.adminPadrao];
 
-      return listaInicial;
-    }
+    localStorage.setItem('contasAdmin', JSON.stringify(listaInicial));
 
-    // Converte o texto salvo em lista de contas
-    const contas = JSON.parse(contasSalvas) as ContaAdmin[];
-
-    // Verifica se o admin padrão já existe
-    const adminPadraoExiste = contas.some(
-      conta => conta.usuario === this.adminPadrao.usuario
-    );
-
-    // Se o admin padrão não existir, adiciona ele novamente
-    if (!adminPadraoExiste) {
-      contas.unshift(this.adminPadrao);
-
-      localStorage.setItem('contasAdmin', JSON.stringify(contas));
-    }
-
-    // Retorna a lista de contas
-    return contas;
+    return listaInicial;
   }
+
+  const contas = JSON.parse(contasSalvas) as ContaAdmin[];
+
+  const adminPadraoExiste = contas.some(
+    conta => conta.usuario === this.adminPadrao.usuario
+  );
+
+  if (!adminPadraoExiste) {
+    contas.unshift(this.adminPadrao);
+
+    localStorage.setItem('contasAdmin', JSON.stringify(contas));
+  }
+
+  return contas;
+}
 
   // Faz logout do usuário
   logout() {
@@ -303,6 +301,81 @@ export class AuthService {
   // Retorna o nome do usuário atual
   nomeUsuario(): string {
     return this.usuarioAtual()?.nome ?? 'Visitante';
+  }
+
+  // Retorna o nome completo do usuário atual
+  nomeCompletoUsuario(): string {
+
+    // Busca o usuário atual
+    const usuario = this.usuarioAtual();
+
+    // Se não existir usuário, retorna visitante
+    if (!usuario) {
+      return 'Visitante';
+    }
+
+    // Se não tiver sobrenome, retorna apenas o nome
+    if (!usuario.sobrenome) {
+      return usuario.nome;
+    }
+
+    // Retorna nome + sobrenome
+    return `${usuario.nome} ${usuario.sobrenome}`;
+  }
+
+  // Retorna a idade formatada
+  idadeUsuario(): string {
+
+    // Busca o usuário atual
+    const usuario = this.usuarioAtual();
+
+    // Se não existir idade, retorna traço
+    if (!usuario || !usuario.idade) {
+      return '—';
+    }
+
+    // Retorna idade com texto
+    return `${usuario.idade} anos`;
+  }
+
+  // Retorna o CPF mascarado para não mostrar tudo na tela
+  cpfMascarado(): string {
+
+    // Busca o usuário atual
+    const usuario = this.usuarioAtual();
+
+    // Se não existir CPF, retorna traço
+    if (!usuario || !usuario.cpf) {
+      return '—';
+    }
+
+    // Remove tudo que não for número
+    const cpfNumerico = usuario.cpf.replace(/\D/g, '');
+
+    // Se o CPF não tiver 11 números, retorna o valor original parcialmente protegido
+    if (cpfNumerico.length !== 11) {
+      return 'CPF cadastrado';
+    }
+
+    // Retorna o CPF mascarado
+    return `${cpfNumerico.slice(0, 3)}.***.***-${cpfNumerico.slice(9, 11)}`;
+  }
+
+  // Retorna o perfil do usuário de forma bonita
+  perfilUsuario(): string {
+
+    // Se for admin, retorna Administrador
+    if (this.ehAdmin()) {
+      return 'Administrador';
+    }
+
+    // Se for visitante, retorna Visitante
+    if (this.ehVisitante()) {
+      return 'Visitante';
+    }
+
+    // Caso não tenha perfil
+    return 'Sem perfil';
   }
 
 }
