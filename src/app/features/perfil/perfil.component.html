@@ -1,0 +1,190 @@
+<!-- Container principal da página de perfil -->
+<section class="perfil-page">
+
+  <!-- Cabeçalho da página -->
+  <header class="perfil-header">
+
+    <!-- Grupo de título -->
+    <div>
+
+      <!-- Título principal -->
+      <h1 class="perfil-header__title">
+        Perfil do usuário
+      </h1>
+
+      <!-- Subtítulo -->
+      <p class="perfil-header__subtitle">
+        Visualize as informações da conta atualmente conectada ao Jurídico Pro.
+      </p>
+
+    </div>
+
+    <!-- Botão para sair da conta -->
+    <button
+      type="button"
+      class="perfil-header__button"
+      (click)="sair()"
+    >
+      Sair
+    </button>
+
+  </header>
+
+  <!-- Card principal do perfil -->
+  <div class="perfil-card">
+
+    <!-- Área superior do card -->
+    <div class="perfil-card__top">
+
+      <!-- Avatar com inicial do nome -->
+      <div class="perfil-card__avatar">
+        {{ authService.nomeUsuario().charAt(0).toUpperCase() }}
+      </div>
+
+      <!-- Informações principais -->
+      <div class="perfil-card__identity">
+
+        <!-- Nome completo -->
+        <h2 class="perfil-card__name">
+          {{ authService.nomeCompletoUsuario() }}
+        </h2>
+
+        <!-- Perfil -->
+        <span
+          class="perfil-card__badge"
+          [class.perfil-card__badge--admin]="authService.ehAdmin()"
+          [class.perfil-card__badge--visitor]="authService.ehVisitante()"
+        >
+          {{ authService.perfilUsuario() }}
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- Grade de informações -->
+    <div class="perfil-info-grid">
+
+      <!-- Informação: usuário -->
+      <article class="perfil-info">
+
+        <!-- Título da informação -->
+        <span class="perfil-info__label">
+          Usuário
+        </span>
+
+        <!-- Valor da informação -->
+        <strong class="perfil-info__value">
+          {{ authService.usuarioAtual()?.usuario || 'visitante' }}
+        </strong>
+
+      </article>
+
+      <!-- Informação: nome completo -->
+      <article class="perfil-info">
+
+        <!-- Título da informação -->
+        <span class="perfil-info__label">
+          Nome completo
+        </span>
+
+        <!-- Valor da informação -->
+        <strong class="perfil-info__value">
+          {{ authService.nomeCompletoUsuario() }}
+        </strong>
+
+      </article>
+
+      <!-- Informação: idade -->
+      <article class="perfil-info">
+
+        <!-- Título da informação -->
+        <span class="perfil-info__label">
+          Idade
+        </span>
+
+        <!-- Valor da informação -->
+        <strong class="perfil-info__value">
+          {{ authService.idadeUsuario() }}
+        </strong>
+
+      </article>
+
+      <!-- Informação: CPF -->
+      <article class="perfil-info">
+
+        <!-- Título da informação -->
+        <span class="perfil-info__label">
+          CPF
+        </span>
+
+        <!-- Valor da informação -->
+        <strong class="perfil-info__value">
+          {{ authService.cpfMascarado() }}
+        </strong>
+
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- Card de permissões -->
+  <div class="perfil-permissoes">
+
+    <!-- Título das permissões -->
+    <h2 class="perfil-permissoes__title">
+      Permissões da conta
+    </h2>
+
+    <!-- Lista para administrador -->
+    <ul
+      *ngIf="authService.ehAdmin()"
+      class="perfil-permissoes__list"
+    >
+
+      <li>
+        Pode acessar o painel de estatísticas.
+      </li>
+
+      <li>
+        Pode visualizar clientes cadastrados.
+      </li>
+
+      <li>
+        Pode cadastrar, editar e excluir processos.
+      </li>
+
+      <li>
+        Pode acessar a área de processos.
+      </li>
+
+    </ul>
+
+    <!-- Lista para visitante -->
+    <ul
+      *ngIf="authService.ehVisitante()"
+      class="perfil-permissoes__list"
+    >
+
+      <li>
+        Pode acessar o painel de estatísticas.
+      </li>
+
+      <li>
+        Pode visualizar clientes cadastrados.
+      </li>
+
+      <li>
+        Não pode cadastrar, editar ou excluir processos.
+      </li>
+
+      <li>
+        Não pode acessar a área administrativa de processos.
+      </li>
+
+    </ul>
+
+  </div>
+
+</section>

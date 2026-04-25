@@ -73,7 +73,7 @@
           [routerLinkActiveOptions]="{ exact: true }"
           class="app-navbar__link"
         >
-          Dashboard
+          Painel
         </a>
 
         <!-- Link para a página de Clientes -->
@@ -102,15 +102,16 @@
       <!-- Área inferior da sidebar -->
       <div class="app-navbar__footer">
 
-        <!-- Botão Sair aparece quando o usuário está logado -->
-        <button
+        <!-- Botão Perfil fica no lugar onde antes ficava o botão Sair -->
+        <a
           *ngIf="estaLogado()"
-          type="button"
-          class="app-navbar__logout"
-          (click)="sair()"
+          routerLink="/perfil"
+          routerLinkActive="app-navbar__perfil--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="app-navbar__perfil"
         >
-          Sair
-        </button>
+          Perfil
+        </a>
 
       </div>
 
@@ -130,7 +131,7 @@
       class="app-page-transition"
     >
 
-      <!-- Aqui o Angular carrega Login, Dashboard, Clientes ou Processos -->
+      <!-- Aqui o Angular carrega Login, Dashboard, Clientes, Perfil ou Processos -->
       <router-outlet #outlet="outlet"></router-outlet>
 
     </div>

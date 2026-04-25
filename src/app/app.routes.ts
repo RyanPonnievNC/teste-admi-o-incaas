@@ -13,6 +13,9 @@ import { LoginComponent } from './features/login/login.component';
 // Importa o componente da página de processos
 import { ProcessosComponent } from './features/processos/processos.component';
 
+// Importa o componente da página de perfil
+import { PerfilComponent } from './features/perfil/perfil.component';
+
 // Importa o guard que permite admin e visitante
 import { authGuard } from './core/guards/auth.guard';
 
@@ -23,7 +26,6 @@ import { adminGuard } from './core/guards/admin.guard';
 export const routes: Routes = [
 
   // Rota inicial do sistema
-  // Agora o usuário sempre começa pela tela de login
   {
     path: '',
     redirectTo: 'login',
@@ -37,7 +39,6 @@ export const routes: Routes = [
   },
 
   // Rota do Dashboard
-  // Admin e visitante podem acessar
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -45,15 +46,20 @@ export const routes: Routes = [
   },
 
   // Rota de Clientes
-  // Admin e visitante podem acessar
   {
     path: 'clientes',
     component: ClientesComponent,
     canActivate: [authGuard]
   },
 
+  // Rota de Perfil
+  {
+    path: 'perfil',
+    component: PerfilComponent,
+    canActivate: [authGuard]
+  },
+
   // Rota de Processos
-  // Apenas administrador pode acessar
   {
     path: 'processos',
     component: ProcessosComponent,

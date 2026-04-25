@@ -1,0 +1,293 @@
+/*
+  perfil.component.scss
+
+  Este arquivo controla o visual da página de perfil:
+  - cabeçalho
+  - card do usuário
+  - dados da conta
+  - permissões
+*/
+
+/* Container principal */
+.perfil-page {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1.5rem;
+}
+
+/* Cabeçalho da página */
+.perfil-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1.25rem;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Título do cabeçalho */
+.perfil-header__title {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 1.5rem;
+
+  font-weight: 800;
+}
+
+/* Subtítulo do cabeçalho */
+.perfil-header__subtitle {
+  margin: 0.35rem 0 0;
+
+  color: #6b7280;
+
+  font-size: 0.95rem;
+}
+
+/* Botão do cabeçalho */
+.perfil-header__button {
+  border: 2px solid rgb(19, 33, 70);
+
+  border-radius: 10px;
+
+  padding: 0.8rem 1.1rem;
+
+  background: #ffffff;
+
+  color: rgb(19, 33, 70);
+
+  font-size: 0.95rem;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+/* Hover do botão do cabeçalho */
+.perfil-header__button:hover {
+  background: red;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  border: 2px solid rgb(225, 0, 0);
+}
+
+/* Card principal */
+.perfil-card {
+  padding: 1.5rem;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Parte superior do card */
+.perfil-card__top {
+  display: flex;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  margin-bottom: 1.5rem;
+}
+
+/* Avatar */
+.perfil-card__avatar {
+  width: 76px;
+
+  height: 76px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 20px;
+
+  background: rgb(19, 33, 70);
+
+  color: #ffffff;
+
+  font-size: 2rem;
+
+  font-weight: 900;
+}
+
+/* Área do nome e perfil */
+.perfil-card__identity {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+}
+
+/* Nome do usuário */
+.perfil-card__name {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 1.45rem;
+
+  font-weight: 900;
+}
+
+/* Badge de perfil */
+.perfil-card__badge {
+  width: fit-content;
+
+  padding: 0.35rem 0.75rem;
+
+  border-radius: 999px;
+
+  font-size: 0.85rem;
+
+  font-weight: 900;
+}
+
+/* Badge admin */
+.perfil-card__badge--admin {
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+/* Badge visitante */
+.perfil-card__badge--visitor {
+  background: #dbeafe;
+
+  color: #1e40af;
+}
+
+/* Grade de informações */
+.perfil-info-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+/* Card de informação */
+.perfil-info {
+  padding: 1rem;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  background: #f9fafb;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.35rem;
+}
+
+/* Label da informação */
+.perfil-info__label {
+  color: #6b7280;
+
+  font-size: 0.85rem;
+
+  font-weight: 700;
+}
+
+/* Valor da informação */
+.perfil-info__value {
+  color: #111827;
+
+  font-size: 1rem;
+
+  font-weight: 900;
+}
+
+/* Card de permissões */
+.perfil-permissoes {
+  padding: 1.5rem;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Título das permissões */
+.perfil-permissoes__title {
+  margin: 0 0 1rem;
+
+  color: #111827;
+
+  font-size: 1.2rem;
+
+  font-weight: 900;
+}
+
+/* Lista de permissões */
+.perfil-permissoes__list {
+  margin: 0;
+
+  padding-left: 1.25rem;
+
+  color: #374151;
+
+  line-height: 1.8;
+
+  font-size: 0.95rem;
+
+  font-weight: 600;
+}
+
+/* Responsividade */
+@media (max-width: 760px) {
+  .perfil-header {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .perfil-header__button {
+    width: 100%;
+  }
+
+  .perfil-card__top {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .perfil-info-grid {
+    grid-template-columns: 1fr;
+  }
+}

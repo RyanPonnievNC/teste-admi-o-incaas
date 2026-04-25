@@ -506,3 +506,88 @@
     bottom: 1rem;
   }
 }
+
+  /* Área que contém os links do menu */
+.app-navbar__perfil {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 0.8rem;
+
+  position: relative;
+
+  top: 0;
+
+  flex-shrink: 0;
+}
+
+/* Estilo padrão de cada link do menu */
+.app-navbar__perfil {
+  width: 170px;
+
+  min-height: 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #ffffff;
+
+  border: 1px solid #ffffff;
+
+  border-radius: 6px;
+
+  padding: 10px 18px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  font-size: 1.05rem;
+
+  font-weight: 500;
+
+  transition: 0.2s ease;
+}
+
+/* Efeito quando o mouse passa por cima do link */
+.app-navbar__perfil:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  text-decoration: underline;
+
+  transform: translateY(-2px);
+}
+
+/* Link ativo com cores invertidas */
+.app-navbar__perfil--active {
+  background: rgb(232, 232, 232);
+
+  color: rgb(19, 33, 70);
+
+  border-color: #ffffff;
+
+  font-weight: 800;
+
+  text-decoration: none;
+
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+}
+
+/* Hover do link ativo */
+.app-navbar__perfil--active:hover {
+  background: #ffffff;
+
+  color: rgb(19, 33, 70);
+
+  text-decoration: none;
+
+  transform: translateY(-2px);
+}
