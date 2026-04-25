@@ -1,134 +1,174 @@
-// Importa Component para criar o componente Login
+// Importa Component e OnInit para criar o componente e executar ações quando ele iniciar.
 import { Component, OnInit } from '@angular/core';
 
-// Importa FormsModule para permitir usar [(ngModel)] no HTML
+// Importa FormsModule para usar [(ngModel)] nos campos do formulário.
 import { FormsModule } from '@angular/forms';
 
-// Importa NgIf para permitir usar *ngIf no HTML
+// Importa NgIf para usar *ngIf no HTML.
 import { NgIf } from '@angular/common';
 
-// Importa Router para navegar entre páginas
+// Importa Router para navegar entre páginas.
 import { Router } from '@angular/router';
 
-// Importa o serviço de autenticação
+// Importa o serviço de autenticação do projeto.
 import { AuthService } from '../../core/services/auth.service';
 
-// Define o componente Login
+// Define as configurações principais do componente de login.
 @Component({
-  // Nome da tag do componente
+  // Nome da tag HTML que representa este componente.
   selector: 'app-login',
 
-  // Define que o componente é standalone
+  // Define que este componente é standalone.
   standalone: true,
 
-  // Importa recursos usados no HTML
-  imports: [
-    FormsModule,
-    NgIf
-  ],
+  // Importa os recursos usados no HTML deste componente.
+  imports: [FormsModule, NgIf],
 
-  // Arquivo HTML do login
+  // Define o arquivo HTML usado por este componente.
   templateUrl: './login.component.html',
 
-  // Arquivo SCSS do login
+  // Define o arquivo SCSS usado por este componente.
   styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit {
 
-  // Controla se está mostrando login ou cadastro de admin
+// Classe principal da tela de login.
+export class LoginComponent implements OnInit {
+  // Controla se a tela está no modo de cadastro de administrador.
   modoCadastroAdmin = false;
 
-  // Guarda o usuário digitado no login
+  // Guarda o usuário digitado no login.
   usuario = '';
 
-  // Guarda a senha digitada no login
+  // Guarda a senha digitada no login.
   senha = '';
 
-  // Guarda mensagem de erro do login
+  // Guarda a mensagem de erro exibida na tela.
   mensagemErro = '';
 
-  // Guarda mensagem de sucesso
+  // Guarda a mensagem de sucesso exibida na tela.
   mensagemSucesso = '';
 
-  // Guarda o nome digitado no cadastro
+  // Guarda o nome digitado no cadastro de administrador.
   cadastroNome = '';
 
-  // Guarda o sobrenome digitado no cadastro
+  // Guarda o sobrenome digitado no cadastro de administrador.
   cadastroSobrenome = '';
 
-  // Guarda a idade digitada no cadastro
+  // Guarda a idade digitada no cadastro de administrador.
   cadastroIdade: number | null = null;
 
-  // Guarda o CPF digitado no cadastro
+  // Guarda o CPF digitado no cadastro de administrador.
   cadastroCpf = '';
 
-  // Guarda o usuário digitado no cadastro
+  // Guarda o usuário digitado no cadastro de administrador.
   cadastroUsuario = '';
 
-  // Guarda a senha digitada no cadastro
+  // Guarda a senha digitada no cadastro de administrador.
   cadastroSenha = '';
 
-  // Guarda o código de verificação digitado no cadastro
+  // Guarda o código de verificação digitado no cadastro de administrador.
   cadastroCodigoVerificacao = '';
 
-  // Injeta Router e AuthService
+  // Controla se a senha do login está visível ou escondida.
+  senhaLoginVisivel = false;
+
+  // Controla se a senha do cadastro está visível ou escondida.
+  senhaCadastroVisivel = false;
+
+  // Controla se o código de verificação está visível ou escondido.
+  codigoVerificacaoVisivel = false;
+
+  // Caminho da imagem de olho aberto dentro da pasta public.
+  caminhoOlhoAberto = '/eye-open.png';
+
+  // Caminho da imagem de olho fechado dentro da pasta public.
+  caminhoOlhoFechado = '/eye-closed.png';
+
+  // Injeta o Router para navegação e o AuthService para autenticação.
   constructor(
     private router: Router,
     private authService: AuthService
   ) {}
 
-  // Executa sempre que a tela de login for aberta
-  ngOnInit() {
-
-    // Limpa todos os campos quando entrar na página de login
+  // Executa automaticamente quando a tela de login é aberta.
+  ngOnInit(): void {
+    // Limpa os campos da tela ao iniciar.
     this.limparTelaLogin();
-
   }
 
-  // Limpa toda a tela de login e cadastro
-  limparTelaLogin() {
+  // Alterna entre mostrar e esconder a senha do login.
+  alternarVisibilidadeSenhaLogin(): void {
+    // Inverte o valor atual da variável.
+    this.senhaLoginVisivel = !this.senhaLoginVisivel;
+  }
 
-    // Volta para o modo login normal
+  // Alterna entre mostrar e esconder a senha do cadastro.
+  alternarVisibilidadeSenhaCadastro(): void {
+    // Inverte o valor atual da variável.
+    this.senhaCadastroVisivel = !this.senhaCadastroVisivel;
+  }
+
+  // Alterna entre mostrar e esconder o código de verificação.
+  alternarVisibilidadeCodigoVerificacao(): void {
+    // Inverte o valor atual da variável.
+    this.codigoVerificacaoVisivel = !this.codigoVerificacaoVisivel;
+  }
+
+  // Limpa toda a tela de login e cadastro.
+  limparTelaLogin(): void {
+    // Volta para a tela de login normal.
     this.modoCadastroAdmin = false;
 
-    // Limpa usuário do login
+    // Limpa o usuário do login.
     this.usuario = '';
 
-    // Limpa senha do login
+    // Limpa a senha do login.
     this.senha = '';
 
-    // Limpa mensagem de erro
+    // Esconde novamente a senha do login.
+    this.senhaLoginVisivel = false;
+
+    // Esconde novamente a senha do cadastro.
+    this.senhaCadastroVisivel = false;
+
+    // Esconde novamente o código de verificação.
+    this.codigoVerificacaoVisivel = false;
+
+    // Limpa a mensagem de erro.
     this.mensagemErro = '';
 
-    // Limpa mensagem de sucesso
+    // Limpa a mensagem de sucesso.
     this.mensagemSucesso = '';
 
-    // Limpa campos do cadastro admin
+    // Limpa os campos do cadastro.
     this.limparCadastroAdmin();
-
   }
 
-  // Função chamada ao clicar no botão Entrar como administrador
-  entrarComoAdmin() {
-
-    // Limpa mensagens anteriores
+  // Função chamada ao clicar no botão "Entrar como administrador".
+  entrarComoAdmin(): void {
+    // Limpa mensagens antigas.
     this.mensagemErro = '';
     this.mensagemSucesso = '';
 
-    // Tenta fazer login com usuário e senha
+    // Tenta fazer login com o usuário e a senha digitados.
     const loginValido = this.authService.login(this.usuario, this.senha);
 
-    // Se o login estiver errado, mostra erro
+    // Se o login não for válido, mostra erro e para a função.
     if (!loginValido) {
       this.mensagemErro = 'Usuário ou senha de administrador inválidos.';
       return;
     }
 
-    // Limpa os campos depois do login dar certo
+    // Limpa o usuário depois do login.
     this.usuario = '';
+
+    // Limpa a senha depois do login.
     this.senha = '';
 
-    // Salva uma mensagem temporária para aparecer depois do login
+    // Esconde a senha novamente.
+    this.senhaLoginVisivel = false;
+
+    // Salva uma mensagem temporária para aparecer depois da navegação.
     localStorage.setItem(
       'appToast',
       JSON.stringify({
@@ -138,21 +178,19 @@ export class LoginComponent implements OnInit {
       })
     );
 
-    // Redireciona para o Dashboard
+    // Redireciona para o dashboard.
     this.router.navigate(['/dashboard']);
-
   }
 
-  // Função chamada ao clicar no botão Visitante
-  entrarComoVisitante() {
-
-    // Limpa os campos antes de entrar como visitante
+  // Função chamada ao clicar no botão "Entrar como visitante".
+  entrarComoVisitante(): void {
+    // Limpa todos os campos da tela.
     this.limparTelaLogin();
 
-    // Entra no sistema como visitante
+    // Entra no sistema como visitante.
     this.authService.entrarComoVisitante();
 
-    // Salva uma mensagem temporária para aparecer depois da navegação
+    // Salva uma mensagem temporária para aparecer depois da navegação.
     localStorage.setItem(
       'appToast',
       JSON.stringify({
@@ -162,49 +200,56 @@ export class LoginComponent implements OnInit {
       })
     );
 
-    // Redireciona para o Dashboard
+    // Redireciona para o dashboard.
     this.router.navigate(['/dashboard']);
-
   }
 
-  // Abre o formulário de cadastro de administrador
-  abrirCadastroAdmin() {
-
-    // Ativa modo cadastro
+  // Abre o formulário de cadastro de administrador.
+  abrirCadastroAdmin(): void {
+    // Ativa o modo cadastro.
     this.modoCadastroAdmin = true;
 
-    // Limpa campos de login
+    // Limpa o usuário do login.
     this.usuario = '';
+
+    // Limpa a senha do login.
     this.senha = '';
 
-    // Limpa mensagens
+    // Esconde a senha do login.
+    this.senhaLoginVisivel = false;
+
+    // Esconde a senha do cadastro.
+    this.senhaCadastroVisivel = false;
+
+    // Esconde o código de verificação.
+    this.codigoVerificacaoVisivel = false;
+
+    // Limpa mensagens antigas.
     this.mensagemErro = '';
     this.mensagemSucesso = '';
 
-    // Limpa campos do cadastro
+    // Limpa os campos do cadastro.
     this.limparCadastroAdmin();
-
   }
 
-  // Volta para a tela de login
-  voltarParaLogin() {
-
-    // Desativa modo cadastro
+  // Volta da tela de cadastro para a tela de login.
+  voltarParaLogin(): void {
+    // Desativa o modo cadastro.
     this.modoCadastroAdmin = false;
 
-    // Limpa todos os campos
+    // Limpa todos os campos.
     this.limparTelaLogin();
-
   }
 
-  // Cria uma nova conta administradora
-  criarContaAdmin() {
-
-    // Limpa mensagens anteriores
+  // Cria uma nova conta de administrador.
+  criarContaAdmin(): void {
+    // Limpa mensagens antigas de erro.
     this.mensagemErro = '';
+
+    // Limpa mensagens antigas de sucesso.
     this.mensagemSucesso = '';
 
-    // Chama o service para tentar criar a conta
+    // Chama o AuthService para tentar criar a conta administradora.
     const resultado = this.authService.criarContaAdmin(
       this.cadastroNome,
       this.cadastroSobrenome,
@@ -212,59 +257,65 @@ export class LoginComponent implements OnInit {
       this.cadastroCpf,
       this.cadastroUsuario,
       this.cadastroSenha,
-      this.cadastroCodigoVerificacao
+      this.cadastroCodigoVerificacao,
+      ''
     );
 
-    // Se não conseguir criar, mostra erro
+    // Se a conta não for criada, mostra a mensagem de erro.
     if (!resultado.sucesso) {
       this.mensagemErro = resultado.mensagem;
       return;
     }
 
-    // Mostra mensagem de sucesso
+    // Mostra a mensagem de sucesso.
     this.mensagemSucesso = resultado.mensagem;
 
-    // Limpa os campos do cadastro
+    // Limpa os campos do cadastro.
     this.limparCadastroAdmin();
 
-    // Depois de 1 segundo, volta para o login
-    setTimeout(() => {
+    // Esconde a senha do cadastro novamente.
+    this.senhaCadastroVisivel = false;
 
-      // Volta para o modo login
+    // Esconde o código de verificação novamente.
+    this.codigoVerificacaoVisivel = false;
+
+    // Depois de 1 segundo, volta para a tela de login.
+    setTimeout(() => {
+      // Volta para o modo login.
       this.modoCadastroAdmin = false;
 
-      // Limpa os campos do login também
+      // Limpa o usuário do login.
       this.usuario = '';
+
+      // Limpa a senha do login.
       this.senha = '';
 
+      // Esconde a senha do login.
+      this.senhaLoginVisivel = false;
     }, 1000);
-
   }
 
-  // Limpa os campos do cadastro
-  limparCadastroAdmin() {
-
-    // Limpa nome
+  // Limpa todos os campos do cadastro de administrador.
+  limparCadastroAdmin(): void {
+    // Limpa o nome.
     this.cadastroNome = '';
 
-    // Limpa sobrenome
+    // Limpa o sobrenome.
     this.cadastroSobrenome = '';
 
-    // Limpa idade
+    // Limpa a idade.
     this.cadastroIdade = null;
 
-    // Limpa CPF
+    // Limpa o CPF.
     this.cadastroCpf = '';
 
-    // Limpa usuário
+    // Limpa o usuário.
     this.cadastroUsuario = '';
 
-    // Limpa senha
+    // Limpa a senha.
     this.cadastroSenha = '';
 
-    // Limpa código de verificação
+    // Limpa o código de verificação.
     this.cadastroCodigoVerificacao = '';
-
   }
-
 }

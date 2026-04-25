@@ -12,6 +12,7 @@ export interface UsuarioLogado {
   cpf: string;
   usuario: string;
   perfil: PerfilUsuario;
+  fotoUrl: string;
 }
 
 // Define a estrutura de uma conta administradora cadastrada
@@ -23,6 +24,18 @@ export interface ContaAdmin {
   usuario: string;
   senha: string;
   perfil: PerfilUsuario;
+  fotoUrl: string;
+}
+
+// Define a estrutura dos dados usados para atualizar uma conta admin
+export interface AtualizarContaAdmin {
+  nome: string;
+  sobrenome: string;
+  idade: number;
+  cpf: string;
+  usuario: string;
+  senha: string;
+  fotoUrl: string;
 }
 
 // Define que este serviço estará disponível para toda a aplicação
@@ -34,6 +47,9 @@ export class AuthService {
   // Código obrigatório para criar uma nova conta admin
   private readonly codigoVerificacaoAdmin = 'tpmc1208';
 
+  // Usuário da conta admin padrão do sistema
+  private readonly usuarioAdminPadrao = 'admin';
+
   // Conta administradora padrão do sistema
   private readonly adminPadrao: ContaAdmin = {
     nome: 'Administrador',
@@ -42,7 +58,8 @@ export class AuthService {
     cpf: '000.000.000-00',
     usuario: 'admin',
     senha: 'admin123',
-    perfil: 'admin'
+    perfil: 'admin',
+    fotoUrl: ''
   };
 
   // Faz login de administrador verificando usuário e senha
@@ -68,7 +85,8 @@ export class AuthService {
       idade: usuarioEncontrado.idade,
       cpf: usuarioEncontrado.cpf,
       usuario: usuarioEncontrado.usuario,
-      perfil: usuarioEncontrado.perfil
+      perfil: usuarioEncontrado.perfil,
+      fotoUrl: usuarioEncontrado.fotoUrl || ''
     };
 
     // Salva que existe alguém logado
@@ -91,7 +109,8 @@ export class AuthService {
       idade: 0,
       cpf: '',
       usuario: 'visitante',
-      perfil: 'visitante'
+      perfil: 'visitante',
+      fotoUrl: ''
     };
 
     // Salva que existe alguém logado
@@ -109,7 +128,8 @@ export class AuthService {
     cpf: string,
     usuario: string,
     senha: string,
-    codigoVerificacao: string
+    codigoVerificacao: string,
+    fotoUrl: string
   ): { sucesso: boolean; mensagem: string } {
 
     // Verifica se o código de verificação está correto
@@ -205,7 +225,8 @@ export class AuthService {
       cpf: cpf.trim(),
       usuario: usuario.trim(),
       senha,
-      perfil: 'admin'
+      perfil: 'admin',
+      fotoUrl
     };
 
     // Adiciona a nova conta à lista de administradores
@@ -221,37 +242,258 @@ export class AuthService {
     };
   }
 
-listarAdministradores(): ContaAdmin[] {
+  // Atualiza a conta admin atualmente logada
+  atualizarContaAdminAtual(
+    dadosAtualizados: AtualizarContaAdmin
+  ): { sucesso: boolean; mensagem: string } {
 
-  localStorage.removeItem('contasAdmin');
-  localStorage.removeItem('usuarioAtual');
-  localStorage.removeItem('logado');
-  localStorage.removeItem('appToast');
+    // Busca o usuário atual
+    const usuarioAtual = this.usuarioAtual();
 
-  const contasSalvas = localStorage.getItem('contasAdmin');
+    // Se não existir usuário logado, bloqueia
+    if (!usuarioAtual) {
+      return {
+        sucesso: false,
+        mensagem: 'Nenhum usuário está logado.'
+      };
+    }
 
-  if (!contasSalvas) {
-    const listaInicial = [this.adminPadrao];
+    // Se não for admin, bloqueia
+    if (usuarioAtual.perfil !== 'admin') {
+      return {
+        sucesso: false,
+        mensagem: 'Apenas contas administradoras podem editar informações.'
+      };
+    }
 
-    localStorage.setItem('contasAdmin', JSON.stringify(listaInicial));
+    // Bloqueia edição da conta admin padrão
+    if (usuarioAtual.usuario === this.usuarioAdminPadrao) {
+      return {
+        sucesso: false,
+        mensagem: 'A conta admin padrão não pode ser editada.'
+      };
+    }
 
-    return listaInicial;
+    // Valida nome
+    if (!dadosAtualizados.nome.trim()) {
+      return {
+        sucesso: false,
+        mensagem: 'Digite o nome.'
+      };
+    }
+
+    // Valida sobrenome
+    if (!dadosAtualizados.sobrenome.trim()) {
+      return {
+        sucesso: false,
+        mensagem: 'Digite o sobrenome.'
+      };
+    }
+
+    // Valida idade
+    if (!dadosAtualizados.idade || dadosAtualizados.idade < 18) {
+      return {
+        sucesso: false,
+        mensagem: 'A idade precisa ser maior ou igual a 18 anos.'
+      };
+    }
+
+    // Valida CPF
+    if (!dadosAtualizados.cpf.trim()) {
+      return {
+        sucesso: false,
+        mensagem: 'Digite o CPF.'
+      };
+    }
+
+    // Valida usuário
+    if (!dadosAtualizados.usuario.trim()) {
+      return {
+        sucesso: false,
+        mensagem: 'Digite um usuário.'
+      };
+    }
+
+    // Valida senha
+    if (!dadosAtualizados.senha || dadosAtualizados.senha.length < 6) {
+      return {
+        sucesso: false,
+        mensagem: 'A senha precisa ter pelo menos 6 caracteres.'
+      };
+    }
+
+    // Busca todas as contas admin
+    const administradores = this.listarAdministradores();
+
+    // Procura a conta atual na lista
+    const indiceContaAtual = administradores.findIndex(
+      conta => conta.usuario === usuarioAtual.usuario
+    );
+
+    // Se não encontrar a conta atual, bloqueia
+    if (indiceContaAtual === -1) {
+      return {
+        sucesso: false,
+        mensagem: 'Conta administradora não encontrada.'
+      };
+    }
+
+    // Verifica se o novo usuário já está sendo usado por outra conta
+    const usuarioJaExiste = administradores.some(
+      conta =>
+        conta.usuario.toLowerCase() === dadosAtualizados.usuario.toLowerCase() &&
+        conta.usuario !== usuarioAtual.usuario
+    );
+
+    // Se usuário já existir, bloqueia
+    if (usuarioJaExiste) {
+      return {
+        sucesso: false,
+        mensagem: 'Já existe outra conta admin com esse usuário.'
+      };
+    }
+
+    // Verifica se o novo CPF já está sendo usado por outra conta
+    const cpfJaExiste = administradores.some(
+      conta =>
+        conta.cpf === dadosAtualizados.cpf &&
+        conta.usuario !== usuarioAtual.usuario
+    );
+
+    // Se CPF já existir, bloqueia
+    if (cpfJaExiste) {
+      return {
+        sucesso: false,
+        mensagem: 'Já existe outra conta admin com esse CPF.'
+      };
+    }
+
+    // Monta a conta atualizada
+    const contaAtualizada: ContaAdmin = {
+      nome: dadosAtualizados.nome.trim(),
+      sobrenome: dadosAtualizados.sobrenome.trim(),
+      idade: dadosAtualizados.idade,
+      cpf: dadosAtualizados.cpf.trim(),
+      usuario: dadosAtualizados.usuario.trim(),
+      senha: dadosAtualizados.senha,
+      perfil: 'admin',
+      fotoUrl: dadosAtualizados.fotoUrl
+    };
+
+    // Atualiza a conta dentro da lista
+    administradores[indiceContaAtual] = contaAtualizada;
+
+    // Salva a lista atualizada
+    localStorage.setItem('contasAdmin', JSON.stringify(administradores));
+
+    // Atualiza também os dados do usuário logado
+    const novoUsuarioAtual: UsuarioLogado = {
+      nome: contaAtualizada.nome,
+      sobrenome: contaAtualizada.sobrenome,
+      idade: contaAtualizada.idade,
+      cpf: contaAtualizada.cpf,
+      usuario: contaAtualizada.usuario,
+      perfil: contaAtualizada.perfil,
+      fotoUrl: contaAtualizada.fotoUrl
+    };
+
+    // Salva os dados atualizados do usuário atual
+    localStorage.setItem('usuarioAtual', JSON.stringify(novoUsuarioAtual));
+
+    // Retorna sucesso
+    return {
+      sucesso: true,
+      mensagem: 'Informações atualizadas com sucesso.'
+    };
   }
 
-  const contas = JSON.parse(contasSalvas) as ContaAdmin[];
+  // Retorna a senha da conta admin atual
+  senhaContaAdminAtual(): string {
 
-  const adminPadraoExiste = contas.some(
-    conta => conta.usuario === this.adminPadrao.usuario
-  );
+    // Busca o usuário atual
+    const usuarioAtual = this.usuarioAtual();
 
-  if (!adminPadraoExiste) {
-    contas.unshift(this.adminPadrao);
+    // Se não houver usuário, retorna vazio
+    if (!usuarioAtual) {
+      return '';
+    }
 
-    localStorage.setItem('contasAdmin', JSON.stringify(contas));
+    // Busca os administradores
+    const administradores = this.listarAdministradores();
+
+    // Procura a conta atual
+    const contaAtual = administradores.find(
+      conta => conta.usuario === usuarioAtual.usuario
+    );
+
+    // Retorna a senha ou vazio
+    return contaAtual?.senha ?? '';
   }
 
-  return contas;
-}
+  // Verifica se a conta atual pode ser editada
+  podeEditarContaAtual(): boolean {
+
+    // Busca o usuário atual
+    const usuarioAtual = this.usuarioAtual();
+
+    // Se não existir usuário, não pode editar
+    if (!usuarioAtual) {
+      return false;
+    }
+
+    // Visitante não pode editar
+    if (usuarioAtual.perfil !== 'admin') {
+      return false;
+    }
+
+    // Admin padrão não pode editar
+    if (usuarioAtual.usuario === this.usuarioAdminPadrao) {
+      return false;
+    }
+
+    // Outros admins podem editar
+    return true;
+  }
+
+  // Lista todos os administradores disponíveis
+  listarAdministradores(): ContaAdmin[] {
+
+    // Busca contas salvas no navegador
+    const contasSalvas = localStorage.getItem('contasAdmin');
+
+    // Se não existir nenhuma conta salva, cria lista com o admin padrão
+    if (!contasSalvas) {
+      const listaInicial = [this.adminPadrao];
+
+      localStorage.setItem('contasAdmin', JSON.stringify(listaInicial));
+
+      return listaInicial;
+    }
+
+    // Converte o texto salvo em lista de contas
+    const contas = JSON.parse(contasSalvas) as ContaAdmin[];
+
+    // Garante que contas antigas sem foto continuem funcionando
+    const contasNormalizadas = contas.map(conta => ({
+      ...conta,
+      fotoUrl: conta.fotoUrl || ''
+    }));
+
+    // Verifica se o admin padrão já existe
+    const adminPadraoExiste = contasNormalizadas.some(
+      conta => conta.usuario === this.adminPadrao.usuario
+    );
+
+    // Se o admin padrão não existir, adiciona ele novamente
+    if (!adminPadraoExiste) {
+      contasNormalizadas.unshift(this.adminPadrao);
+
+      localStorage.setItem('contasAdmin', JSON.stringify(contasNormalizadas));
+    }
+
+    // Retorna a lista de contas
+    return contasNormalizadas;
+  }
 
   // Faz logout do usuário
   logout() {
@@ -280,7 +522,13 @@ listarAdministradores(): ContaAdmin[] {
     }
 
     // Converte o texto salvo em objeto JavaScript
-    return JSON.parse(usuarioSalvo) as UsuarioLogado;
+    const usuario = JSON.parse(usuarioSalvo) as UsuarioLogado;
+
+    // Garante compatibilidade com usuários antigos sem foto
+    return {
+      ...usuario,
+      fotoUrl: usuario.fotoUrl || ''
+    };
   }
 
   // Verifica se o usuário atual é administrador
@@ -301,6 +549,11 @@ listarAdministradores(): ContaAdmin[] {
   // Retorna o nome do usuário atual
   nomeUsuario(): string {
     return this.usuarioAtual()?.nome ?? 'Visitante';
+  }
+
+  // Retorna a foto do usuário atual
+  fotoUsuario(): string {
+    return this.usuarioAtual()?.fotoUrl ?? '';
   }
 
   // Retorna o nome completo do usuário atual

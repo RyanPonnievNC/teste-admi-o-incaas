@@ -14,7 +14,7 @@
 
       <!-- Subtítulo -->
       <p class="perfil-header__subtitle">
-        Visualize as informações da conta atualmente conectada ao Jurídico Pro.
+        Visualize e gerencie as informações da conta atualmente conectada ao Jurídico Pro.
       </p>
 
     </div>
@@ -22,7 +22,7 @@
     <!-- Botão para sair da conta -->
     <button
       type="button"
-      class="perfil-header__button"
+      class="perfil-header__button perfil-header__button--logout"
       (click)="sair()"
     >
       Sair
@@ -30,15 +30,37 @@
 
   </header>
 
+  <!-- Mensagem para admin padrão -->
+  <div
+    *ngIf="authService.ehAdmin() && !authService.podeEditarContaAtual()"
+    class="perfil-alert"
+  >
+    A conta padrão <strong>admin</strong> não pode ser editada.
+    Crie uma nova conta admin para liberar edição de informações.
+  </div>
+
   <!-- Card principal do perfil -->
   <div class="perfil-card">
 
     <!-- Área superior do card -->
     <div class="perfil-card__top">
 
-      <!-- Avatar com inicial do nome -->
+      <!-- Avatar/foto do usuário -->
       <div class="perfil-card__avatar">
-        {{ authService.nomeUsuario().charAt(0).toUpperCase() }}
+
+        <!-- Mostra foto se existir -->
+        <img
+          *ngIf="authService.fotoUsuario()"
+          [src]="authService.fotoUsuario()"
+          alt="Foto do usuário"
+          class="perfil-card__avatar-image"
+        />
+
+        <!-- Mostra inicial se não existir foto -->
+        <span *ngIf="!authService.fotoUsuario()">
+          {{ authService.nomeUsuario().charAt(0).toUpperCase() }}
+        </span>
+
       </div>
 
       <!-- Informações principais -->
@@ -60,65 +82,70 @@
 
       </div>
 
+      <!-- Botão editar informações -->
+      <button
+        *ngIf="authService.podeEditarContaAtual() && !modoEdicao"
+        type="button"
+        class="perfil-card__edit-button"
+        (click)="abrirEdicao()"
+      >
+        Editar informações
+      </button>
+
     </div>
 
-    <!-- Grade de informações -->
-    <div class="perfil-info-grid">
+    <!-- Grade de informações quando não está editando -->
+    <div
+      *ngIf="!modoEdicao"
+      class="perfil-info-grid"
+    >
 
-      <!-- Informação: usuário -->
+      <!-- Informação usuário -->
       <article class="perfil-info">
 
-        <!-- Título da informação -->
         <span class="perfil-info__label">
           Usuário
         </span>
 
-        <!-- Valor da informação -->
         <strong class="perfil-info__value">
           {{ authService.usuarioAtual()?.usuario || 'visitante' }}
         </strong>
 
       </article>
 
-      <!-- Informação: nome completo -->
+      <!-- Informação nome completo -->
       <article class="perfil-info">
 
-        <!-- Título da informação -->
         <span class="perfil-info__label">
           Nome completo
         </span>
 
-        <!-- Valor da informação -->
         <strong class="perfil-info__value">
           {{ authService.nomeCompletoUsuario() }}
         </strong>
 
       </article>
 
-      <!-- Informação: idade -->
+      <!-- Informação idade -->
       <article class="perfil-info">
 
-        <!-- Título da informação -->
         <span class="perfil-info__label">
           Idade
         </span>
 
-        <!-- Valor da informação -->
         <strong class="perfil-info__value">
           {{ authService.idadeUsuario() }}
         </strong>
 
       </article>
 
-      <!-- Informação: CPF -->
+      <!-- Informação CPF -->
       <article class="perfil-info">
 
-        <!-- Título da informação -->
         <span class="perfil-info__label">
           CPF
         </span>
 
-        <!-- Valor da informação -->
         <strong class="perfil-info__value">
           {{ authService.cpfMascarado() }}
         </strong>
@@ -126,6 +153,222 @@
       </article>
 
     </div>
+
+    <!-- Formulário de edição -->
+    <form
+      *ngIf="modoEdicao"
+      class="perfil-edit-form"
+      autocomplete="off"
+    >
+
+      <!-- Área para alterar foto -->
+      <div class="perfil-photo-edit">
+
+        <!-- Prévia da foto -->
+        <div class="perfil-photo-edit__preview">
+
+          <!-- Foto escolhida -->
+          <img
+            *ngIf="editarFotoUrl"
+            [src]="editarFotoUrl"
+            alt="Foto do usuário"
+            class="perfil-photo-edit__image"
+          />
+
+          <!-- Inicial caso não tenha foto -->
+          <span
+            *ngIf="!editarFotoUrl"
+            class="perfil-photo-edit__initial"
+          >
+            {{ editarNome ? editarNome.charAt(0).toUpperCase() : 'A' }}
+          </span>
+
+        </div>
+
+        <!-- Botão alterar foto -->
+        <label class="perfil-photo-edit__label">
+          Alterar foto
+
+          <input
+            type="file"
+            accept="image/*"
+            class="perfil-photo-edit__input"
+            (change)="selecionarFotoEdicao($event)"
+          />
+        </label>
+
+        <!-- Botão remover foto -->
+        <button
+          *ngIf="editarFotoUrl"
+          type="button"
+          class="perfil-photo-edit__remove"
+          (click)="removerFotoEdicao()"
+        >
+          Remover foto
+        </button>
+
+      </div>
+
+      <!-- Campo nome -->
+      <div class="perfil-edit-form__field">
+
+        <label class="perfil-edit-form__label">
+          Nome
+        </label>
+
+        <input
+          type="text"
+          class="perfil-edit-form__input"
+          name="editarNome"
+          [(ngModel)]="editarNome"
+        />
+
+      </div>
+
+      <!-- Campo sobrenome -->
+      <div class="perfil-edit-form__field">
+
+        <label class="perfil-edit-form__label">
+          Sobrenome
+        </label>
+
+        <input
+          type="text"
+          class="perfil-edit-form__input"
+          name="editarSobrenome"
+          [(ngModel)]="editarSobrenome"
+        />
+
+      </div>
+
+      <!-- Campo idade -->
+      <div class="perfil-edit-form__field">
+
+        <label class="perfil-edit-form__label">
+          Idade
+        </label>
+
+        <input
+          type="number"
+          class="perfil-edit-form__input"
+          name="editarIdade"
+          [(ngModel)]="editarIdade"
+        />
+
+      </div>
+
+      <!-- Campo CPF -->
+      <div class="perfil-edit-form__field">
+
+        <label class="perfil-edit-form__label">
+          CPF
+        </label>
+
+        <input
+          type="text"
+          class="perfil-edit-form__input"
+          name="editarCpf"
+          [(ngModel)]="editarCpf"
+        />
+
+      </div>
+
+      <!-- Campo usuário -->
+      <div class="perfil-edit-form__field">
+
+        <label class="perfil-edit-form__label">
+          Usuário
+        </label>
+
+        <input
+          type="text"
+          class="perfil-edit-form__input"
+          name="editarUsuario"
+          [(ngModel)]="editarUsuario"
+        />
+
+      </div>
+
+      <!-- Campo senha -->
+      <div class="perfil-edit-form__field">
+
+        <label class="perfil-edit-form__label">
+          Senha
+        </label>
+
+        <!-- Área do input da senha com botão de mostrar/esconder -->
+        <div class="perfil-edit-form__password-wrapper">
+
+          <!-- Input da senha -->
+          <input
+            [type]="mostrarSenhaEdicao ? 'text' : 'password'"
+            class="perfil-edit-form__input perfil-edit-form__input--password"
+            name="editarSenha"
+            autocomplete="new-password"
+            [(ngModel)]="editarSenha"
+          />
+
+          <!-- Botão para mostrar ou esconder senha -->
+          <button
+            type="button"
+            class="perfil-edit-form__eye-button"
+            (click)="alternarSenhaEdicao()"
+            [attr.aria-label]="mostrarSenhaEdicao ? 'Esconder senha' : 'Mostrar senha'"
+          >
+
+            <!-- Imagem do olho -->
+            <img
+              [src]="mostrarSenhaEdicao ? '/eye-open.png' : '/eye-closed.png'"
+              alt=""
+              class="perfil-edit-form__eye-icon"
+            />
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Mensagem de erro -->
+      <p
+        *ngIf="mensagemErro"
+        class="perfil-edit-form__error"
+      >
+        {{ mensagemErro }}
+      </p>
+
+      <!-- Mensagem de sucesso -->
+      <p
+        *ngIf="mensagemSucesso"
+        class="perfil-edit-form__success"
+      >
+        {{ mensagemSucesso }}
+      </p>
+
+      <!-- Ações do formulário -->
+      <div class="perfil-edit-form__actions">
+
+        <!-- Botão salvar -->
+        <button
+          type="button"
+          class="perfil-edit-form__save-button"
+          (click)="salvarEdicao()"
+        >
+          Salvar alterações
+        </button>
+
+        <!-- Botão cancelar -->
+        <button
+          type="button"
+          class="perfil-edit-form__cancel-button"
+          (click)="cancelarEdicao()"
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+    </form>
 
   </div>
 
@@ -157,6 +400,10 @@
 
       <li>
         Pode acessar a área de processos.
+      </li>
+
+      <li *ngIf="authService.podeEditarContaAtual()">
+        Pode editar suas próprias informações de conta.
       </li>
 
     </ul>

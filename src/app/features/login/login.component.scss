@@ -1,13 +1,21 @@
 /* Página inteira do login */
 .login-page {
+  /* Faz a página ocupar a altura total da tela */
   min-height: 100vh;
 
+  /* Ativa o flexbox para centralizar o card */
   display: flex;
+
+  /* Centraliza o card verticalmente */
   align-items: center;
+
+  /* Centraliza o card horizontalmente */
   justify-content: center;
 
+  /* Cria espaçamento interno nas bordas */
   padding: 2rem;
 
+  /* Define o fundo com gradiente escuro */
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 28%),
     linear-gradient(135deg, #132146 0%, #0f172a 100%);
@@ -15,259 +23,510 @@
 
 /* Card branco central */
 .login-card {
+  /* Faz o card ocupar a largura disponível */
   width: 100%;
+
+  /* Define a largura máxima do card */
   max-width: 460px;
 
+  /* Define a cor de fundo do card */
   background: #ffffff;
 
+  /* Cria espaçamento interno */
   padding: 2.5rem;
 
+  /* Arredonda as bordas */
   border-radius: 1.5rem;
 
+  /* Adiciona sombra atrás do card */
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
 
+  /* Centraliza os textos principais */
   text-align: center;
 }
 
 /* Área da marca */
 .login-card__brand {
+  /* Cria espaço abaixo da marca */
   margin-bottom: 2rem;
 }
 
-/* Container do logo no login */
+/* Caixa do ícone/logo */
 .login-card__icon {
+  /* Define a largura da caixa */
   width: 78px;
+
+  /* Define a altura da caixa */
   height: 78px;
 
+  /* Centraliza a caixa horizontalmente e cria espaço abaixo */
   margin: 0 auto 1rem;
 
+  /* Ativa flexbox */
   display: flex;
+
+  /* Centraliza o conteúdo verticalmente */
   align-items: center;
+
+  /* Centraliza o conteúdo horizontalmente */
   justify-content: center;
 
+  /* Define o fundo azul escuro */
   background: #132146;
 
+  /* Arredonda as bordas */
   border-radius: 1.25rem;
 
+  /* Impede que conteúdo saia da caixa */
   overflow: hidden;
 }
 
-/* Imagem oficial do Jurídico Pro no login */
+/* Texto JP dentro do ícone */
+.login-card__icon-text {
+  /* Define a cor do texto */
+  color: #ffffff;
+
+  /* Define o tamanho da fonte */
+  font-size: 1.8rem;
+
+  /* Deixa o texto em negrito */
+  font-weight: 900;
+
+  /* Aumenta o espaçamento entre as letras */
+  letter-spacing: 0.05em;
+}
+
+/* Imagem oficial do logo, caso você use uma imagem futuramente */
 .login-card__logo {
+  /* Faz a imagem ocupar toda a largura disponível */
   width: 100%;
 
+  /* Faz a imagem ocupar toda a altura disponível */
   height: 100%;
 
+  /* Faz a imagem caber sem distorcer */
   object-fit: contain;
 
+  /* Remove espaços indesejados abaixo da imagem */
   display: block;
 }
 
-/* Título */
+/* Título principal */
 .login-card__title {
+  /* Remove margem padrão */
   margin: 0;
 
+  /* Define a cor do título */
   color: #132146;
 
+  /* Define o tamanho do título */
   font-size: 2rem;
+
+  /* Deixa o título bem forte */
   font-weight: 800;
 }
 
 /* Subtítulo */
 .login-card__subtitle {
+  /* Define margem superior e remove margens laterais */
   margin: 0.75rem 0 0;
 
+  /* Define a cor do texto */
   color: #6b7280;
 
+  /* Define o tamanho do texto */
   font-size: 1rem;
+
+  /* Melhora o espaçamento entre linhas */
   line-height: 1.5;
 }
 
 /* Formulário */
 .login-form {
+  /* Ativa flexbox */
   display: flex;
+
+  /* Organiza os itens em coluna */
   flex-direction: column;
 
+  /* Define espaço entre os campos */
   gap: 1.1rem;
 }
 
 /* Grupo de cada campo */
 .login-form__group {
+  /* Alinha o conteúdo do grupo à esquerda */
   text-align: left;
 }
 
-/* Label */
+/* Label dos campos */
 .login-form__label {
+  /* Faz o label ocupar sua própria linha */
   display: block;
 
+  /* Cria espaço abaixo do label */
   margin-bottom: 0.45rem;
 
+  /* Define a cor do texto */
   color: #111827;
 
+  /* Define o tamanho da fonte */
   font-size: 0.95rem;
+
+  /* Deixa o texto em negrito */
   font-weight: 700;
 }
 
-/* Campo */
+/* Campo de entrada */
 .login-form__input {
+  /* Faz o input ocupar toda a largura */
   width: 100%;
 
+  /* Cria espaço interno */
   padding: 0.95rem 1rem;
 
+  /* Define a borda */
   border: 1px solid #d1d5db;
+
+  /* Arredonda as bordas */
   border-radius: 0.85rem;
 
+  /* Define a cor do texto */
   color: #111827;
 
+  /* Define o tamanho do texto */
   font-size: 1rem;
 
+  /* Remove contorno padrão do navegador */
   outline: none;
 
+  /* Inclui padding e borda no cálculo da largura */
+  box-sizing: border-box;
+
+  /* Suaviza mudanças visuais */
   transition: 0.2s ease;
 }
 
-/* Texto dentro do input */
+/* Campo de senha com espaço para o botão do olho */
+.login-form__input--password {
+  /* Cria espaço à direita para a imagem do olho */
+  padding-right: 3.2rem;
+}
+
+/* Texto de exemplo dentro dos inputs */
 .login-form__input::placeholder {
+  /* Define a cor do placeholder */
   color: #9ca3af;
 }
 
-/* Campo quando clicado */
+/* Input quando está selecionado */
 .login-form__input:focus {
+  /* Muda a cor da borda */
   border-color: #132146;
+
+  /* Adiciona uma sombra azul ao redor */
   box-shadow: 0 0 0 4px rgba(19, 33, 70, 0.12);
+}
+
+/* Área que envolve input de senha e botão do olho */
+.login-form__password-wrapper {
+  /* Permite posicionar o botão do olho dentro da área */
+  position: relative;
+
+  /* Faz a área ocupar toda a largura */
+  width: 100%;
+}
+
+/* Botão do olho */
+.login-form__eye-button {
+  /* Posiciona o botão dentro do campo de senha */
+  position: absolute;
+
+  /* Coloca o botão no meio vertical do input */
+  top: 50%;
+
+  /* Afasta o botão da borda direita */
+  right: 0.9rem;
+
+  /* Corrige o alinhamento vertical */
+  transform: translateY(-50%);
+
+  /* Define a largura do botão */
+  width: 32px;
+
+  /* Define a altura do botão */
+  height: 32px;
+
+  /* Remove a borda padrão */
+  border: none;
+
+  /* Remove o fundo padrão */
+  background: transparent;
+
+  /* Remove espaçamento interno */
+  padding: 0;
+
+  /* Ativa flexbox */
+  display: flex;
+
+  /* Centraliza a imagem verticalmente */
+  align-items: center;
+
+  /* Centraliza a imagem horizontalmente */
+  justify-content: center;
+
+  /* Mostra a mãozinha ao passar o mouse */
+  cursor: pointer;
+
+  /* Suaviza o efeito de hover */
+  transition: 0.2s ease;
+}
+
+/* Efeito ao passar o mouse no botão do olho */
+.login-form__eye-button:hover {
+  /* Reduz um pouco a opacidade */
+  opacity: 0.7;
+}
+
+/* Imagem do olho */
+.login-form__eye-image {
+  /* Define a largura da imagem */
+  width: 22px;
+
+  /* Define a altura da imagem */
+  height: 22px;
+
+  /* Faz a imagem caber sem distorcer */
+  object-fit: contain;
+
+  /* Remove espaço indesejado abaixo da imagem */
+  display: block;
+
+  /* Faz o clique ser capturado pelo botão, não pela imagem */
+  pointer-events: none;
 }
 
 /* Mensagem de erro */
 .login-form__error {
+  /* Remove margem padrão */
   margin: 0;
 
+  /* Cria espaço interno */
   padding: 0.85rem;
 
+  /* Arredonda as bordas */
   border-radius: 0.75rem;
 
+  /* Define fundo vermelho claro */
   background: #fee2e2;
 
+  /* Define texto vermelho escuro */
   color: #991b1b;
 
+  /* Define tamanho da fonte */
   font-size: 0.9rem;
 
+  /* Deixa o texto em negrito */
   font-weight: 700;
 
+  /* Alinha o texto à esquerda */
   text-align: left;
 }
 
 /* Mensagem de sucesso */
 .login-form__success {
+  /* Remove margem padrão */
   margin: 0;
 
+  /* Cria espaço interno */
   padding: 0.85rem;
 
+  /* Arredonda as bordas */
   border-radius: 0.75rem;
 
+  /* Define fundo verde claro */
   background: #dcfce7;
 
+  /* Define texto verde escuro */
   color: #166534;
 
+  /* Define tamanho da fonte */
   font-size: 0.9rem;
 
+  /* Deixa o texto em negrito */
   font-weight: 700;
 
+  /* Alinha o texto à esquerda */
   text-align: left;
 }
 
-/* Botão administrador */
+/* Botão principal */
 .login-form__button {
+  /* Faz o botão ocupar toda a largura */
   width: 100%;
 
+  /* Cria espaço acima do botão */
   margin-top: 0.5rem;
 
+  /* Cria espaço interno */
   padding: 1rem;
 
+  /* Remove a borda padrão */
   border: none;
+
+  /* Arredonda as bordas */
   border-radius: 0.85rem;
 
+  /* Define a cor de fundo */
   background: #132146;
+
+  /* Define a cor do texto */
   color: #ffffff;
 
+  /* Define o tamanho da fonte */
   font-size: 1.05rem;
+
+  /* Deixa o texto em negrito */
   font-weight: 800;
 
+  /* Mostra a mãozinha ao passar o mouse */
   cursor: pointer;
 
+  /* Suaviza mudanças visuais */
   transition: 0.2s ease;
 }
 
-/* Hover do botão administrador */
+/* Hover do botão principal */
 .login-form__button:hover {
+  /* Clareia um pouco o fundo */
   background: #1f3470;
+
+  /* Move o botão levemente para cima */
   transform: translateY(-2px);
 }
 
 /* Separador */
 .login-form__divider {
+  /* Ativa flexbox */
   display: flex;
 
+  /* Centraliza verticalmente */
   align-items: center;
 
+  /* Centraliza horizontalmente */
   justify-content: center;
 
+  /* Define a cor do texto */
   color: #6b7280;
 
+  /* Define o tamanho da fonte */
   font-size: 0.9rem;
 
+  /* Deixa o texto em negrito */
   font-weight: 700;
 }
 
-/* Botão visitante */
+/* Botão visitante e botão voltar */
 .login-form__visitor-button {
+  /* Faz o botão ocupar toda a largura */
   width: 100%;
 
+  /* Cria espaço interno */
   padding: 1rem;
 
+  /* Define a borda azul */
   border: 1px solid #132146;
+
+  /* Arredonda as bordas */
   border-radius: 0.85rem;
 
+  /* Define fundo branco */
   background: #ffffff;
+
+  /* Define texto azul */
   color: #132146;
 
+  /* Define tamanho da fonte */
   font-size: 1.05rem;
+
+  /* Deixa o texto em negrito */
   font-weight: 800;
 
+  /* Mostra a mãozinha ao passar o mouse */
   cursor: pointer;
 
+  /* Suaviza mudanças visuais */
   transition: 0.2s ease;
 }
 
-/* Hover do botão visitante */
+/* Hover do botão visitante e voltar */
 .login-form__visitor-button:hover {
+  /* Muda o fundo para cinza claro */
   background: #f3f4f6;
 
+  /* Move o botão levemente para cima */
   transform: translateY(-2px);
 }
 
 /* Botão para abrir cadastro */
 .login-form__create-button {
+  /* Faz o botão ocupar toda a largura */
   width: 100%;
 
+  /* Cria espaço interno */
   padding: 1rem;
 
+  /* Remove borda */
   border: none;
+
+  /* Arredonda as bordas */
   border-radius: 0.85rem;
 
+  /* Define fundo cinza claro */
   background: #f3f4f6;
+
+  /* Define texto azul escuro */
   color: #132146;
 
+  /* Define tamanho do texto */
   font-size: 1rem;
+
+  /* Deixa o texto em negrito */
   font-weight: 800;
 
+  /* Mostra a mãozinha ao passar o mouse */
   cursor: pointer;
 
+  /* Suaviza mudanças visuais */
   transition: 0.2s ease;
 }
 
 /* Hover do botão criar conta */
 .login-form__create-button:hover {
+  /* Escurece levemente o fundo */
   background: #e5e7eb;
 
+  /* Move o botão levemente para cima */
   transform: translateY(-2px);
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 520px) {
+  /* Página em telas pequenas */
+  .login-page {
+    /* Reduz o espaçamento lateral */
+    padding: 1rem;
+  }
+
+  /* Card em telas pequenas */
+  .login-card {
+    /* Reduz o espaçamento interno */
+    padding: 1.6rem;
+  }
+
+  /* Título em telas pequenas */
+  .login-card__title {
+    /* Reduz o tamanho do título */
+    font-size: 1.7rem;
+  }
 }

@@ -4,9 +4,9 @@
   Este arquivo controla o visual principal da aplicação:
   - sidebar lateral
   - cartão do usuário
+  - foto do usuário
   - links do menu
   - link ativo
-  - botão Sair
   - área principal
   - tela cheia no login
   - caixa de mensagem
@@ -137,9 +137,58 @@
 
   flex-direction: column;
 
-  gap: 0.5rem;
+  align-items: center;
+
+  gap: 0.55rem;
 
   flex-shrink: 0;
+}
+
+/* Foto do usuário na sidebar */
+.app-user-card__photo {
+  width: 72px;
+
+  height: 72px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  font-size: 1.8rem;
+
+  font-weight: 900;
+
+  border: 2px solid rgba(255, 255, 255, 0.55);
+}
+
+/* Imagem da foto na sidebar */
+.app-user-card__photo-image {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+/* Inicial quando não tem foto */
+.app-user-card__photo-initial {
+  color: #ffffff;
+
+  font-size: 1.8rem;
+
+  font-weight: 900;
 }
 
 /* Nome do usuário */
@@ -297,46 +346,6 @@
   justify-content: center;
 
   flex-shrink: 0;
-}
-
-/* Botão Sair */
-.app-navbar__logout {
-  width: 170px;
-
-  min-height: 50px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.8);
-
-  border-radius: 6px;
-
-  padding: 10px 18px;
-
-  background: transparent;
-
-  color: #ffffff;
-
-  font-size: 1rem;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-/* Hover do botão Sair */
-.app-navbar__logout:hover {
-  background: rgba(220, 38, 38, 0.9);
-
-  border-color: rgba(220, 38, 38, 0.9);
-
-  transform: translateY(-2px);
 }
 
 /* Área principal onde as páginas são exibidas */
@@ -507,7 +516,7 @@
   }
 }
 
-  /* Área que contém os links do menu */
+/* Área que contém os links do menu */
 .app-navbar__perfil {
   width: 100%;
 
@@ -568,11 +577,11 @@
 
 /* Link ativo com cores invertidas */
 .app-navbar__perfil--active {
-  background: rgb(232, 232, 232);
+  background: rgb(231, 231, 231);
 
   color: rgb(19, 33, 70);
 
-  border-color: #ffffff;
+  border-color: rgb(231, 231, 231);
 
   font-weight: 800;
 

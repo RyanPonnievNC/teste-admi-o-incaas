@@ -32,6 +32,27 @@
         class="app-user-card"
       >
 
+        <!-- Foto do usuário logado -->
+        <div class="app-user-card__photo">
+
+          <!-- Mostra a foto se existir uma foto cadastrada -->
+          <img
+            *ngIf="authService.fotoUsuario()"
+            [src]="authService.fotoUsuario()"
+            alt="Foto do usuário"
+            class="app-user-card__photo-image"
+          />
+
+          <!-- Mostra a inicial do nome se não existir foto -->
+          <span
+            *ngIf="!authService.fotoUsuario()"
+            class="app-user-card__photo-initial"
+          >
+            {{ authService.nomeUsuario().charAt(0).toUpperCase() }}
+          </span>
+
+        </div>
+
         <!-- Nome completo do usuário -->
         <strong class="app-user-card__name">
           {{ authService.nomeCompletoUsuario() }}
