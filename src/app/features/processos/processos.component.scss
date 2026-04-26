@@ -1,430 +1,983 @@
-/*
-  processos.component.scss
-
-  Este arquivo controla o visual da tela de processos:
-  - título da página
-  - formulário de cadastro/edição
-  - campos
-  - botão Salvar Processo
-  - filtros
-  - tabela
-  - botões de ação
-*/
-
-/* Container principal da tela */
+/* Container principal da tela de processos */
 .processos {
-  width: 100%;
+  /* Cria espaçamento geral da página */
+  padding: 2rem;
 
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 1.5rem;
+  /* Define a cor principal dos textos */
+  color: #000000;
 }
 
-/* Título principal da página */
+/* Título principal */
 .processos__title {
-  width: fit-content;
+  /* Remove margem superior padrão */
+  margin-top: 0;
 
-  margin: 0;
+  /* Cria espaço abaixo do título */
+  margin-bottom: 1.5rem;
 
-  padding: 0.55rem 0.85rem;
+  /* Define tamanho do título */
+  font-size: 2rem;
 
-  border: 2px solid #111827;
-
-  border-radius: 4px;
-
-  color: #000000;
-
-  font-size: 1.25rem;
-
+  /* Deixa o título em negrito */
   font-weight: 800;
 
-  background: #ffffff;
+  /* Define a cor do título */
+  color: rgb(19, 33, 70);
 }
 
-/* Formulário principal */
+/* Formulário de cadastro e edição */
 .processos-form {
-  width: 100%;
-
-  padding: 1.25rem;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 12px;
-
+  /* Define fundo branco */
   background: #ffffff;
 
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  /* Arredonda as bordas */
+  border-radius: 1rem;
+
+  /* Cria espaçamento interno */
+  padding: 1.5rem;
+
+  /* Cria espaço abaixo do formulário */
+  margin-bottom: 1.5rem;
+
+  /* Adiciona sombra suave */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* Título do formulário */
 .processos-form__title {
-  margin: 0 0 1rem;
+  /* Remove margem superior */
+  margin-top: 0;
 
-  color: #000000;
+  /* Cria espaço abaixo */
+  margin-bottom: 1.2rem;
 
-  font-size: 1rem;
+  /* Define tamanho */
+  font-size: 1.4rem;
 
-  font-weight: 800;
+  /* Define cor */
+  color: rgb(19, 33, 70);
 }
 
-/* Grade dos campos principais */
+/* Grade dos campos do formulário */
 .processos-form__grid {
+  /* Ativa grid */
   display: grid;
 
+  /* Cria duas colunas */
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
+  /* Espaço entre os campos */
   gap: 1rem;
 }
 
 /* Grupo de campo */
 .form-field {
-  width: 100%;
-
+  /* Organiza label, input e erro em coluna */
   display: flex;
 
+  /* Coloca os elementos um abaixo do outro */
   flex-direction: column;
 
+  /* Espaço entre os elementos */
   gap: 0.4rem;
 }
 
 /* Label dos campos */
 .form-field__label {
-  color: #000000;
+  /* Define tamanho */
+  font-size: 0.95rem;
 
-  font-size: 0.85rem;
+  /* Deixa em negrito */
+  font-weight: 700;
 
-  font-weight: 600;
+  /* Define cor */
+  color: #374151;
 }
 
-/* Inputs, textarea e select */
+/* Inputs, selects e textarea */
 .form-field__input {
+  /* Ocupa toda a largura */
   width: 100%;
 
-  min-height: 38px;
+  /* Define altura mínima */
+  min-height: 44px;
 
-  padding: 0.65rem 0.75rem;
+  /* Cria espaçamento interno */
+  padding: 0.8rem;
 
-  border: 1px solid #cbd5e1;
+  /* Define borda */
+  border: 1px solid #d1d5db;
 
-  border-radius: 7px;
+  /* Arredonda as bordas */
+  border-radius: 0.75rem;
 
+  /* Define cor do texto */
+  color: #111827;
+
+  /* Define fundo branco */
   background: #ffffff;
 
-  color: #000000;
+  /* Define tamanho do texto */
+  font-size: 1rem;
 
-  font-size: 0.9rem;
-
+  /* Remove contorno padrão */
   outline: none;
 
+  /* Inclui padding e borda no tamanho total */
+  box-sizing: border-box;
+
+  /* Suaviza foco */
   transition: 0.2s ease;
 }
 
-/* Efeito ao clicar nos campos */
+/* Foco dos campos */
 .form-field__input:focus {
+  /* Muda a cor da borda */
   border-color: rgb(19, 33, 70);
 
+  /* Adiciona sombra azul suave */
   box-shadow: 0 0 0 3px rgba(19, 33, 70, 0.12);
 }
 
-/* Campo descrição */
+/* Textarea */
 .form-field__textarea {
-  resize: vertical;
-
+  /* Define altura mínima */
   min-height: 90px;
+
+  /* Permite redimensionar verticalmente */
+  resize: vertical;
 }
 
-/* Mensagem de erro dos campos */
+/* Mensagem de erro */
 .form-field__error {
-  margin: 0.15rem 0 0;
+  /* Remove margem padrão */
+  margin: 0;
 
+  /* Define cor vermelha */
   color: #dc2626;
 
-  font-size: 0.8rem;
+  /* Define tamanho */
+  font-size: 0.85rem;
 
+  /* Deixa em negrito */
   font-weight: 600;
 }
 
 /* Área dos botões do formulário */
 .processos-form__actions {
+  /* Ativa flexbox */
   display: flex;
 
+  /* Alinha os botões */
   align-items: center;
 
-  gap: 0.75rem;
+  /* Espaço entre botões */
+  gap: 0.8rem;
 
-  margin-top: 1rem;
+  /* Espaço acima */
+  margin-top: 1.2rem;
 }
 
-/* Botão Salvar/Atualizar Processo */
+/* Botão salvar/atualizar */
 .processos-form__submit-button {
-  border: 2px solid rgb(19, 33, 70);
+  /* Remove borda padrão */
+  border: none;
 
-  border-radius: 8px;
+  /* Define fundo azul escuro */
+  background: rgb(19, 33, 70);
 
-  padding: 0.75rem 1.25rem;
+  /* Define texto branco */
+  color: #ffffff;
 
-  background: #ffffff;
+  /* Cria espaçamento */
+  padding: 0.9rem 1.2rem;
 
-  color: rgb(19, 33, 70);
+  /* Arredonda */
+  border-radius: 0.75rem;
 
-  font-size: 0.95rem;
-
+  /* Deixa texto forte */
   font-weight: 800;
 
+  /* Cursor de clique */
   cursor: pointer;
 
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
+  /* Suaviza hover */
   transition: 0.2s ease;
 }
 
-/* Hover do botão Salvar/Atualizar Processo */
+/* Hover do botão salvar */
 .processos-form__submit-button:hover {
-  background: rgb(19, 33, 70);
+  /* Clareia o fundo */
+  background: rgb(31, 52, 112);
 
-  color: #ffffff;
-
+  /* Move levemente para cima */
   transform: translateY(-2px);
 }
 
-/* Clique do botão Salvar/Atualizar Processo */
-.processos-form__submit-button:active {
-  transform: translateY(0);
-}
-
-/* Botão cancelar */
+/* Botão cancelar edição */
 .processos-form__cancel-button {
-  border: 2px solid #6b7280;
+  /* Remove borda padrão */
+  border: none;
 
-  border-radius: 8px;
+  /* Define fundo cinza */
+  background: #e5e7eb;
 
-  padding: 0.75rem 1.25rem;
+  /* Define texto escuro */
+  color: #111827;
 
-  background: #ffffff;
+  /* Cria espaçamento */
+  padding: 0.9rem 1.2rem;
 
-  color: #374151;
+  /* Arredonda */
+  border-radius: 0.75rem;
 
-  font-size: 0.95rem;
-
+  /* Deixa texto forte */
   font-weight: 800;
 
+  /* Cursor de clique */
   cursor: pointer;
 
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
+  /* Suaviza hover */
   transition: 0.2s ease;
 }
 
 /* Hover do botão cancelar */
 .processos-form__cancel-button:hover {
-  background: #6b7280;
+  /* Escurece fundo */
+  background: #d1d5db;
 
-  color: #ffffff;
-
+  /* Move levemente */
   transform: translateY(-2px);
 }
 
-/* Clique do botão cancelar */
-.processos-form__cancel-button:active {
-  transform: translateY(0);
-}
-
-/* Painel branco de filtros e tabela */
+/* Painéis gerais */
 .processos-panel {
-  width: 100%;
-
-  padding: 1.25rem;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 12px;
-
+  /* Define fundo branco */
   background: #ffffff;
 
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  /* Arredonda as bordas */
+  border-radius: 1rem;
+
+  /* Cria espaçamento interno */
+  padding: 1.5rem;
+
+  /* Cria espaço abaixo */
+  margin-bottom: 1.5rem;
+
+  /* Borda suave */
+  border: 1px solid #e5e7eb;
+
+  /* Sombra suave */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* Título dos painéis */
 .processos-panel__title {
-  margin: 0 0 1rem;
+  /* Remove margem superior */
+  margin-top: 0;
 
-  color: #000000;
+  /* Espaço abaixo */
+  margin-bottom: 1rem;
 
-  font-size: 1rem;
+  /* Define tamanho */
+  font-size: 1.3rem;
 
+  /* Define cor */
+  color: rgb(19, 33, 70);
+
+  /* Deixa forte */
   font-weight: 800;
+}
+
+/* Painel de aviso para visitante */
+.processos-panel--aviso {
+  /* Define fundo claro */
+  background: #f8fafc;
+
+  /* Define borda azul suave */
+  border-color: rgba(19, 33, 70, 0.18);
+}
+
+/* Texto do aviso */
+.processos-panel--aviso p {
+  /* Remove margem padrão */
+  margin: 0;
+
+  /* Define cor */
+  color: #374151;
+
+  /* Define tamanho */
+  font-size: 0.95rem;
+
+  /* Define peso */
+  font-weight: 600;
 }
 
 /* Área dos filtros */
 .processos-filtros {
+  /* Ativa grid */
   display: grid;
 
-  grid-template-columns: 1fr 1fr auto;
+  /* Cria três colunas */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
-  align-items: end;
-
+  /* Espaço entre filtros */
   gap: 1rem;
+
+  /* Alinha ao final */
+  align-items: end;
 }
 
-/* Container do botão de limpar filtros */
+/* Área do botão limpar filtros */
 .processos-filtros__button {
+  /* Organiza botão */
   display: flex;
 
-  align-items: flex-end;
-
-  justify-content: flex-start;
+  /* Alinha ao final */
+  align-items: end;
 }
 
 /* Botão limpar filtros */
 .processos-filtros__clear-button {
-  border: 2px solid rgb(19, 33, 70);
+  /* Ocupa largura total */
+  width: 100%;
 
-  border-radius: 8px;
+  /* Remove borda */
+  border: none;
 
-  padding: 0.65rem 1rem;
+  /* Fundo cinza */
+  background: #e5e7eb;
 
-  background: #ffffff;
+  /* Texto escuro */
+  color: #111827;
 
-  color: rgb(19, 33, 70);
+  /* Espaçamento */
+  padding: 0.9rem 1rem;
 
-  font-size: 0.9rem;
+  /* Arredonda */
+  border-radius: 0.75rem;
 
+  /* Texto forte */
   font-weight: 800;
 
+  /* Cursor */
   cursor: pointer;
 
+  /* Suaviza */
   transition: 0.2s ease;
 }
 
-/* Hover do botão limpar filtros */
+/* Hover do botão limpar */
 .processos-filtros__clear-button:hover {
-  background: rgb(19, 33, 70);
+  /* Escurece fundo */
+  background: #d1d5db;
 
-  color: #ffffff;
-
+  /* Move levemente */
   transform: translateY(-2px);
 }
 
-/* Ajuste geral da tabela PrimeNG */
+/* Estilo geral da tabela PrimeNG */
 :host ::ng-deep .p-datatable {
-  font-size: 0.9rem;
+  /* Define largura total */
+  width: 100%;
 }
 
 /* Cabeçalho da tabela */
-:host ::ng-deep .p-datatable thead th {
-  padding: 0.65rem 0.5rem;
-
-  border-bottom: 1px solid #111827;
-
-  color: #000000;
-
-  font-weight: 700;
-
+:host ::ng-deep .p-datatable-thead > tr > th {
+  /* Define fundo branco */
   background: #ffffff;
-}
 
-/* Linhas da tabela */
-:host ::ng-deep .p-datatable tbody td {
-  padding: 0.55rem 0.5rem;
+  /* Define cor do texto */
+  color: #000000;
 
+  /* Deixa texto forte */
+  font-weight: 800;
+
+  /* Define borda inferior */
   border-bottom: 1px solid #111827;
 
-  color: #000000;
+  /* Espaçamento */
+  padding: 0.9rem;
 }
 
-/* Área dos botões editar/excluir */
+/* Células da tabela */
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  /* Espaçamento */
+  padding: 0.9rem;
+
+  /* Borda inferior */
+  border-bottom: 1px solid #d1d5db;
+
+  /* Cor do texto */
+  color: #000000;
+
+  /* Tamanho */
+  font-size: 1rem;
+}
+
+/* Paginação da tabela */
+:host ::ng-deep .p-paginator {
+  /* Remove fundo diferente */
+  background: #ffffff;
+
+  /* Remove bordas extras */
+  border: none;
+
+  /* Espaçamento superior */
+  padding-top: 1rem;
+}
+
+/* Remove o seletor visual de linhas por página caso apareça */
+:host ::ng-deep .p-paginator-rpp-options {
+  /* Esconde o seletor */
+  display: none !important;
+}
+
+/* Área dos botões de ação da tabela */
 .processos-table__actions {
+  /* Organiza botões lado a lado */
   display: flex;
 
+  /* Centraliza verticalmente */
   align-items: center;
 
-  gap: 0.4rem;
+  /* Cria espaço entre os botões */
+  gap: 0.5rem;
 }
 
-/* Botões de ação da tabela */
+/* Botão padrão de ação da tabela */
 .processos-table__action-button {
-  width: 30px;
+  /* Define largura fixa */
+  width: 34px;
 
-  height: 30px;
+  /* Define altura fixa */
+  height: 34px;
 
-  border: 1px solid transparent;
+  /* Remove borda padrão */
+  border: none;
 
-  border-radius: 6px;
+  /* Arredonda */
+  border-radius: 8px;
 
-  background: transparent;
+  /* Ativa flexbox */
+  display: flex;
 
-  color: #111827;
-
-  cursor: pointer;
-
-  display: inline-flex;
-
+  /* Centraliza verticalmente */
   align-items: center;
 
+  /* Centraliza horizontalmente */
   justify-content: center;
 
-  font-size: 1rem;
+  /* Mostra cursor */
+  cursor: pointer;
 
+  /* Suaviza hover */
   transition: 0.2s ease;
 }
 
-/* Hover geral dos botões de ação */
-.processos-table__action-button:hover {
-  transform: translateY(-1px);
+/* Ícone dentro do botão */
+.processos-table__action-button i {
+  /* Define tamanho do ícone */
+  font-size: 1rem;
 }
 
 /* Botão editar */
+.processos-table__action-button--edit {
+  /* Fundo azul escuro */
+  background: rgb(19, 33, 70);
+
+  /* Ícone branco */
+  color: #ffffff;
+}
+
+/* Hover do botão editar */
 .processos-table__action-button--edit:hover {
-  border-color: #f59e0b;
+  /* Clareia fundo */
+  background: rgb(31, 52, 112);
 
-  background: #fef3c7;
-
-  color: #92400e;
+  /* Move levemente */
+  transform: translateY(-2px);
 }
 
 /* Botão excluir */
-.processos-table__action-button--delete:hover {
-  border-color: #dc2626;
+.processos-table__action-button--delete {
+  /* Fundo vermelho */
+  background: #dc2626;
 
-  background: #fee2e2;
-
-  color: #991b1b;
+  /* Ícone branco */
+  color: #ffffff;
 }
 
-/* Paginação do PrimeNG */
-:host ::ng-deep .p-paginator {
-  padding: 0.5rem 0 0;
+/* Hover do botão excluir */
+.processos-table__action-button--delete:hover {
+  /* Escurece vermelho */
+  background: #b91c1c;
 
-  background: transparent;
+  /* Move levemente */
+  transform: translateY(-2px);
+}
 
+/* Fundo escuro que cobre a tela quando o modal abre */
+.modal-exclusao {
+  /* Fixa o modal sobre a tela inteira */
+  position: fixed;
+
+  /* Cola no topo */
+  top: 0;
+
+  /* Cola na esquerda */
+  left: 0;
+
+  /* Ocupa toda a largura */
+  width: 100%;
+
+  /* Ocupa toda a altura */
+  height: 100%;
+
+  /* Fundo escuro transparente */
+  background: rgba(15, 23, 42, 0.72);
+
+  /* Centraliza o card */
+  display: flex;
+
+  /* Centraliza verticalmente */
+  align-items: center;
+
+  /* Centraliza horizontalmente */
+  justify-content: center;
+
+  /* Espaçamento em telas pequenas */
+  padding: 1rem;
+
+  /* Fica acima de tudo */
+  z-index: 999;
+}
+
+/* Card branco do modal */
+.modal-exclusao__card {
+  /* Largura total disponível */
+  width: 100%;
+
+  /* Largura máxima */
+  max-width: 460px;
+
+  /* Fundo branco */
+  background: #ffffff;
+
+  /* Arredonda */
+  border-radius: 1.2rem;
+
+  /* Espaçamento interno */
+  padding: 1.6rem;
+
+  /* Sombra forte */
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+
+  /* Animação */
+  animation: modalEntrada 0.2s ease;
+}
+
+/* Cabeçalho do modal */
+.modal-exclusao__header {
+  /* Título e botão lado a lado */
+  display: flex;
+
+  /* Alinha verticalmente */
+  align-items: center;
+
+  /* Separa elementos */
+  justify-content: space-between;
+
+  /* Espaço abaixo */
+  margin-bottom: 1rem;
+}
+
+/* Título do modal */
+.modal-exclusao__title {
+  /* Remove margem */
+  margin: 0;
+
+  /* Tamanho */
+  font-size: 1.35rem;
+
+  /* Peso */
+  font-weight: 800;
+
+  /* Cor */
+  color: rgb(19, 33, 70);
+}
+
+/* Botão X */
+.modal-exclusao__close {
+  /* Largura */
+  width: 34px;
+
+  /* Altura */
+  height: 34px;
+
+  /* Remove borda */
   border: none;
+
+  /* Fundo cinza */
+  background: #f3f4f6;
+
+  /* Arredonda */
+  border-radius: 50%;
+
+  /* Cor */
+  color: #111827;
+
+  /* Tamanho */
+  font-size: 1.4rem;
+
+  /* Centraliza */
+  display: flex;
+
+  /* Centraliza vertical */
+  align-items: center;
+
+  /* Centraliza horizontal */
+  justify-content: center;
+
+  /* Cursor */
+  cursor: pointer;
+
+  /* Suaviza */
+  transition: 0.2s ease;
+}
+
+/* Hover do X */
+.modal-exclusao__close:hover {
+  /* Escurece fundo */
+  background: #e5e7eb;
+
+  /* Move levemente */
+  transform: translateY(-1px);
+}
+
+/* Texto principal */
+.modal-exclusao__text {
+  /* Margem */
+  margin: 0 0 1rem;
+
+  /* Cor */
+  color: #374151;
+
+  /* Tamanho */
+  font-size: 1rem;
+
+  /* Altura da linha */
+  line-height: 1.5;
+}
+
+/* Caixa de informações */
+.modal-exclusao__info {
+  /* Fundo claro */
+  background: #f8fafc;
+
+  /* Borda */
+  border: 1px solid #e5e7eb;
+
+  /* Arredonda */
+  border-radius: 0.9rem;
+
+  /* Espaçamento */
+  padding: 1rem;
+
+  /* Espaço abaixo */
+  margin-bottom: 1rem;
+}
+
+/* Parágrafos das informações */
+.modal-exclusao__info p {
+  /* Margem */
+  margin: 0 0 0.45rem;
+
+  /* Cor */
+  color: #374151;
+
+  /* Tamanho */
+  font-size: 0.95rem;
+}
+
+/* Último parágrafo */
+.modal-exclusao__info p:last-child {
+  /* Remove margem */
+  margin-bottom: 0;
+}
+
+/* Aviso */
+.modal-exclusao__warning {
+  /* Fundo vermelho claro */
+  background: #fee2e2;
+
+  /* Texto vermelho */
+  color: #991b1b;
+
+  /* Espaçamento */
+  padding: 0.85rem;
+
+  /* Arredonda */
+  border-radius: 0.8rem;
+
+  /* Margem */
+  margin: 0 0 1.2rem;
+
+  /* Negrito */
+  font-weight: 700;
+
+  /* Tamanho */
+  font-size: 0.92rem;
+}
+
+/* Área dos botões */
+.modal-exclusao__actions {
+  /* Flexbox */
+  display: flex;
+
+  /* Alinha */
+  align-items: center;
+
+  /* Alinha à direita */
+  justify-content: flex-end;
+
+  /* Espaço */
+  gap: 0.8rem;
+}
+
+/* Botões do modal */
+.modal-exclusao__button {
+  /* Remove borda */
+  border: none;
+
+  /* Arredonda */
+  border-radius: 0.75rem;
+
+  /* Espaçamento */
+  padding: 0.85rem 1rem;
+
+  /* Negrito */
+  font-weight: 800;
+
+  /* Cursor */
+  cursor: pointer;
+
+  /* Suaviza */
+  transition: 0.2s ease;
+}
+
+/* Botão cancelar */
+.modal-exclusao__button--cancel {
+  /* Fundo cinza */
+  background: #e5e7eb;
+
+  /* Texto escuro */
+  color: #111827;
+}
+
+/* Hover cancelar */
+.modal-exclusao__button--cancel:hover {
+  /* Fundo mais escuro */
+  background: #d1d5db;
+
+  /* Move */
+  transform: translateY(-2px);
+}
+
+/* Botão excluir */
+.modal-exclusao__button--delete {
+  /* Fundo vermelho */
+  background: #dc2626;
+
+  /* Texto branco */
+  color: #ffffff;
+}
+
+/* Hover excluir */
+.modal-exclusao__button--delete:hover {
+  /* Vermelho escuro */
+  background: #b91c1c;
+
+  /* Move */
+  transform: translateY(-2px);
+}
+
+/* Animação do modal */
+@keyframes modalEntrada {
+  /* Início */
+  from {
+    /* Invisível */
+    opacity: 0;
+
+    /* Menor */
+    transform: scale(0.96);
+  }
+
+  /* Final */
+  to {
+    /* Visível */
+    opacity: 1;
+
+    /* Tamanho normal */
+    transform: scale(1);
+  }
 }
 
 /* Responsividade */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
+  /* Tela de processos */
+  .processos {
+    /* Reduz espaçamento */
+    padding: 1rem;
+  }
+
+  /* Grid do formulário */
   .processos-form__grid {
+    /* Uma coluna */
     grid-template-columns: 1fr;
   }
 
+  /* Filtros */
   .processos-filtros {
+    /* Uma coluna */
     grid-template-columns: 1fr;
   }
 
-  .processos-filtros__button {
-    justify-content: stretch;
+  /* Botões do formulário */
+  .processos-form__actions {
+    /* Coloca em coluna */
+    flex-direction: column;
+
+    /* Estica os botões */
+    align-items: stretch;
+  }
+}
+
+/* Responsividade do modal */
+@media (max-width: 520px) {
+  /* Botões do modal */
+  .modal-exclusao__actions {
+    /* Coloca em coluna */
+    flex-direction: column;
   }
 
-  .processos-filtros__clear-button {
+  /* Botões do modal */
+  .modal-exclusao__button {
+    /* Ocupa toda largura */
     width: 100%;
   }
+}
+
+/* Área responsiva da tabela */
+.processos-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Tabela normal de processos */
+.processos-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+/* Cabeçalho da tabela */
+.processos-table thead th {
+  padding: 1rem;
+  text-align: left;
+  color: #000000;
+  font-size: 1rem;
+  font-weight: 800;
+  border-bottom: 1px solid #111827;
+}
+
+/* Células da tabela */
+.processos-table tbody td {
+  padding: 1rem;
+  color: #000000;
+  font-size: 1rem;
+  border-bottom: 1px solid #d1d5db;
+}
+
+/* Mensagem de tabela vazia */
+.processos-table__empty {
+  text-align: center;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+/* Status do processo */
+.processos-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+/* Status ativo */
+.processos-status--ativo {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Status finalizado */
+.processos-status--finalizado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Status suspenso */
+.processos-status--suspenso {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Área dos botões de ação */
+.processos-table__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Botões de ação */
+.processos-table__action-button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Botão editar */
+.processos-table__action-button--edit {
+  background: rgb(19, 33, 70);
+  color: #ffffff;
+}
+
+/* Hover editar */
+.processos-table__action-button--edit:hover {
+  background: rgb(31, 52, 112);
+  transform: translateY(-2px);
+}
+
+/* Botão excluir */
+.processos-table__action-button--delete {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+/* Hover excluir */
+.processos-table__action-button--delete:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
 }

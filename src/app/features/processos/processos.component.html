@@ -1,164 +1,181 @@
 <!-- Container principal da tela de processos -->
-<div class="processos">
+<section class="processos">
 
-  <!-- Título principal -->
+  <!-- Título principal da página -->
   <h1 class="processos__title">
     Gestão de Processos
   </h1>
 
-  <!-- Formulário de cadastro/edição -->
+  <!-- Aviso exibido para visitante -->
+  <div
+    class="processos-panel processos-panel--aviso"
+    *ngIf="usuarioVisitante()"
+  >
+    <h2 class="processos-panel__title">
+      Modo visitante
+    </h2>
+
+    <p>
+      Você pode visualizar e filtrar os processos, mas não pode criar, editar ou excluir registros.
+    </p>
+  </div>
+
+  <!-- Mensagem temporária de permissão -->
+  <div
+    class="processos-panel processos-panel--aviso"
+    *ngIf="mensagemPermissao"
+  >
+    <p>
+      {{ mensagemPermissao }}
+    </p>
+  </div>
+
+  <!-- Formulário de cadastro e edição visível apenas para administrador -->
   <form
+    class="processos-form"
     [formGroup]="form"
     (ngSubmit)="salvar()"
-    class="processos-form"
+    *ngIf="podeAlterarProcessos()"
   >
-
-    <!-- Título muda se está editando ou cadastrando -->
+    <!-- Título do formulário -->
     <h2 class="processos-form__title">
       {{ editandoId !== null ? 'Editar Processo' : 'Processo Cadastral' }}
     </h2>
 
-    <!-- Grade dos dois primeiros campos -->
+    <!-- Grade dos campos -->
     <div class="processos-form__grid">
 
       <!-- Campo número -->
       <div class="form-field">
-
-        <!-- Nome do campo -->
-        <label class="form-field__label">
+        <label
+          class="form-field__label"
+          for="numero"
+        >
           Número
         </label>
 
-        <!-- Input do número do processo -->
         <input
+          class="form-field__input"
+          id="numero"
           type="text"
           formControlName="numero"
-          class="form-field__input"
+          placeholder="Ex.: 0001-2026"
         />
 
-        <!-- Mensagem de erro do campo número -->
         <p
-          *ngIf="form.get('numero')?.touched && form.get('numero')?.invalid"
           class="form-field__error"
+          *ngIf="form.controls.numero.invalid && form.controls.numero.touched"
         >
           O número do processo é obrigatório.
         </p>
-
       </div>
 
       <!-- Campo cliente -->
       <div class="form-field">
-
-        <!-- Nome do campo -->
-        <label class="form-field__label">
+        <label
+          class="form-field__label"
+          for="cliente"
+        >
           Cliente
         </label>
 
-        <!-- Input do cliente -->
         <input
+          class="form-field__input"
+          id="cliente"
           type="text"
           formControlName="cliente"
-          class="form-field__input"
+          placeholder="Ex.: João Silva"
         />
 
-        <!-- Mensagem de erro do campo cliente -->
         <p
-          *ngIf="form.get('cliente')?.touched && form.get('cliente')?.invalid"
           class="form-field__error"
+          *ngIf="form.controls.cliente.invalid && form.controls.cliente.touched"
         >
           O nome do cliente é obrigatório.
         </p>
-
       </div>
 
+      <!-- Campo descrição -->
+      <div class="form-field">
+        <label
+          class="form-field__label"
+          for="descricao"
+        >
+          Descrição
+        </label>
+
+        <textarea
+          class="form-field__input form-field__textarea"
+          id="descricao"
+          formControlName="descricao"
+          placeholder="Descreva o processo"
+        ></textarea>
+      </div>
+
+      <!-- Campo status -->
+      <div class="form-field">
+        <label
+          class="form-field__label"
+          for="status"
+        >
+          Status
+        </label>
+
+        <select
+          class="form-field__input"
+          id="status"
+          formControlName="status"
+        >
+          <option value="NENHUM">
+            Selecione um status
+          </option>
+
+          <option value="ATIVO">
+            ATIVO
+          </option>
+
+          <option value="FINALIZADO">
+            FINALIZADO
+          </option>
+
+          <option value="SUSPENSO">
+            SUSPENSO
+          </option>
+        </select>
+
+        <p
+          class="form-field__error"
+          *ngIf="form.controls.status.value === 'NENHUM' && form.controls.status.touched"
+        >
+          Selecione um status válido.
+        </p>
+      </div>
     </div>
 
-    <!-- Campo descrição -->
-    <div class="form-field">
-
-      <!-- Nome do campo -->
-      <label class="form-field__label">
-        Descrição
-      </label>
-
-      <!-- Campo de texto da descrição -->
-      <textarea
-        formControlName="descricao"
-        rows="4"
-        class="form-field__input form-field__textarea"
-      ></textarea>
-
-    </div>
-
-    <!-- Campo status -->
-    <div class="form-field">
-
-      <!-- Nome do campo -->
-      <label class="form-field__label">
-        Status
-      </label>
-
-      <!-- Select do status -->
-      <select
-        formControlName="status"
-        class="form-field__input"
-      >
-        <option value="NENHUM">
-          Selecione um status
-        </option>
-
-        <option value="ATIVO">
-          ATIVO
-        </option>
-
-        <option value="FINALIZADO">
-          FINALIZADO
-        </option>
-
-        <option value="SUSPENSO">
-          SUSPENSO
-        </option>
-      </select>
-
-      <!-- Mensagem de erro do status -->
-      <p
-        *ngIf="form.get('status')?.touched && form.get('status')?.value === 'NENHUM'"
-        class="form-field__error"
-      >
-        Selecione um status válido.
-      </p>
-
-    </div>
-
-    <!-- Área dos botões -->
+    <!-- Botões do formulário -->
     <div class="processos-form__actions">
-
-      <!-- Botão principal para salvar ou atualizar processo -->
       <button
-        type="submit"
         class="processos-form__submit-button"
+        type="submit"
       >
         {{ editandoId !== null ? 'Atualizar Processo' : 'Salvar Processo' }}
       </button>
 
-      <!-- Botão cancelar só aparece em edição -->
       <button
-        *ngIf="editandoId !== null"
-        type="button"
         class="processos-form__cancel-button"
+        type="button"
+        *ngIf="editandoId !== null"
         (click)="cancelarEdicao()"
       >
         Cancelar
       </button>
-
     </div>
-
   </form>
 
   <!-- Painel de filtros -->
-  <div class="processos-panel">
+  <section class="processos-panel">
 
-    <!-- Título do painel de filtros -->
+    <!-- Título dos filtros -->
     <h2 class="processos-panel__title">
       Filtros
     </h2>
@@ -168,38 +185,37 @@
 
       <!-- Filtro por cliente -->
       <div class="form-field">
-
-        <!-- Nome do campo -->
-        <label class="form-field__label">
+        <label
+          class="form-field__label"
+          for="filtroCliente"
+        >
           Filtrar por cliente
         </label>
 
-        <!-- Input do filtro por cliente -->
         <input
-          type="text"
-          [(ngModel)]="filtroCliente"
-          [ngModelOptions]="{ standalone: true }"
-          (input)="aplicarFiltros()"
           class="form-field__input"
+          id="filtroCliente"
+          type="text"
           placeholder="Digite o nome do cliente"
+          [(ngModel)]="filtroCliente"
+          (ngModelChange)="aplicarFiltros()"
         />
-
       </div>
 
       <!-- Filtro por status -->
       <div class="form-field">
-
-        <!-- Nome do campo -->
-        <label class="form-field__label">
+        <label
+          class="form-field__label"
+          for="filtroStatus"
+        >
           Filtrar por status
         </label>
 
-        <!-- Select do filtro por status -->
         <select
-          [(ngModel)]="filtroStatus"
-          [ngModelOptions]="{ standalone: true }"
-          (change)="aplicarFiltros()"
           class="form-field__input"
+          id="filtroStatus"
+          [(ngModel)]="filtroStatus"
+          (ngModelChange)="aplicarFiltros()"
         >
           <option value="">
             Todos
@@ -217,118 +233,209 @@
             SUSPENSO
           </option>
         </select>
-
       </div>
 
-      <!-- Botão para limpar filtros -->
+      <!-- Botão limpar filtros -->
       <div class="processos-filtros__button">
-
         <button
-          type="button"
           class="processos-filtros__clear-button"
+          type="button"
           (click)="limparFiltros()"
         >
           Limpar filtros
         </button>
-
       </div>
-
     </div>
+  </section>
 
-  </div>
-
-  <!-- Painel da tabela -->
-  <div class="processos-panel">
+  <!-- Painel da lista -->
+  <section class="processos-panel">
 
     <!-- Título da lista -->
     <h2 class="processos-panel__title">
       Lista de Processos
     </h2>
 
-    <!-- Tabela do PrimeNG -->
-    <p-table
-      [value]="processosFiltrados"
-      [paginator]="true"
-      [rows]="5"
-      [tableStyle]="{ 'min-width': '60rem' }"
-      responsiveLayout="scroll"
-    >
+    <!-- Área responsiva da tabela -->
+    <div class="processos-table-wrapper">
 
-      <!-- Cabeçalho da tabela -->
-      <ng-template pTemplate="header">
+      <!-- Tabela normal, sem PrimeNG -->
+      <table class="processos-table">
 
-        <tr>
-          <th>Número</th>
-          <th>Cliente</th>
-          <th>Status</th>
-          <th>Criação</th>
-          <th>Ações</th>
-        </tr>
+        <!-- Cabeçalho da tabela -->
+        <thead>
+          <tr>
+            <th>
+              Número
+            </th>
 
-      </ng-template>
+            <th>
+              Cliente
+            </th>
 
-      <!-- Corpo da tabela -->
-      <ng-template
-        pTemplate="body"
-        let-p
+            <th>
+              Status
+            </th>
+
+            <th>
+              Criação
+            </th>
+
+            <th *ngIf="podeAlterarProcessos()">
+              Ações
+            </th>
+          </tr>
+        </thead>
+
+        <!-- Corpo da tabela -->
+        <tbody>
+
+          <!-- Linha de cada processo -->
+          <tr *ngFor="let p of processosFiltrados">
+            <td>
+              {{ p.numero }}
+            </td>
+
+            <td>
+              {{ p.cliente }}
+            </td>
+
+            <td>
+              <span
+                class="processos-status"
+                [class.processos-status--ativo]="p.status === 'ATIVO'"
+                [class.processos-status--finalizado]="p.status === 'FINALIZADO'"
+                [class.processos-status--suspenso]="p.status === 'SUSPENSO'"
+              >
+                {{ p.status }}
+              </span>
+            </td>
+
+            <td>
+              {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+
+            <td *ngIf="podeAlterarProcessos()">
+              <div class="processos-table__actions">
+
+                <!-- Botão editar com símbolo de lápis -->
+                <button
+                  class="processos-table__action-button processos-table__action-button--edit"
+                  type="button"
+                  title="Editar processo"
+                  aria-label="Editar processo"
+                  (click)="editar(p)"
+                >
+                  ✎
+                </button>
+
+                <!-- Botão excluir com símbolo de lixeira -->
+                <button
+                  class="processos-table__action-button processos-table__action-button--delete"
+                  type="button"
+                  title="Excluir processo"
+                  aria-label="Excluir processo"
+                  (click)="abrirModalExclusao(p)"
+                >
+                  🗑
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Mensagem quando não houver processos -->
+          <tr *ngIf="processosFiltrados.length === 0">
+            <td
+              class="processos-table__empty"
+              [attr.colspan]="podeAlterarProcessos() ? 5 : 4"
+            >
+              Nenhum processo encontrado.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Fundo escuro do modal de exclusão -->
+  <div
+    class="modal-exclusao"
+    *ngIf="modalExclusaoAberto"
+  >
+    <!-- Caixa principal do modal -->
+    <div class="modal-exclusao__card">
+
+      <!-- Cabeçalho do modal -->
+      <div class="modal-exclusao__header">
+
+        <!-- Título do modal -->
+        <h2 class="modal-exclusao__title">
+          Confirmar exclusão
+        </h2>
+
+        <!-- Botão fechar -->
+        <button
+          class="modal-exclusao__close"
+          type="button"
+          (click)="cancelarExclusao()"
+          aria-label="Fechar modal"
+        >
+          ×
+        </button>
+      </div>
+
+      <!-- Texto principal -->
+      <p class="modal-exclusao__text">
+        Tem certeza que deseja excluir este processo?
+      </p>
+
+      <!-- Informações do processo -->
+      <div
+        class="modal-exclusao__info"
+        *ngIf="processoSelecionadoParaExcluir"
       >
+        <p>
+          <strong>Número:</strong>
+          {{ processoSelecionadoParaExcluir.numero }}
+        </p>
 
-        <tr>
+        <p>
+          <strong>Cliente:</strong>
+          {{ processoSelecionadoParaExcluir.cliente }}
+        </p>
 
-          <!-- Número do processo -->
-          <td>
-            {{ p.numero }}
-          </td>
+        <p>
+          <strong>Status:</strong>
+          {{ processoSelecionadoParaExcluir.status }}
+        </p>
+      </div>
 
-          <!-- Cliente do processo -->
-          <td>
-            {{ p.cliente }}
-          </td>
+      <!-- Aviso -->
+      <p class="modal-exclusao__warning">
+        Essa ação não poderá ser desfeita.
+      </p>
 
-          <!-- Status do processo -->
-          <td>
-            <p-tag
-              [value]="p.status"
-              [severity]="getStatusSeverity(p.status)"
-            ></p-tag>
-          </td>
+      <!-- Botões do modal -->
+      <div class="modal-exclusao__actions">
 
-          <!-- Data de criação -->
-          <td>
-            {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}
-          </td>
+        <!-- Botão cancelar -->
+        <button
+          class="modal-exclusao__button modal-exclusao__button--cancel"
+          type="button"
+          (click)="cancelarExclusao()"
+        >
+          Cancelar
+        </button>
 
-          <!-- Ações -->
-          <td class="processos-table__actions">
-
-            <!-- Botão editar -->
-            <button
-              type="button"
-              class="processos-table__action-button processos-table__action-button--edit"
-              (click)="editar(p)"
-              title="Editar processo"
-            >
-              ✎
-            </button>
-
-            <!-- Botão excluir -->
-            <button
-              type="button"
-              class="processos-table__action-button processos-table__action-button--delete"
-              (click)="excluir(p.id)"
-              title="Excluir processo"
-            >
-              🗑
-            </button>
-
-          </td>
-
-        </tr>
-
-      </ng-template>
-
-    </p-table>
-
+        <!-- Botão confirmar exclusão -->
+        <button
+          class="modal-exclusao__button modal-exclusao__button--delete"
+          type="button"
+          (click)="confirmarExclusao()"
+        >
+          Excluir processo
+        </button>
+      </div>
+    </div>
   </div>
-
-</div>
+</section>
