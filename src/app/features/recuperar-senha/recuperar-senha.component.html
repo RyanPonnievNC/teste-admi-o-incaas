@@ -1,0 +1,110 @@
+<main class="login-page">
+  <section class="login-card">
+
+    <div class="login-card__brand">
+      <div class="login-card__icon">
+        <span class="login-card__icon-text">
+          <img
+            src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png"
+            alt="Jurídico Pro"
+            class="app-navbar__logo"
+          />
+        </span>
+      </div>
+      <h1 class="login-card__title">Jurídico Pro</h1>
+      <p class="login-card__subtitle" *ngIf="etapa === 1">
+        Digite seu usuário para redefinir a senha.
+      </p>
+      <p class="login-card__subtitle" *ngIf="etapa === 2">
+        Digite e confirme sua nova senha.
+      </p>
+    </div>
+
+    <form class="login-form" *ngIf="etapa === 1" (ngSubmit)="verificarUsuario()">
+      <div class="login-form__group">
+        <label class="login-form__label" for="usuarioRecuperar">
+          Usuário administrador
+        </label>
+        <input
+          class="login-form__input"
+          id="usuarioRecuperar"
+          name="usuarioRecuperar"
+          type="text"
+          placeholder="Digite seu usuário"
+          autocomplete="username"
+          [(ngModel)]="usuarioDigitado"
+        />
+      </div>
+      <p class="login-form__error" *ngIf="mensagemErro">{{ mensagemErro }}</p>
+      <p class="login-form__success" *ngIf="mensagemSucesso">{{ mensagemSucesso }}</p>
+      <button class="login-form__button" type="submit">Continuar</button>
+      <button class="login-form__visitor-button" type="button" (click)="voltarParaLogin()">
+        Voltar para login
+      </button>
+    </form>
+
+    <form class="login-form" *ngIf="etapa === 2" (ngSubmit)="redefinirSenha()">
+      <div class="login-form__group">
+        <label class="login-form__label" for="novaSenha">Nova senha</label>
+        <div class="login-form__password-wrapper">
+          <input
+            class="login-form__input login-form__input--password"
+            id="novaSenha"
+            name="novaSenha"
+            [type]="novaSenhaVisivel ? 'text' : 'password'"
+            placeholder="Digite a nova senha"
+            autocomplete="new-password"
+            [(ngModel)]="novaSenha"
+          />
+          <button
+            class="login-form__eye-button"
+            type="button"
+            (click)="alternarNovaSenha()"
+            [attr.aria-label]="novaSenhaVisivel ? 'Ocultar senha' : 'Mostrar senha'"
+          >
+            <img
+              class="login-form__eye-image"
+              [src]="novaSenhaVisivel ? caminhoOlhoAberto : caminhoOlhoFechado"
+              [alt]="novaSenhaVisivel ? 'Olho aberto' : 'Olho fechado'"
+            />
+          </button>
+        </div>
+      </div>
+
+      <div class="login-form__group">
+        <label class="login-form__label" for="confirmarSenha">Confirmar nova senha</label>
+        <div class="login-form__password-wrapper">
+          <input
+            class="login-form__input login-form__input--password"
+            id="confirmarSenha"
+            name="confirmarSenha"
+            [type]="confirmarSenhaVisivel ? 'text' : 'password'"
+            placeholder="Confirme a nova senha"
+            autocomplete="new-password"
+            [(ngModel)]="confirmarSenha"
+          />
+          <button
+            class="login-form__eye-button"
+            type="button"
+            (click)="alternarConfirmarSenha()"
+            [attr.aria-label]="confirmarSenhaVisivel ? 'Ocultar senha' : 'Mostrar senha'"
+          >
+            <img
+              class="login-form__eye-image"
+              [src]="confirmarSenhaVisivel ? caminhoOlhoAberto : caminhoOlhoFechado"
+              [alt]="confirmarSenhaVisivel ? 'Olho aberto' : 'Olho fechado'"
+            />
+          </button>
+        </div>
+      </div>
+
+      <p class="login-form__error" *ngIf="mensagemErro">{{ mensagemErro }}</p>
+      <p class="login-form__success" *ngIf="mensagemSucesso">{{ mensagemSucesso }}</p>
+      <button class="login-form__button" type="submit">Redefinir senha</button>
+      <button class="login-form__visitor-button" type="button" (click)="voltarParaLogin()">
+        Voltar para login
+      </button>
+    </form>
+
+  </section>
+</main>

@@ -16,6 +16,9 @@ import { ProcessosComponent } from './features/processos/processos.component';
 // Importa o componente da página de perfil
 import { PerfilComponent } from './features/perfil/perfil.component';
 
+// Importa o componente de recuperar senha
+import { RecuperarSenhaComponent } from './features/recuperar-senha/recuperar-senha.component';
+
 // Importa o guard que permite admin e visitante
 import { authGuard } from './core/guards/auth.guard';
 
@@ -36,6 +39,12 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+
+  // Rota de recuperar senha
+  {
+    path: 'recuperar-senha',
+    component: RecuperarSenhaComponent
   },
 
   // Rota do Dashboard

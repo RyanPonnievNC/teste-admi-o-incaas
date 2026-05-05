@@ -178,9 +178,9 @@ export class AppComponent {
     return outlet?.activatedRouteData?.['animation'];
   }
 
-  // Verifica se a rota atual é a tela de login
+  // Verifica se a rota atual é a tela de login ou recuperar senha
   isLoginPage(): boolean {
-    return this.router.url === '/login';
+    return this.router.url === '/login' || this.router.url === '/recuperar-senha';
   }
 
   // Verifica se o usuário está logado

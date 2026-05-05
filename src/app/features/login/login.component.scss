@@ -529,4 +529,22 @@
     /* Reduz o tamanho do título */
     font-size: 1.7rem;
   }
+
+  /* Link esqueci minha senha */
+.login-form__forgot-link {
+  display: block;
+  text-align: center;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.login-form__forgot-link:hover {
+  color: #6b7280;
+  text-decoration: underline;
+}
+
 }

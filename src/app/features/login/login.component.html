@@ -7,10 +7,7 @@
     <!-- Área da marca do sistema -->
     <div class="login-card__brand">
 
-      <!-- Caixa do ícone/logo -->
       <div class="login-card__icon">
-
-        <!-- Texto usado como marca visual caso não queira usar imagem de logo -->
         <span class="login-card__icon-text">
           <img
             src="ChatGPT Image 21 de abr. de 2026, 22_50_50.png"
@@ -20,36 +17,22 @@
         </span>
       </div>
 
-      <!-- Título principal da tela -->
       <h1 class="login-card__title">Jurídico Pro</h1>
 
-      <!-- Subtítulo exibido quando está no modo login -->
       <p class="login-card__subtitle" *ngIf="!modoCadastroAdmin">
         Entre como administrador ou acesse como visitante.
       </p>
 
-      <!-- Subtítulo exibido quando está no modo cadastro -->
       <p class="login-card__subtitle" *ngIf="modoCadastroAdmin">
         Cadastre uma nova conta administrativa com código de verificação.
       </p>
     </div>
 
     <!-- Formulário de login do administrador -->
-    <form
-      class="login-form"
-      *ngIf="!modoCadastroAdmin"
-      (ngSubmit)="entrarComoAdmin()"
-    >
+    <form class="login-form" *ngIf="!modoCadastroAdmin" (ngSubmit)="entrarComoAdmin()">
 
-      <!-- Grupo do campo de usuário -->
       <div class="login-form__group">
-
-        <!-- Label do campo usuário -->
-        <label class="login-form__label" for="usuario">
-          Usuário administrador
-        </label>
-
-        <!-- Input onde o usuário digita o nome de administrador -->
+        <label class="login-form__label" for="usuario">Usuário administrador</label>
         <input
           class="login-form__input"
           id="usuario"
@@ -61,18 +44,9 @@
         />
       </div>
 
-      <!-- Grupo do campo de senha do login -->
       <div class="login-form__group">
-
-        <!-- Label do campo senha -->
-        <label class="login-form__label" for="senha">
-          Senha
-        </label>
-
-        <!-- Área que envolve o input de senha e o botão do olho -->
+        <label class="login-form__label" for="senha">Senha</label>
         <div class="login-form__password-wrapper">
-
-          <!-- Input da senha, que muda entre password e text -->
           <input
             class="login-form__input login-form__input--password"
             id="senha"
@@ -82,16 +56,12 @@
             autocomplete="current-password"
             [(ngModel)]="senha"
           />
-
-          <!-- Botão para mostrar ou ocultar a senha -->
           <button
             class="login-form__eye-button"
             type="button"
             (click)="alternarVisibilidadeSenhaLogin()"
             [attr.aria-label]="senhaLoginVisivel ? 'Ocultar senha' : 'Mostrar senha'"
           >
-
-            <!-- Imagem do olho que muda entre aberto e fechado -->
             <img
               class="login-form__eye-image"
               [src]="senhaLoginVisivel ? caminhoOlhoAberto : caminhoOlhoFechado"
@@ -101,27 +71,15 @@
         </div>
       </div>
 
-      <!-- Mensagem de erro do login -->
-      <p class="login-form__error" *ngIf="mensagemErro">
-        {{ mensagemErro }}
-      </p>
+      <p class="login-form__error" *ngIf="mensagemErro">{{ mensagemErro }}</p>
+      <p class="login-form__success" *ngIf="mensagemSucesso">{{ mensagemSucesso }}</p>
 
-      <!-- Mensagem de sucesso do login -->
-      <p class="login-form__success" *ngIf="mensagemSucesso">
-        {{ mensagemSucesso }}
-      </p>
-
-      <!-- Botão para entrar como administrador -->
       <button class="login-form__button" type="submit">
         Entrar como administrador
       </button>
 
-      <!-- Separador visual -->
-      <div class="login-form__divider">
-        ou
-      </div>
+      <div class="login-form__divider">ou</div>
 
-      <!-- Botão para entrar como visitante -->
       <button
         class="login-form__visitor-button"
         type="button"
@@ -130,7 +88,6 @@
         Entrar como visitante
       </button>
 
-      <!-- Botão para abrir o cadastro de administrador -->
       <button
         class="login-form__create-button"
         type="button"
@@ -138,24 +95,19 @@
       >
         Criar conta admin
       </button>
+
+      <!-- Link discreto de esqueci minha senha no final -->
+      <a class="login-form__forgot-link" routerLink="/recuperar-senha">
+        Esqueci minha senha
+      </a>
+
     </form>
 
     <!-- Formulário de cadastro de administrador -->
-    <form
-      class="login-form"
-      *ngIf="modoCadastroAdmin"
-      (ngSubmit)="criarContaAdmin()"
-    >
+    <form class="login-form" *ngIf="modoCadastroAdmin" (ngSubmit)="criarContaAdmin()">
 
-      <!-- Grupo do campo nome -->
       <div class="login-form__group">
-
-        <!-- Label do campo nome -->
-        <label class="login-form__label" for="cadastroNome">
-          Nome
-        </label>
-
-        <!-- Input do nome -->
+        <label class="login-form__label" for="cadastroNome">Nome</label>
         <input
           class="login-form__input"
           id="cadastroNome"
@@ -167,15 +119,8 @@
         />
       </div>
 
-      <!-- Grupo do campo sobrenome -->
       <div class="login-form__group">
-
-        <!-- Label do campo sobrenome -->
-        <label class="login-form__label" for="cadastroSobrenome">
-          Sobrenome
-        </label>
-
-        <!-- Input do sobrenome -->
+        <label class="login-form__label" for="cadastroSobrenome">Sobrenome</label>
         <input
           class="login-form__input"
           id="cadastroSobrenome"
@@ -187,15 +132,8 @@
         />
       </div>
 
-      <!-- Grupo do campo idade -->
       <div class="login-form__group">
-
-        <!-- Label do campo idade -->
-        <label class="login-form__label" for="cadastroIdade">
-          Idade
-        </label>
-
-        <!-- Input da idade -->
+        <label class="login-form__label" for="cadastroIdade">Idade</label>
         <input
           class="login-form__input"
           id="cadastroIdade"
@@ -207,15 +145,8 @@
         />
       </div>
 
-      <!-- Grupo do campo CPF -->
       <div class="login-form__group">
-
-        <!-- Label do campo CPF -->
-        <label class="login-form__label" for="cadastroCpf">
-          CPF
-        </label>
-
-        <!-- Input do CPF -->
+        <label class="login-form__label" for="cadastroCpf">CPF</label>
         <input
           class="login-form__input"
           id="cadastroCpf"
@@ -227,15 +158,8 @@
         />
       </div>
 
-      <!-- Grupo do campo usuário -->
       <div class="login-form__group">
-
-        <!-- Label do campo usuário -->
-        <label class="login-form__label" for="cadastroUsuario">
-          Usuário
-        </label>
-
-        <!-- Input do usuário -->
+        <label class="login-form__label" for="cadastroUsuario">Usuário</label>
         <input
           class="login-form__input"
           id="cadastroUsuario"
@@ -247,18 +171,9 @@
         />
       </div>
 
-      <!-- Grupo do campo senha do cadastro -->
       <div class="login-form__group">
-
-        <!-- Label do campo senha -->
-        <label class="login-form__label" for="cadastroSenha">
-          Senha
-        </label>
-
-        <!-- Área que envolve a senha do cadastro e o botão do olho -->
+        <label class="login-form__label" for="cadastroSenha">Senha</label>
         <div class="login-form__password-wrapper">
-
-          <!-- Input da senha do cadastro -->
           <input
             class="login-form__input login-form__input--password"
             id="cadastroSenha"
@@ -268,16 +183,12 @@
             autocomplete="new-password"
             [(ngModel)]="cadastroSenha"
           />
-
-          <!-- Botão para mostrar ou ocultar a senha do cadastro -->
           <button
             class="login-form__eye-button"
             type="button"
             (click)="alternarVisibilidadeSenhaCadastro()"
             [attr.aria-label]="senhaCadastroVisivel ? 'Ocultar senha' : 'Mostrar senha'"
           >
-
-            <!-- Imagem do olho que muda entre aberto e fechado -->
             <img
               class="login-form__eye-image"
               [src]="senhaCadastroVisivel ? caminhoOlhoAberto : caminhoOlhoFechado"
@@ -287,18 +198,9 @@
         </div>
       </div>
 
-      <!-- Grupo do campo código de verificação -->
       <div class="login-form__group">
-
-        <!-- Label do campo código -->
-        <label class="login-form__label" for="cadastroCodigoVerificacao">
-          Código de verificação
-        </label>
-
-        <!-- Área que envolve o código de verificação e o botão do olho -->
+        <label class="login-form__label" for="cadastroCodigoVerificacao">Código de verificação</label>
         <div class="login-form__password-wrapper">
-
-          <!-- Input do código de verificação, que muda entre password e text -->
           <input
             class="login-form__input login-form__input--password"
             id="cadastroCodigoVerificacao"
@@ -308,16 +210,12 @@
             autocomplete="off"
             [(ngModel)]="cadastroCodigoVerificacao"
           />
-
-          <!-- Botão para mostrar ou ocultar o código de verificação -->
           <button
             class="login-form__eye-button"
             type="button"
             (click)="alternarVisibilidadeCodigoVerificacao()"
             [attr.aria-label]="codigoVerificacaoVisivel ? 'Ocultar código de verificação' : 'Mostrar código de verificação'"
           >
-
-            <!-- Imagem do olho que muda entre aberto e fechado -->
             <img
               class="login-form__eye-image"
               [src]="codigoVerificacaoVisivel ? caminhoOlhoAberto : caminhoOlhoFechado"
@@ -327,22 +225,11 @@
         </div>
       </div>
 
-      <!-- Mensagem de erro do cadastro -->
-      <p class="login-form__error" *ngIf="mensagemErro">
-        {{ mensagemErro }}
-      </p>
+      <p class="login-form__error" *ngIf="mensagemErro">{{ mensagemErro }}</p>
+      <p class="login-form__success" *ngIf="mensagemSucesso">{{ mensagemSucesso }}</p>
 
-      <!-- Mensagem de sucesso do cadastro -->
-      <p class="login-form__success" *ngIf="mensagemSucesso">
-        {{ mensagemSucesso }}
-      </p>
+      <button class="login-form__button" type="submit">Criar conta admin</button>
 
-      <!-- Botão para criar conta admin -->
-      <button class="login-form__button" type="submit">
-        Criar conta admin
-      </button>
-
-      <!-- Botão para voltar ao login -->
       <button
         class="login-form__visitor-button"
         type="button"
@@ -351,5 +238,6 @@
         Voltar para login
       </button>
     </form>
+
   </section>
 </main>

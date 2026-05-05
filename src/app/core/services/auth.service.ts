@@ -630,5 +630,61 @@ export class AuthService {
     // Caso não tenha perfil
     return 'Sem perfil';
   }
+  
+  // Verifica se o usuário existe para permitir recuperação de senha
+  verificarUsuarioParaRecuperacao(usuario: string): boolean {
+    const administradores = this.listarAdministradores();
+    const encontrado = administradores.find(
+      item => item.usuario.toLowerCase() === usuario.toLowerCase()
+    );
+    return !!encontrado;
+  }
+
+  // Redefine a senha de um administrador pelo nome de usuário
+  redefinirSenha(usuario: string, novaSenha: string): { sucesso: boolean; mensagem: string } {
+
+    // Bloqueia redefinição do admin padrão
+    if (usuario === this.usuarioAdminPadrao) {
+      return {
+        sucesso: false,
+        mensagem: 'A senha do administrador padrão não pode ser redefinida.'
+      };
+    }
+
+    // Busca todos os administradores
+    const administradores = this.listarAdministradores();
+
+    // Procura o índice da conta
+    const indice = administradores.findIndex(
+      item => item.usuario.toLowerCase() === usuario.toLowerCase()
+    );
+
+    // Se não encontrar, retorna erro
+    if (indice === -1) {
+      return {
+        sucesso: false,
+        mensagem: 'Usuário não encontrado.'
+      };
+    }
+
+    // Valida o tamanho da senha
+    if (!novaSenha || novaSenha.length < 6) {
+      return {
+        sucesso: false,
+        mensagem: 'A nova senha precisa ter pelo menos 6 caracteres.'
+      };
+    }
+
+    // Atualiza a senha
+    administradores[indice].senha = novaSenha;
+
+    // Salva a lista atualizada
+    localStorage.setItem('contasAdmin', JSON.stringify(administradores));
+
+    return {
+      sucesso: true,
+      mensagem: 'Senha redefinida com sucesso! Redirecionando para o login...'
+    };
+  }
 
 }
