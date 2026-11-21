@@ -1,0 +1,313 @@
+trabalhista;acao trabalhista por horas extras nao pagas
+trabalhista;reclamacao trabalhista contra empresa por demissao sem justa causa
+trabalhista;pedido de vinculo empregaticio e carteira assinada
+trabalhista;cobranca de verbas rescisorias e ferias atrasadas
+trabalhista;acao de adicional de insalubridade e periculosidade
+trabalhista;processo de acidente de trabalho e estabilidade
+trabalhista;reconhecimento de justa causa e pagamento de fgts
+trabalhista;indenizacao por assedio moral no ambiente de trabalho
+trabalhista;revisao de banco de horas e intervalo de almoco
+trabalhista;acao contra empregador por salario atrasado
+trabalhista;rescisao indireta do contrato de trabalho
+trabalhista;pedido de equiparacao salarial entre funcionarios
+civel;processo civil de cobranca de divida
+civel;acao de indenizacao por danos morais e materiais
+civel;acao de despejo por falta de pagamento de aluguel
+civel;processo de usucapiao de imovel urbano
+civel;acao de reparacao por acidente de transito
+civel;rescisao de contrato de compra e venda de veiculo
+civel;acao de cobranca de condominio atrasado
+civel;processo de responsabilidade civil contra empresa
+civel;acao revisional de contrato de financiamento
+civel;disputa de contrato de prestacao de servicos
+civel;acao de indenizacao por negativacao indevida
+civel;processo de defeito em produto e direito do consumidor
+familia;acao de divorcio consensual com partilha de bens
+familia;processo de guarda de filhos menores
+familia;acao de pensao alimenticia e revisao de valor
+familia;reconhecimento de paternidade e registro de nascimento
+familia;processo de inventario e partilha de heranca
+familia;acao de uniao estavel e dissolucao
+familia;regulamentacao de visitas aos filhos
+familia;acao de adocao de crianca
+familia;processo de interdicao e curatela de idoso
+familia;divorcio litigioso e divisao de patrimonio
+familia;execucao de alimentos atrasados
+familia;pedido de alteracao de guarda compartilhada
+criminal;processo criminal por furto e roubo
+criminal;defesa em acao penal de lesao corporal
+criminal;pedido de liberdade provisoria e habeas corpus
+criminal;processo de trafico de drogas e prisao em flagrante
+criminal;acao penal por estelionato e fraude
+criminal;defesa em crime de transito e embriaguez ao volante
+criminal;processo por calunia injuria e difamacao
+criminal;audiencia de custodia e prisao preventiva
+criminal;recurso contra condenacao e progressao de regime
+criminal;inquerito policial por ameaca e violencia domestica
+criminal;defesa em acao penal por receptacao
+criminal;pedido de revogacao de medida cautelar
+tributario;acao tributaria contra cobranca indevida de imposto
+tributario;execucao fiscal de divida ativa municipal
+tributario;mandado de seguranca contra multa fiscal
+tributario;restituicao de icms pago a maior
+tributario;defesa em auto de infracao da receita federal
+tributario;acao anulatoria de debito de iptu
+tributario;parcelamento de divida de imposto de renda
+tributario;discussao sobre incidencia de pis e cofins
+tributario;embargos a execucao fiscal por prescricao
+tributario;planejamento e recuperacao de creditos tributarios
+tributario;acao contra cobranca de iss em servicos
+tributario;impugnacao de lancamento de itbi
+trabalhista;empregado pede pagamento de horas extras e adicional noturno
+trabalhista;funcionario demitido sem justa causa cobra aviso previo e multa do fgts
+trabalhista;reclamacao do trabalhador contra empregador por falta de registro na carteira
+trabalhista;pedido de reconhecimento de vinculo de emprego com a empresa
+trabalhista;empregada gestante dispensada pede estabilidade e indenizacao
+trabalhista;trabalhador cobra ferias vencidas e decimo terceiro salario
+trabalhista;acao contra a empresa por atraso de salario e verbas rescisorias
+trabalhista;funcionario pede adicional de periculosidade por trabalho com risco
+trabalhista;empregado sofreu acidente na empresa e pede indenizacao e estabilidade
+trabalhista;pedido de horas extras com cartao de ponto e banco de horas
+trabalhista;trabalhador demitido pede rescisao do contrato e pagamento do fgts
+trabalhista;empregador dispensou funcionario por justa causa e o empregado contesta
+trabalhista;reclamacao por assedio moral praticado pelo chefe contra o empregado
+trabalhista;pedido de diferenca salarial por desvio de funcao no emprego
+trabalhista;acao do vigilante por horas extras e adicional noturno
+trabalhista;empregada domestica cobra salario e verbas da rescisao
+trabalhista;motorista pede pagamento de horas extras e intervalo de descanso
+trabalhista;funcionario pede reintegracao ao emprego e pagamento de salarios
+trabalhista;acao de trabalhador terceirizado contra a empresa tomadora de servicos
+trabalhista;pedido de insalubridade e pagamento do adicional ao empregado
+trabalhista;empresa pede anulacao de multa da fiscalizacao do trabalho
+trabalhista;cobranca de comissoes e premios nao pagos ao empregado
+trabalhista;pedido de licenca e estabilidade de funcionario acidentado
+trabalhista;empregado pede reconhecimento de horas de sobreaviso
+trabalhista;acao do trabalhador por falta de depositos do fgts pelo empregador
+trabalhista;pedido de vale transporte e vale alimentacao nao pagos ao funcionario
+trabalhista;dispensa discriminatoria e pedido de indenizacao pelo empregado
+trabalhista;acordo trabalhista entre empresa e empregado demitido
+trabalhista;pedido de salario maternidade e estabilidade da empregada
+trabalhista;cobranca de multa por atraso no pagamento das verbas rescisorias
+civel;acao de cobranca de divida e pagamento de juros e multa
+civel;pedido de indenizacao por danos morais contra loja e fornecedor
+civel;locador move acao de despejo contra inquilino por atraso no aluguel
+civel;acao de usucapiao para reconhecer propriedade de imovel
+civel;indenizacao por acidente de transito e danos materiais no veiculo
+civel;consumidor pede devolucao de valor e indenizacao por produto com defeito
+civel;acao de rescisao de contrato de compra e venda de imovel
+civel;cobranca de taxa de condominio atrasada pelo morador
+civel;pedido de revisao de contrato de financiamento com juros abusivos
+civel;acao de reparacao de danos contra empresa por servico mal prestado
+civel;cliente pede indenizacao por inscricao indevida no cadastro de inadimplentes
+civel;acao contra banco por cobranca indevida e danos morais
+civel;pedido de cancelamento de contrato de plano de saude e indenizacao
+civel;acao de indenizacao contra companhia aerea por atraso e cancelamento de voo
+civel;disputa de contrato de aluguel e devolucao de caucao
+civel;acao possessoria para retomar posse de terreno invadido
+civel;pedido de cumprimento de contrato de prestacao de servicos
+civel;acao de responsabilidade civil por erro em cirurgia e danos morais
+civel;cobranca de cheque devolvido e protesto de titulo
+civel;acao de nulidade de clausula abusiva em contrato do consumidor
+civel;pedido de indenizacao por queda em estabelecimento comercial
+civel;acao de regresso e cobranca entre devedor e fiador
+civel;vizinho pede reparacao de danos causados por obra no imovel
+civel;acao de consignacao em pagamento de aluguel
+civel;pedido de devolucao de valor pago por curso nao prestado
+civel;contrato de seguro negado e pedido de indenizacao pela seguradora
+civel;acao de reintegracao de posse de imovel alugado
+civel;cobranca de honorarios e pagamento de servicos prestados
+civel;pedido de retirada do nome do consumidor do cadastro de inadimplentes
+civel;acao contra concessionaria por veiculo com defeito e devolucao do valor
+civel;pedido de reparacao por cobranca indevida na fatura de cartao
+familia;casal pede divorcio consensual e partilha de bens
+familia;mae pede guarda dos filhos e pensao alimenticia ao pai
+familia;pai pede regulamentacao de visitas e guarda compartilhada dos filhos
+familia;acao de investigacao de paternidade e pedido de alimentos para o filho
+familia;herdeiros abrem inventario para a partilha da heranca do falecido
+familia;pedido de reconhecimento e dissolucao de uniao estavel com partilha de bens
+familia;divorcio litigioso com disputa de guarda e pensao alimenticia
+familia;acao de revisao de pensao alimenticia por mudanca na renda do pai
+familia;execucao de pensao alimenticia atrasada e pedido de prisao do devedor
+familia;pedido de adocao de crianca e guarda provisoria
+familia;filhos pedem inventario e partilha dos bens deixados pelos pais
+familia;acao de curatela e interdicao de pessoa idosa pela familia
+familia;pedido de exoneracao de alimentos pelo pai com filho maior
+familia;acao de alteracao de guarda unilateral para guarda compartilhada
+familia;pedido de reconhecimento de paternidade socioafetiva e registro do filho
+familia;partilha de bens e divisao de patrimonio no divorcio do casal
+familia;mae pede aumento da pensao alimenticia para o filho menor
+familia;pedido de visita aos netos pelos avos e regulamentacao
+familia;acao de anulacao de casamento e partilha dos bens
+familia;inventario extrajudicial e partilha entre os herdeiros da familia
+familia;pedido de alimentos gravidicos pela mae durante a gestacao
+familia;acao de guarda de crianca pelos avos e pedido de pensao
+familia;disputa de heranca entre irmaos e abertura de testamento
+familia;pedido de modificacao de nome e registro de nascimento do filho
+familia;acao de separacao de bens e pedido de pensao ao ex conjuge
+familia;pai pede reducao da pensao alimenticia dos filhos
+familia;pedido de tutela de menor orfao pelos parentes da familia
+familia;acordo de divorcio com guarda dos filhos e visitas combinadas
+familia;pedido de reconhecimento de uniao estavel apos o falecimento do companheiro
+familia;acao de oferta de alimentos e fixacao de pensao para o filho
+familia;pedido de alteracao do regime de bens do casamento
+criminal;reu e preso em flagrante por roubo e pede liberdade provisoria
+criminal;defesa em processo criminal por furto e pedido de absolvicao
+criminal;acao penal por lesao corporal e violencia domestica contra a mulher
+criminal;pedido de habeas corpus contra prisao preventiva do acusado
+criminal;processo penal por trafico de drogas e audiencia de custodia
+criminal;defesa do acusado de estelionato e fraude em acao penal
+criminal;reu condenado recorre da sentenca e pede progressao de regime
+criminal;inquerito policial por ameaca e pedido de medida protetiva
+criminal;acusado de crime de transito pede revogacao de prisao e liberdade
+criminal;defesa em acao penal por calunia injuria e difamacao
+criminal;pedido de relaxamento de prisao em flagrante e liberdade do reu
+criminal;processo criminal por receptacao e defesa do acusado
+criminal;acao penal por homicidio e julgamento pelo tribunal do juri
+criminal;pedido de livramento condicional e progressao de regime do condenado
+criminal;defesa do reu em processo por porte ilegal de arma
+criminal;audiencia de instrucao em acao penal e oitiva de testemunhas
+criminal;pedido de revogacao de medida cautelar e prisao domiciliar do acusado
+criminal;recurso de apelacao criminal contra sentenca condenatoria
+criminal;acusado de lesao corporal pede absolvicao e arquivamento do inquerito
+criminal;prisao preventiva decretada em processo de trafico e pedido de liberdade
+criminal;defesa em crime de embriaguez ao volante e acidente de transito
+criminal;pedido de suspensao condicional do processo penal ao reu primario
+criminal;queixa crime por injuria e difamacao contra o acusado
+criminal;inquerito por violencia domestica e prisao em flagrante do agressor
+criminal;defesa em acao penal por roubo qualificado e pedido de liberdade
+criminal;pedido de indulto e extincao da pena do condenado
+criminal;acusado de furto pede liberdade provisoria e relaxamento da prisao
+criminal;processo criminal por estelionato e pedido de arquivamento do inquerito
+criminal;habeas corpus para trancar acao penal contra o reu
+criminal;audiencia de custodia apos prisao em flagrante por ameaca
+criminal;defesa do condenado em recurso contra regime de pena
+tributario;contribuinte contesta cobranca indevida de imposto pela fazenda
+tributario;execucao fiscal de divida ativa e embargos do contribuinte
+tributario;mandado de seguranca contra multa e auto de infracao fiscal
+tributario;empresa pede restituicao de icms pago a maior ao estado
+tributario;defesa contra auto de infracao da receita federal e cobranca de imposto
+tributario;acao anulatoria de debito fiscal de iptu cobrado pelo municipio
+tributario;parcelamento de divida de imposto de renda com a fazenda nacional
+tributario;discussao sobre pis e cofins e restituicao de credito tributario
+tributario;embargos a execucao fiscal por prescricao do debito tributario
+tributario;empresa contesta cobranca de iss pelo municipio em servicos prestados
+tributario;impugnacao de lancamento de itbi na compra de imovel
+tributario;pedido de compensacao de tributos e credito fiscal da empresa
+tributario;acao contra cobranca de icms e multa aplicada pela fazenda estadual
+tributario;contribuinte pede suspensao da exigibilidade do credito tributario
+tributario;defesa em execucao fiscal de divida ativa da fazenda nacional
+tributario;pedido de isencao de iptu e imposto de renda para idoso
+tributario;acao declaratoria de inexistencia de debito tributario com a receita
+tributario;recurso administrativo contra auto de infracao e cobranca de imposto
+tributario;empresa pede revisao do lancamento de iss e multa do municipio
+tributario;mandado de seguranca para afastar cobranca de pis e cofins
+tributario;pedido de restituicao de imposto de renda retido na fonte
+tributario;discussao de aliquota de icms e credito de imposto da empresa
+tributario;parcelamento de debito fiscal e multa de divida ativa
+tributario;contribuinte apresenta defesa contra execucao fiscal do municipio
+tributario;acao de repeticao de indebito tributario e restituicao de imposto pago
+tributario;pedido de baixa de divida ativa por prescricao do credito
+tributario;empresa contesta lancamento fiscal de itbi e iptu
+tributario;defesa contra penhora em execucao fiscal de imposto
+tributario;pedido de certidao negativa de debitos tributarios da empresa
+tributario;acao contra multa da receita federal por atraso na declaracao de imposto
+trabalhista;demissao sem justa causa
+trabalhista;horas extras nao pagas
+trabalhista;falta de carteira assinada
+trabalhista;atraso de salario na empresa
+trabalhista;ferias nao pagas pelo patrao
+trabalhista;acidente de trabalho na fabrica
+trabalhista;adicional noturno e insalubridade
+trabalhista;demitido pelo chefe sem aviso previo
+trabalhista;patrao nao assinou minha carteira
+trabalhista;cobro fgts e multa da rescisao
+trabalhista;assedio moral no trabalho
+trabalhista;trabalhei sem registro na empresa
+trabalhista;demissao de gestante e estabilidade
+trabalhista;reclamacao contra o patrao por salario atrasado
+trabalhista;funcionario quer receber verbas da rescisao
+trabalhista;decimo terceiro nao pago pela empresa
+trabalhista;trabalho aos domingos sem receber horas extras
+trabalhista;empregado machucado no servico quer indenizacao
+trabalhista;justa causa injusta e pedido de reintegracao
+trabalhista;vigilante sem pagamento do adicional noturno
+civel;compra de produto com defeito na loja
+civel;cobranca indevida no cartao de credito
+civel;nome sujo por divida que ja paguei
+civel;vizinho quebrou meu muro e quero reparacao
+civel;aluguel atrasado e despejo do inquilino
+civel;contrato de compra de carro cancelado
+civel;batida de carro e prejuizo no veiculo
+civel;banco cobrou tarifa que nao devia
+civel;loja nao entregou a mercadoria que comprei
+civel;voo cancelado e bagagem extraviada
+civel;plano de saude negou o tratamento
+civel;seguradora recusou pagar o sinistro
+civel;devolucao do dinheiro de curso que nao foi dado
+civel;cobranca de divida de emprestimo
+civel;condominio cobra taxa atrasada
+civel;imovel comprado com problema na construcao
+civel;danos morais por mau atendimento na loja
+civel;empresa de internet cobrou servico que nao prestou
+civel;fiador cobrado por divida do inquilino
+civel;reparacao por queda em mercado
+familia;quero me divorciar do meu marido
+familia;pensao para meu filho pequeno
+familia;guarda da crianca depois da separacao
+familia;pai nao paga a pensao dos filhos
+familia;dividir os bens com a esposa
+familia;heranca do meu pai falecido
+familia;inventario da minha mae
+familia;reconhecer paternidade do meu filho
+familia;visitar meus filhos nos finais de semana
+familia;fim da uniao estavel com minha companheira
+familia;avo quer a guarda do neto
+familia;pedir aumento da pensao alimenticia
+familia;adotar uma crianca
+familia;brigas entre irmaos por causa da heranca
+familia;separacao do casal e partilha da casa
+familia;mudar o nome no registro do filho
+familia;marido saiu de casa e deixou os filhos
+familia;esposa pede divorcio e metade dos bens
+familia;tutela dos sobrinhos orfaos
+familia;testamento deixado pelo avo
+criminal;roubo em uma loja
+criminal;furto de celular na rua
+criminal;fui preso injustamente
+criminal;briga com lesao corporal
+criminal;ameaca de morte pelo ex marido
+criminal;trafico de drogas e prisao
+criminal;estelionato e golpe pela internet
+criminal;dirigir bebado e causar acidente
+criminal;agressao contra a mulher em casa
+criminal;preso em flagrante por furto
+criminal;liberdade para o preso
+criminal;roubo de carro a mao armada
+criminal;acusado de homicidio
+criminal;porte de arma sem registro
+criminal;difamacao e injuria nas redes sociais
+criminal;delegacia registrou boletim de ocorrencia contra mim
+criminal;roubo em loja de roupas
+criminal;furto em loja e prisao do suspeito
+criminal;habeas corpus para soltar o acusado
+criminal;policia prendeu meu filho
+tributario;cobranca de imposto indevida
+tributario;iptu da prefeitura muito alto
+tributario;multa da receita federal
+tributario;imposto de renda a restituir
+tributario;empresa pagou icms a mais
+tributario;divida ativa com a fazenda
+tributario;prefeitura cobrou iss errado
+tributario;auto de infracao da fiscalizacao fazendaria
+tributario;parcelar divida de impostos
+tributario;isencao de iptu para idoso
+tributario;nota fiscal e tributos atrasados
+tributario;cobranca de itbi na compra da casa
+tributario;penhora por divida de imposto
+tributario;certidao negativa de debitos
+tributario;imposto cobrado em dobro pelo estado
+tributario;execucao fiscal contra minha empresa
+tributario;sonegacao e cobranca de tributos
+tributario;contribuinte quer anular a multa fiscal
+tributario;taxa cobrada pelo municipio sem motivo
+tributario;pis e cofins pagos a mais

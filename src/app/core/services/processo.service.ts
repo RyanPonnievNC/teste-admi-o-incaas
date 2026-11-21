@@ -27,6 +27,7 @@ export class ProcessoService {
       cliente: 'João Silva',
       descricao: 'Ação trabalhista',
       status: 'ATIVO',
+      area: 'trabalhista',
       dataCriacao: new Date()
     },
 
@@ -37,6 +38,7 @@ export class ProcessoService {
       cliente: 'Maria Souza',
       descricao: 'Processo civil',
       status: 'FINALIZADO',
+      area: 'civel',
       dataCriacao: new Date()
     }
   ];
@@ -60,7 +62,7 @@ export class ProcessoService {
     // Monta o novo objeto completo
     const novoProcesso: Processo = {
 
-      // Copia numero, cliente, descricao e status
+      // Copia numero, cliente, descricao, status e area
       ...processo,
 
       // Gera ID único usando timestamp atual

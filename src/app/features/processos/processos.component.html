@@ -110,6 +110,52 @@
           formControlName="descricao"
           placeholder="Descreva o processo"
         ></textarea>
+
+        <!-- Sugestão de área feita pela IA -->
+        <p class="form-field__ia" *ngIf="sugestaoIa">
+          <ng-container *ngIf="sugestaoIa.area !== 'indefinido'; else semSugestao">
+            Sugestão da IA: <strong>{{ nomeArea(sugestaoIa.area) }}</strong>
+            ({{ sugestaoIa.confianca * 100 | number:'1.0-0' }}%)
+
+            <button
+              class="form-field__ia-button"
+              type="button"
+              (click)="aplicarSugestao()"
+            >
+              Usar sugestão
+            </button>
+          </ng-container>
+          <ng-template #semSugestao>
+            A IA ainda não tem certeza da área.
+          </ng-template>
+        </p>
+      </div>
+
+      <!-- Campo área -->
+      <div class="form-field">
+        <label
+          class="form-field__label"
+          for="area"
+        >
+          Área
+        </label>
+
+        <select
+          class="form-field__input"
+          id="area"
+          formControlName="area"
+        >
+          <option value="">
+            Sem área
+          </option>
+
+          <option
+            *ngFor="let a of areas"
+            [value]="a.valor"
+          >
+            {{ a.nome }}
+          </option>
+        </select>
       </div>
 
       <!-- Campo status -->
@@ -235,6 +281,34 @@
         </select>
       </div>
 
+      <!-- Filtro por área -->
+      <div class="form-field">
+        <label
+          class="form-field__label"
+          for="filtroArea"
+        >
+          Filtrar por área
+        </label>
+
+        <select
+          class="form-field__input"
+          id="filtroArea"
+          [(ngModel)]="filtroArea"
+          (ngModelChange)="aplicarFiltros()"
+        >
+          <option value="">
+            Todas
+          </option>
+
+          <option
+            *ngFor="let a of areas"
+            [value]="a.valor"
+          >
+            {{ a.nome }}
+          </option>
+        </select>
+      </div>
+
       <!-- Botão limpar filtros -->
       <div class="processos-filtros__button">
         <button
@@ -274,6 +348,10 @@
             </th>
 
             <th>
+              Área
+            </th>
+
+            <th>
               Status
             </th>
 
@@ -298,6 +376,10 @@
 
             <td>
               {{ p.cliente }}
+            </td>
+
+            <td>
+              {{ nomeArea(p.area) }}
             </td>
 
             <td>
@@ -347,7 +429,7 @@
           <tr *ngIf="processosFiltrados.length === 0">
             <td
               class="processos-table__empty"
-              [attr.colspan]="podeAlterarProcessos() ? 5 : 4"
+              [attr.colspan]="podeAlterarProcessos() ? 6 : 5"
             >
               Nenhum processo encontrado.
             </td>

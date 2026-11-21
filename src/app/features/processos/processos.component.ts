@@ -1,5 +1,8 @@
 // Importa recursos principais do Angular.
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+
+// Permite cancelar a escuta de um Observable quando o componente fecha.
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Importa recursos básicos como *ngIf, *ngFor, date pipe e outros.
 import { CommonModule } from '@angular/common';
@@ -12,6 +15,9 @@ import {
   Validators
 } from '@angular/forms';
 
+// Importa operadores do RxJS usados na sugestão da IA.
+import { catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+
 // Importa módulos do PrimeNG usados na tela.
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +28,9 @@ import { ProcessoService } from '../../core/services/processo.service';
 
 // Importa o serviço de autenticação.
 import { AuthService } from '../../core/services/auth.service';
+
+// Importa o serviço da IA.
+import { IaService, SugestaoIa } from '../../core/services/ia.service';
 
 // Importa o model de processo.
 import { Processo } from '../../models/processo.model';
@@ -68,6 +77,24 @@ export class ProcessosComponent implements OnInit {
   // Injeta o serviço de autenticação.
   private authService = inject(AuthService);
 
+  // Serviço que conversa com a IA em C++.
+  private iaService = inject(IaService);
+
+  // Usado para encerrar a escuta do formulário quando a tela fechar.
+  private destroyRef = inject(DestroyRef);
+
+  // Última sugestão da IA (null = nada para mostrar).
+  sugestaoIa: SugestaoIa | null = null;
+
+  // Áreas disponíveis (valor = o que a IA devolve, nome = o que aparece na tela).
+  readonly areas = [
+    { valor: 'trabalhista', nome: 'Trabalhista' },
+    { valor: 'civel', nome: 'Cível' },
+    { valor: 'familia', nome: 'Família' },
+    { valor: 'criminal', nome: 'Criminal' },
+    { valor: 'tributario', nome: 'Tributário' }
+  ];
+
   // Lista completa de processos.
   processos: Processo[] = [];
 
@@ -82,6 +109,9 @@ export class ProcessosComponent implements OnInit {
 
   // Guarda o status selecionado no filtro.
   filtroStatus: '' | StatusProcesso = '';
+
+  // Guarda a área selecionada no filtro.
+  filtroArea = '';
 
   // Mensagem exibida quando o visitante tenta fazer uma ação bloqueada.
   mensagemPermissao = '';
@@ -103,6 +133,9 @@ export class ProcessosComponent implements OnInit {
     // Campo descrição do processo.
     descricao: [''],
 
+    // Campo área do processo (opcional).
+    area: [''],
+
     // Campo status do processo.
     status: ['NENHUM' as StatusFormulario, Validators.required]
   });
@@ -117,6 +150,40 @@ export class ProcessosComponent implements OnInit {
       // Aplica os filtros iniciais.
       this.aplicarFiltros();
     });
+
+    // Pede sugestão de área à IA enquanto a descrição é digitada.
+    this.form.controls.descricao.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(texto =>
+          texto.trim().length < 10
+            ? of(null)
+            : this.iaService.sugerirArea(texto).pipe(
+                // Se o servidor estiver desligado, apenas não mostra sugestão.
+                catchError(() => of(null))
+              )
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(sugestao => {
+        this.sugestaoIa = sugestao;
+      });
+  }
+
+  // Converte o código da área para o nome exibido na tela.
+  nomeArea(area?: string): string {
+    if (!area) {
+      return '-';
+    }
+    return this.areas.find(a => a.valor === area)?.nome ?? area;
+  }
+
+  // Aplica no formulário a área sugerida pela IA.
+  aplicarSugestao(): void {
+    if (this.sugestaoIa && this.sugestaoIa.area !== 'indefinido') {
+      this.form.controls.area.setValue(this.sugestaoIa.area);
+    }
   }
 
   // Verifica se o usuário atual pode criar, editar ou excluir processos.
@@ -175,6 +242,7 @@ export class ProcessosComponent implements OnInit {
         numero: valor.numero,
         cliente: valor.cliente,
         descricao: valor.descricao,
+        area: valor.area,
         status: valor.status as StatusProcesso
       });
 
@@ -192,6 +260,7 @@ export class ProcessosComponent implements OnInit {
       numero: valor.numero,
       cliente: valor.cliente,
       descricao: valor.descricao,
+      area: valor.area,
       status: valor.status as StatusProcesso
     });
 
@@ -200,6 +269,7 @@ export class ProcessosComponent implements OnInit {
       numero: '',
       cliente: '',
       descricao: '',
+      area: '',
       status: 'NENHUM'
     });
 
@@ -223,6 +293,7 @@ export class ProcessosComponent implements OnInit {
       numero: processo.numero,
       cliente: processo.cliente,
       descricao: processo.descricao,
+      area: processo.area ?? '',
       status: processo.status
     });
   }
@@ -237,6 +308,7 @@ export class ProcessosComponent implements OnInit {
       numero: '',
       cliente: '',
       descricao: '',
+      area: '',
       status: 'NENHUM'
     });
   }
@@ -291,7 +363,7 @@ export class ProcessosComponent implements OnInit {
     this.cancelarExclusao();
   }
 
-  // Filtra processos por cliente e status.
+  // Filtra processos por cliente, status e área.
   aplicarFiltros(): void {
     // Filtra os processos conforme os campos preenchidos.
     this.processosFiltrados = this.processos.filter(processo => {
@@ -305,8 +377,13 @@ export class ProcessosComponent implements OnInit {
         !this.filtroStatus ||
         processo.status === this.filtroStatus;
 
+      // Verifica se a área bate com o filtro.
+      const areaOk =
+        !this.filtroArea ||
+        processo.area === this.filtroArea;
+
       // Retorna apenas processos que passaram nos filtros.
-      return clienteOk && statusOk;
+      return clienteOk && statusOk && areaOk;
     });
   }
 
@@ -317,6 +394,9 @@ export class ProcessosComponent implements OnInit {
 
     // Limpa o filtro de status.
     this.filtroStatus = '';
+
+    // Limpa o filtro de área.
+    this.filtroArea = '';
 
     // Atualiza a lista.
     this.aplicarFiltros();

@@ -1,0 +1,15 @@
+# Programas compilados
+*.exe
+
+# Bibliotecas externas (baixar conforme o README)
+libs/
+
+# Modelo gerado pelo treinar (gerar com .\treinar)
+dados/modelo.txt
+
+# Testes antigos da rede (nao fazem parte do projeto final)
+rede.cpp
+xor.cpp
+
+# Backups
+*.bak
