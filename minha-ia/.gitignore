@@ -13,3 +13,7 @@ xor.cpp
 
 # Backups
 *.bak
+
+# Excecoes: o servidor e o modelo vao para o GitHub, para o projeto rodar em qualquer PC
+!servidor.exe
+!dados/modelo.txt
