@@ -1,779 +1,411 @@
-/*
-  perfil.component.scss
+/* Perfil do usuário */
 
-  Este arquivo controla o visual da página de perfil:
-  - cabeçalho
-  - card do usuário
-  - avatar/foto
-  - dados da conta
-  - formulário de edição
-  - botão de mostrar senha
-  - permissões
-*/
-
-/* Container principal */
 .perfil-page {
-  width: 100%;
-
   display: flex;
-
   flex-direction: column;
-
   gap: 1.5rem;
 }
 
-/* Cabeçalho da página */
+/* Título à esquerda, botão Sair à direita */
 .perfil-header {
   display: flex;
-
-  align-items: center;
-
+  flex-wrap: wrap;
+  align-items: flex-end;
   justify-content: space-between;
-
   gap: 1rem;
-
-  padding: 1.25rem;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 14px;
-
-  background: #ffffff;
-
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
-/* Título do cabeçalho */
 .perfil-header__title {
   margin: 0;
-
-  color: #111827;
-
-  font-size: 1.5rem;
-
-  font-weight: 800;
-}
-
-/* Subtítulo do cabeçalho */
-.perfil-header__subtitle {
-  margin: 0.35rem 0 0;
-
-  color: #6b7280;
-
-  font-size: 0.95rem;
-}
-
-/* Botão do cabeçalho */
-.perfil-header__button {
-  border: 2px solid rgb(19, 33, 70);
-
-  border-radius: 10px;
-
-  padding: 0.8rem 1.1rem;
-
-  background: #ffffff;
-
-  color: rgb(19, 33, 70);
-
-  font-size: 0.95rem;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-/* Hover do botão do cabeçalho */
-.perfil-header__button:hover {
-  background: rgb(19, 33, 70);
-
-  color: #ffffff;
-
-  transform: translateY(-2px);
-}
-
-/* Botão sair */
-.perfil-header__button--logout:hover {
-  background: #dc2626;
-
-  border-color: #dc2626;
-
-  color: #ffffff;
-}
-
-/* Alerta informativo */
-.perfil-alert {
-  padding: 1rem;
-
-  border: 1px solid #facc15;
-
-  border-radius: 12px;
-
-  background: #fef9c3;
-
-  color: #854d0e;
-
-  font-size: 0.95rem;
-
+  font-size: 2rem;
   font-weight: 700;
+  line-height: 1.15;
 }
 
-/* Card principal */
-.perfil-card {
-  padding: 1.5rem;
+.perfil-header__subtitle {
+  max-width: 42rem;
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
 
-  border: 1px solid #e5e7eb;
-
-  border-radius: 16px;
-
+.perfil-header__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 1.4rem;
+  border: 1px solid #c6cedd;
+  border-radius: 10px;
   background: #ffffff;
-
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  color: var(--navy);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-/* Parte superior do card */
+.perfil-header__button--logout {
+  border-color: #e3b4ae;
+  color: var(--bad);
+}
+
+.perfil-header__button--logout:hover {
+  border-color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.perfil-alert {
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #ecd9a3;
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+  background: #fdf7e6;
+  color: #5c4513;
+}
+
+/* Cartão principal */
+.perfil-card,
+.perfil-permissoes {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
 .perfil-card__top {
   display: flex;
-
+  flex-wrap: wrap;
   align-items: center;
-
-  gap: 1rem;
-
-  margin-bottom: 1.5rem;
+  gap: 1.25rem;
 }
 
-/* Avatar/foto do usuário */
-.perfil-card__avatar {
-  width: 86px;
-
-  height: 86px;
-
-  min-width: 86px;
-
-  min-height: 86px;
-
-  max-width: 86px;
-
-  max-height: 86px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: rgb(19, 33, 70);
-
-  color: #ffffff;
-
-  font-size: 2rem;
-
-  font-weight: 900;
-
-  overflow: hidden;
-
-  border: 3px solid rgba(19, 33, 70, 0.18);
-}
-
-/* Imagem do avatar */
-.perfil-card__avatar-image {
-  width: 100%;
-
-  height: 100%;
-
-  max-width: 100%;
-
-  max-height: 100%;
-
-  object-fit: cover;
-
-  display: block;
-}
-
-/* Área do nome e perfil */
-.perfil-card__identity {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 0.5rem;
-
-  flex: 1;
-}
-
-/* Nome do usuário */
-.perfil-card__name {
-  margin: 0;
-
-  color: #111827;
-
-  font-size: 1.45rem;
-
-  font-weight: 900;
-}
-
-/* Badge de perfil */
-.perfil-card__badge {
-  width: fit-content;
-
-  padding: 0.35rem 0.75rem;
-
-  border-radius: 999px;
-
-  font-size: 0.85rem;
-
-  font-weight: 900;
-}
-
-/* Badge admin */
-.perfil-card__badge--admin {
-  background: #dcfce7;
-
-  color: #166534;
-}
-
-/* Badge visitante */
-.perfil-card__badge--visitor {
-  background: #dbeafe;
-
-  color: #1e40af;
-}
-
-/* Botão editar */
-.perfil-card__edit-button {
-  border: 2px solid rgb(19, 33, 70);
-
-  border-radius: 10px;
-
-  padding: 0.75rem 1rem;
-
-  background: #ffffff;
-
-  color: rgb(19, 33, 70);
-
-  font-size: 0.9rem;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-/* Hover do botão editar */
-.perfil-card__edit-button:hover {
-  background: rgb(19, 33, 70);
-
-  color: #ffffff;
-
-  transform: translateY(-2px);
-}
-
-/* Grade de informações */
-.perfil-info-grid {
-  display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 1rem;
-}
-
-/* Card de informação */
-.perfil-info {
-  padding: 1rem;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 12px;
-
-  background: #f9fafb;
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 0.35rem;
-}
-
-/* Label da informação */
-.perfil-info__label {
-  color: #6b7280;
-
-  font-size: 0.85rem;
-
-  font-weight: 700;
-}
-
-/* Valor da informação */
-.perfil-info__value {
-  color: #111827;
-
-  font-size: 1rem;
-
-  font-weight: 900;
-
-  word-break: break-word;
-}
-
-/* Formulário de edição */
-.perfil-edit-form {
-  display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 1rem;
-}
-
-/* Área de edição da foto */
-.perfil-photo-edit {
-  grid-column: 1 / -1;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  gap: 0.75rem;
-
-  padding: 1rem;
-
-  border: 1px dashed #cbd5e1;
-
-  border-radius: 14px;
-
-  background: #f9fafb;
-}
-
-/* Prévia da foto */
+.perfil-card__avatar,
 .perfil-photo-edit__preview {
-  width: 110px;
-
-  height: 110px;
-
-  min-width: 110px;
-
-  min-height: 110px;
-
-  max-width: 110px;
-
-  max-height: 110px;
-
-  border-radius: 50%;
-
-  background: rgb(19, 33, 70);
-
-  color: #ffffff;
-
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
+  border-radius: 50%;
   overflow: hidden;
-
-  font-size: 2rem;
-
-  font-weight: 900;
+  border: 3px solid var(--gold);
+  background: var(--navy);
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--gold);
 }
 
-/* Imagem da prévia */
+.perfil-card__avatar-image,
 .perfil-photo-edit__image {
   width: 100%;
-
   height: 100%;
-
-  max-width: 100%;
-
-  max-height: 100%;
-
   object-fit: cover;
-
-  display: block;
 }
 
-/* Inicial quando não tem foto */
 .perfil-photo-edit__initial {
-  color: #ffffff;
-
-  font-size: 2rem;
-
-  font-weight: 900;
+  font-family: var(--font-display);
 }
 
-/* Label para alterar foto */
-.perfil-photo-edit__label {
-  padding: 0.7rem 1rem;
+.perfil-card__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+}
 
+.perfil-card__name {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.perfil-card__badge {
+  padding: 0.15rem 0.8rem;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.perfil-card__badge--admin {
+  background: var(--gold);
+  color: var(--navy-deep);
+}
+
+.perfil-card__edit-button {
+  margin-left: auto;
+  min-height: 42px;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--navy);
   border-radius: 10px;
-
-  background: rgb(19, 33, 70);
-
+  background: var(--navy);
   color: #ffffff;
-
-  font-size: 0.9rem;
-
-  font-weight: 800;
-
+  font-weight: 600;
   cursor: pointer;
-
-  transition: 0.2s ease;
 }
 
-/* Hover do label */
+.perfil-card__edit-button:hover {
+  background: var(--navy-deep);
+}
+
+/* Dados da conta */
+.perfil-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fafbfd;
+}
+
+.perfil-info__label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.perfil-info__value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Edição ---------- */
+
+.perfil-edit-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.25rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.perfil-photo-edit,
+.perfil-edit-form__error,
+.perfil-edit-form__success,
+.perfil-edit-form__actions {
+  grid-column: 1 / -1;
+}
+
+.perfil-photo-edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.perfil-photo-edit__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.4rem 1.1rem;
+  border: 1px solid #c6cedd;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--navy);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .perfil-photo-edit__label:hover {
-  background: #1f3470;
-
-  transform: translateY(-2px);
+  border-color: var(--navy);
+  background: var(--paper);
 }
 
-/* Input de arquivo escondido */
 .perfil-photo-edit__input {
   display: none;
 }
 
-/* Botão remover foto */
 .perfil-photo-edit__remove {
-  border: none;
-
+  border: 0;
   background: transparent;
-
-  color: #dc2626;
-
-  font-size: 0.85rem;
-
-  font-weight: 800;
-
+  color: var(--bad);
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* Campo do formulário */
+.perfil-photo-edit__remove:hover {
+  text-decoration: underline;
+}
+
 .perfil-edit-form__field {
   display: flex;
-
   flex-direction: column;
-
   gap: 0.4rem;
+  min-width: 0;
 }
 
-/* Label do formulário */
 .perfil-edit-form__label {
-  color: #111827;
-
-  font-size: 0.9rem;
-
-  font-weight: 800;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
 }
 
-/* Input do formulário */
 .perfil-edit-form__input {
   width: 100%;
-
-  min-height: 52px;
-
-  padding: 0.75rem 0.9rem;
-
-  border: 1px solid #cbd5e1;
-
-  border-radius: 9px;
-
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #c6cedd;
+  border-radius: var(--radius-sm);
   background: #ffffff;
-
-  color: #111827;
-
-  font-size: 0.95rem;
-
-  outline: none;
-
-  transition: 0.2s ease;
+  color: var(--text);
 }
 
-/* Foco no input */
 .perfil-edit-form__input:focus {
-  border-color: rgb(19, 33, 70);
-
-  box-shadow: 0 0 0 3px rgba(19, 33, 70, 0.12);
+  outline: 0;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(201, 162, 77, 0.35);
 }
 
-/* Área da senha */
 .perfil-edit-form__password-wrapper {
   position: relative;
-
-  width: 100%;
-
-  display: flex;
-
-  align-items: center;
 }
 
-/* Input de senha com espaço para a imagem do olho */
 .perfil-edit-form__input--password {
-  width: 100%;
-
-  padding-right: 58px;
+  padding-right: 3rem;
 }
 
-/* Botão do olho */
 .perfil-edit-form__eye-button {
   position: absolute;
-
-  right: 10px;
-
   top: 50%;
-
-  transform: translateY(-50%);
-
-  width: 34px;
-
-  height: 34px;
-
-  min-width: 34px;
-
-  min-height: 34px;
-
-  max-width: 34px;
-
-  max-height: 34px;
-
-  border: none;
-
-  border-radius: 50%;
-
-  background: transparent;
-
-  cursor: pointer;
-
-  padding: 0;
-
-  margin: 0;
-
+  right: 0.45rem;
+  width: 36px;
+  height: 36px;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  overflow: hidden;
-
-  z-index: 10;
-
-  transition: 0.2s ease;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
 }
 
-/* Hover do botão do olho */
 .perfil-edit-form__eye-button:hover {
-  background: #f3f4f6;
+  background: var(--paper);
 }
 
-/* Imagem do olho */
 .perfil-edit-form__eye-icon {
   width: 22px;
-
   height: 22px;
-
-  min-width: 22px;
-
-  min-height: 22px;
-
-  max-width: 22px;
-
-  max-height: 22px;
-
   object-fit: contain;
-
-  display: block;
-
-  pointer-events: none;
 }
 
-/* Mensagem de erro */
-.perfil-edit-form__error {
-  grid-column: 1 / -1;
-
-  margin: 0;
-
-  padding: 0.85rem;
-
-  border-radius: 10px;
-
-  background: #fee2e2;
-
-  color: #991b1b;
-
-  font-size: 0.9rem;
-
-  font-weight: 800;
-}
-
-/* Mensagem de sucesso */
+.perfil-edit-form__error,
 .perfil-edit-form__success {
-  grid-column: 1 / -1;
-
   margin: 0;
-
-  padding: 0.85rem;
-
-  border-radius: 10px;
-
-  background: #dcfce7;
-
-  color: #166534;
-
-  font-size: 0.9rem;
-
-  font-weight: 800;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
 }
 
-/* Ações do formulário */
+.perfil-edit-form__error {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.perfil-edit-form__success {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
 .perfil-edit-form__actions {
-  grid-column: 1 / -1;
-
   display: flex;
-
+  flex-wrap: wrap;
   gap: 0.75rem;
-
-  align-items: center;
+  padding-top: 0.5rem;
 }
 
-/* Botão salvar */
-.perfil-edit-form__save-button {
-  border: 2px solid rgb(19, 33, 70);
-
-  border-radius: 10px;
-
-  padding: 0.8rem 1.1rem;
-
-  background: rgb(19, 33, 70);
-
-  color: #ffffff;
-
-  font-size: 0.95rem;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-/* Hover botão salvar */
-.perfil-edit-form__save-button:hover {
-  background: #1f3470;
-
-  transform: translateY(-2px);
-}
-
-/* Botão cancelar */
+.perfil-edit-form__save-button,
 .perfil-edit-form__cancel-button {
-  border: 2px solid #6b7280;
-
+  min-height: 44px;
+  padding: 0.55rem 1.4rem;
+  border: 1px solid var(--navy);
   border-radius: 10px;
-
-  padding: 0.8rem 1.1rem;
-
-  background: #ffffff;
-
-  color: #374151;
-
-  font-size: 0.95rem;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-/* Hover botão cancelar */
-.perfil-edit-form__cancel-button:hover {
-  background: #6b7280;
-
+  background: var(--navy);
   color: #ffffff;
-
-  transform: translateY(-2px);
+  font-weight: 600;
+  cursor: pointer;
 }
 
-/* Card de permissões */
-.perfil-permissoes {
-  padding: 1.5rem;
+.perfil-edit-form__save-button:hover {
+  background: var(--navy-deep);
+}
 
-  border: 1px solid #e5e7eb;
-
-  border-radius: 16px;
-
+.perfil-edit-form__cancel-button {
+  border-color: #c6cedd;
   background: #ffffff;
-
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  color: var(--navy);
 }
 
-/* Título das permissões */
+.perfil-edit-form__cancel-button:hover {
+  border-color: var(--navy);
+  background: var(--paper);
+}
+
+/* ---------- Permissões ---------- */
+
 .perfil-permissoes__title {
   margin: 0 0 1rem;
-
-  color: #111827;
-
-  font-size: 1.2rem;
-
-  font-weight: 900;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
-/* Lista de permissões */
 .perfil-permissoes__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 0.6rem 1.5rem;
   margin: 0;
-
-  padding-left: 1.25rem;
-
-  color: #374151;
-
-  line-height: 1.8;
-
-  font-size: 0.95rem;
-
-  font-weight: 600;
+  padding: 0;
+  list-style: none;
 }
 
-/* Responsividade */
-@media (max-width: 760px) {
-  .perfil-header {
-    flex-direction: column;
+.perfil-permissoes__list li {
+  position: relative;
+  padding-left: 1.5rem;
+}
 
-    align-items: stretch;
-  }
+.perfil-permissoes__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
 
-  .perfil-header__button {
-    width: 100%;
-  }
-
-  .perfil-card__top {
-    flex-direction: column;
-
-    align-items: flex-start;
+@media (max-width: 720px) {
+  .perfil-header__title {
+    font-size: 1.65rem;
   }
 
   .perfil-card__edit-button {
-    width: 100%;
-  }
-
-  .perfil-info-grid {
-    grid-template-columns: 1fr;
+    margin-left: 0;
   }
 
   .perfil-edit-form {
-    grid-template-columns: 1fr;
-  }
-
-  .perfil-edit-form__actions {
-    flex-direction: column;
-
-    align-items: stretch;
-  }
-
-  .perfil-edit-form__save-button,
-  .perfil-edit-form__cancel-button {
-    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

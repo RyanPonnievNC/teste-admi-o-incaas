@@ -1,5 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
-/* Tailwind */
+/* Estilos globais: cores, tipografia e regras comuns a todas as telas */
 
 @import url("primeicons/primeicons.css");
 
@@ -7,20 +6,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Estilo geral */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+/* Cores e medidas usadas em todo o sistema */
+:root {
+  --navy: #132146;
+  --navy-deep: #0c1630;
+  --ink: #101c38;
+  --gold: #c9a24d;
+  --gold-deep: #8a6a22;
+  --paper: #f1f3f8;
+  --surface: #ffffff;
+  --line: #dde2ed;
+  --text: #1a2640;
+  --muted: #5b6880;
+
+  --ok: #1d7a4e;
+  --ok-bg: #e2f4ea;
+  --bad: #b4372b;
+  --bad-bg: #fbe8e5;
+  --warn: #8f5d00;
+  --warn-bg: #fcf0d4;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(16, 28, 56, 0.06), 0 4px 14px rgba(16, 28, 56, 0.05);
+
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-body: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--paper);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
 
-/* ===================================== */
-/* TRANSIÇÃO ENTRE PÁGINAS */
-/* ===================================== */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
 
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+/* Foco visível para quem navega pelo teclado */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--navy-deep);
+}
+
+/* Transição entre páginas */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 220ms;
+  animation-duration: 200ms;
   animation-timing-function: ease;
 }
 
@@ -33,11 +85,6 @@ body {
 }
 
 @keyframes fade-out-page {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
   to {
     opacity: 0;
     transform: translateY(6px);
@@ -49,9 +96,268 @@ body {
     opacity: 0;
     transform: translateY(6px);
   }
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
+}
+
+/* =========================================================
+   Componentes compartilhados (campos, botões, tabelas, status)
+   Usados nas telas de Clientes e Processos.
+   ========================================================= */
+
+/* ---------- Campos de formulário ---------- */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.form-field__label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.form-field__input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #c6cedd;
+  border-radius: var(--radius-sm);
+  background-color: #ffffff;
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-field__input::placeholder {
+  color: #8591a8;
+}
+
+.form-field__input:hover {
+  border-color: #9aa6bf;
+}
+
+.form-field__input:focus {
+  outline: 0;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(201, 162, 77, 0.35);
+}
+
+.form-field__textarea {
+  min-height: 7rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+select.form-field__input {
+  padding-right: 2.4rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235b6880' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  cursor: pointer;
+}
+
+.form-field__error {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--bad);
+}
+
+/* ---------- Botões ---------- */
+
+.ui-btn,
+.processos-form__submit-button,
+.processos-form__cancel-button,
+.processos-filtros__clear-button,
+.modal-exclusao__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.55rem 1.25rem;
+  border: 1px solid var(--navy);
+  border-radius: 10px;
+  background: var(--navy);
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.ui-btn:hover,
+.processos-form__submit-button:hover {
+  background: var(--navy-deep);
+  border-color: var(--navy-deep);
+}
+
+.ui-btn--ghost,
+.processos-form__cancel-button,
+.processos-filtros__clear-button,
+.modal-exclusao__button--cancel {
+  border-color: #c6cedd;
+  background: #ffffff;
+  color: var(--navy);
+}
+
+.ui-btn--ghost:hover,
+.processos-form__cancel-button:hover,
+.processos-filtros__clear-button:hover,
+.modal-exclusao__button--cancel:hover {
+  border-color: var(--navy);
+  background: var(--paper);
+}
+
+.ui-btn--sm {
+  min-height: 36px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.ui-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.modal-exclusao__button--delete {
+  border-color: var(--bad);
+  background: var(--bad);
+}
+
+.modal-exclusao__button--delete:hover {
+  border-color: #8f2a20;
+  background: #8f2a20;
+}
+
+/* ---------- Tabelas ---------- */
+
+.ui-table-wrap,
+.processos-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.ui-table,
+.processos-table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+}
+
+.ui-table th,
+.processos-table th {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--line);
+  background: #f6f8fc;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ui-table td,
+.processos-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.ui-table tbody tr:last-child td,
+.processos-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ui-table tbody tr:hover td,
+.processos-table tbody tr:hover td {
+  background: #f9fafd;
+}
+
+.ui-table__empty,
+.processos-table__empty {
+  padding: 2.25rem 1rem !important;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Última coluna (ações) alinhada à direita */
+.ui-table .ui-col-acoes {
+  text-align: right;
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* ---------- Etiqueta de status ---------- */
+
+.ui-badge,
+.processos-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ui-badge::before,
+.processos-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ui-badge--ativo,
+.processos-status--ativo {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.ui-badge--finalizado,
+.processos-status--finalizado {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.ui-badge--suspenso,
+.processos-status--suspenso {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+/* ---------- Paginação ---------- */
+
+.ui-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.ui-pager__buttons {
+  display: flex;
+  gap: 0.5rem;
 }

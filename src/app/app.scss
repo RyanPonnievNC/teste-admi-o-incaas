@@ -1,602 +1,381 @@
 /*
   app.scss
-
-  Este arquivo controla o visual principal da aplicação:
-  - sidebar lateral
-  - cartão do usuário
-  - foto do usuário
-  - links do menu
-  - link ativo
-  - área principal
-  - tela cheia no login
-  - caixa de mensagem
+  Visual principal: barra lateral, cartão do usuário, menu, área das páginas e aviso na tela.
 */
 
-/* Container principal da aplicação inteira */
 .app-shell {
   min-height: 100vh;
-
-  background-color: #f3f4f6;
+  background: var(--paper);
 }
 
-/* Barra lateral do sistema */
+/* ---------- Barra lateral ---------- */
+
 .app-navbar {
-  background-color: rgb(19, 33, 70);
-
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  background: var(--navy);
 }
 
-/* Conteúdo interno da sidebar */
 .app-navbar__content {
-  width: 250px;
-
+  width: 264px;
   height: 100vh;
-
-  background: rgb(19, 33, 70);
-
-  padding: 1rem;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: flex-start;
-
-  gap: 0.85rem;
-
+  box-sizing: border-box;
+  padding: 1.5rem 1rem 1.25rem;
   position: fixed;
-
   top: 0;
-
   left: 0;
-
   z-index: 20;
-
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.5rem;
   overflow-y: auto;
-
   overflow-x: hidden;
+  background: var(--navy);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Personalização da barra de rolagem da sidebar */
 .app-navbar__content::-webkit-scrollbar {
   width: 6px;
 }
 
-/* Fundo da barra de rolagem */
-.app-navbar__content::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* Parte móvel da barra de rolagem */
 .app-navbar__content::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.35);
-
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 999px;
 }
 
-/* Área do logo */
+/* Marca */
 .app-navbar__brand {
-  width: 100%;
-
   display: flex;
-
-  justify-content: center;
-
-  margin-bottom: 0.25rem;
-
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0 0.25rem;
   flex-shrink: 0;
 }
 
-/* Container visual do logo do sistema */
 .app-navbar__title {
-  width: 72px;
-
-  height: 72px;
-
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  border-radius: 1rem;
-
-  background: rgba(255, 255, 255, 0.08);
-
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(201, 162, 77, 0.55);
   overflow: hidden;
 }
 
-/* Imagem oficial do Jurídico Pro na sidebar */
 .app-navbar__logo {
   width: 100%;
-
   height: 100%;
-
-  object-fit: contain;
-
   display: block;
+  object-fit: contain;
 }
 
-/* Cartão do usuário logado */
-.app-user-card {
-  width: 100%;
-
-  padding: 0.85rem;
-
-  border: 1px solid rgba(255, 255, 255, 0.18);
-
-  border-radius: 12px;
-
-  background: rgba(255, 255, 255, 0.08);
-
+.app-navbar__name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.1;
   color: #ffffff;
+}
 
+/* Cartão do usuário */
+.app-user-card {
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
-  gap: 0.55rem;
-
+  gap: 0.45rem;
+  padding: 1.1rem 0.9rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
   flex-shrink: 0;
 }
 
-/* Foto do usuário na sidebar */
 .app-user-card__photo {
-  width: 72px;
-
-  height: 72px;
-
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.12);
-
-  color: #ffffff;
-
+  width: 68px;
+  height: 68px;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
+  border-radius: 50%;
   overflow: hidden;
-
-  font-size: 1.8rem;
-
-  font-weight: 900;
-
-  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 2px var(--gold);
 }
 
-/* Imagem da foto na sidebar */
 .app-user-card__photo-image {
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
-  display: block;
 }
 
-/* Inicial quando não tem foto */
 .app-user-card__photo-initial {
-  color: #ffffff;
-
-  font-size: 1.8rem;
-
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--gold);
 }
 
-/* Nome do usuário */
 .app-user-card__name {
+  max-width: 100%;
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  font-weight: 600;
   color: #ffffff;
-
-  font-size: 0.95rem;
-
-  font-weight: 800;
-
-  text-align: center;
-
-  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
-/* Selo do perfil */
 .app-user-card__badge {
-  width: fit-content;
-
-  margin: 0 auto;
-
-  padding: 0.25rem 0.6rem;
-
+  padding: 0.15rem 0.7rem;
   border-radius: 999px;
-
-  font-size: 0.75rem;
-
-  font-weight: 800;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
-/* Selo de administrador */
 .app-user-card__badge--admin {
-  background: #dcfce7;
-
-  color: #166534;
+  background: var(--gold);
+  color: var(--navy-deep);
 }
 
-/* Selo de visitante */
 .app-user-card__badge--visitor {
-  background: #dbeafe;
-
-  color: #1e40af;
+  background: rgba(255, 255, 255, 0.14);
+  color: #dfe5f3;
 }
 
-/* Área de detalhes do usuário */
 .app-user-card__details {
   display: flex;
-
   flex-direction: column;
-
-  gap: 0.25rem;
-
-  color: rgba(255, 255, 255, 0.82);
-
-  font-size: 0.78rem;
-
-  text-align: center;
+  gap: 0.1rem;
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.62);
 }
 
-/* Área que contém os links do menu */
+/* Menu */
 .app-navbar__links {
-  width: 100%;
-
   display: flex;
-
   flex-direction: column;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
 
+.app-navbar__link,
+.app-navbar__perfil {
+  display: flex;
   align-items: center;
-
   gap: 0.8rem;
-
-  position: relative;
-
-  top: 0;
-
-  flex-shrink: 0;
-}
-
-/* Estilo padrão de cada link do menu */
-.app-navbar__link {
-  width: 170px;
-
-  min-height: 50px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  color: #ffffff;
-
-  border: 1px solid #ffffff;
-
-  border-radius: 6px;
-
-  padding: 10px 18px;
-
-  text-align: center;
-
-  text-decoration: none;
-
-  font-size: 1.05rem;
-
-  font-weight: 500;
-
-  transition: 0.2s ease;
-}
-
-/* Efeito quando o mouse passa por cima do link */
-.app-navbar__link:hover {
-  background: rgba(255, 255, 255, 0.08);
-
-  text-decoration: underline;
-
-  transform: translateY(-2px);
-}
-
-/* Link ativo com cores invertidas */
-.app-navbar__link--active {
-  background: #ffffff;
-
-  color: rgb(19, 33, 70);
-
-  border-color: #ffffff;
-
-  font-weight: 800;
-
-  text-decoration: none;
-
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
-}
-
-/* Hover do link ativo */
-.app-navbar__link--active:hover {
-  background: #ffffff;
-
-  color: rgb(19, 33, 70);
-
-  text-decoration: none;
-
-  transform: translateY(-2px);
-}
-
-/* Rodapé do menu lateral */
-.app-navbar__footer {
+  box-sizing: border-box;
   width: 100%;
+  min-height: 46px;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.98rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
 
-  margin-top: 1rem;
+.app-navbar__link .pi,
+.app-navbar__perfil .pi {
+  width: 1.25rem;
+  font-size: 1.05rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+}
 
-  padding-bottom: 1rem;
+.app-navbar__link:hover,
+.app-navbar__perfil:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
 
-  display: flex;
+.app-navbar__link--active,
+.app-navbar__perfil--active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--gold);
+}
 
-  justify-content: center;
+.app-navbar__link--active .pi,
+.app-navbar__perfil--active .pi {
+  color: var(--gold);
+}
 
+/* Rodapé fixo na base da barra */
+.app-navbar__footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
 
-/* Área principal onde as páginas são exibidas */
+/* ---------- Área das páginas ---------- */
+
 .app-main {
-  max-width: 72rem;
-
-  margin-left: 250px;
-
-  padding: 1.5rem 2rem;
+  margin-left: 264px;
+  padding: 2.25rem 2.5rem 3rem;
 }
 
-/* Área principal quando está na tela de login */
 .app-main--login {
-  max-width: none;
-
   margin-left: 0;
-
   padding: 0;
 }
 
-/* Container usado nas animações das páginas */
+/* Todas as páginas começam no mesmo ponto e têm a mesma largura */
 .app-page-transition {
   position: relative;
+  max-width: 76rem;
+  margin: 0 auto;
 }
 
-/* Caixa de mensagem do sistema */
+.app-main--login .app-page-transition {
+  max-width: none;
+}
+
+/* ---------- Aviso na tela ---------- */
+
 .app-toast {
   width: 360px;
-
-  min-height: 82px;
-
+  max-width: calc(100% - 2rem);
+  box-sizing: border-box;
   position: fixed;
-
   right: 24px;
-
   bottom: 24px;
-
   z-index: 100;
-
   display: flex;
-
   align-items: center;
-
-  gap: 1rem;
-
-  padding: 1rem;
-
-  border-radius: 14px;
-
-  background: #ffffff;
-
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
-
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--navy);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 18px 40px rgba(16, 28, 56, 0.2);
   animation: toast-enter 0.25s ease;
 }
 
-/* Caixa quando a mensagem é de sucesso */
 .app-toast--success {
-  border-left: 6px solid #16a34a;
+  border-left-color: var(--ok);
 }
 
-/* Caixa quando a mensagem é informativa */
 .app-toast--info {
-  border-left: 6px solid rgb(19, 33, 70);
+  border-left-color: var(--gold);
 }
 
-/* Ícone da caixa */
 .app-toast__icon {
-  width: 42px;
-
-  height: 42px;
-
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   border-radius: 50%;
-
-  background: #f3f4f6;
-
-  font-size: 1.4rem;
+  background: var(--paper);
+  font-size: 1.25rem;
 }
 
-/* Área dos textos da caixa */
 .app-toast__content {
   flex: 1;
-
+  min-width: 0;
   display: flex;
-
   flex-direction: column;
-
-  gap: 0.25rem;
+  gap: 0.15rem;
 }
 
-/* Título da caixa */
 .app-toast__title {
-  color: #111827;
-
   font-size: 0.98rem;
-
-  font-weight: 800;
+  color: var(--ink);
 }
 
-/* Mensagem menor da caixa */
 .app-toast__message {
-  color: #6b7280;
-
-  font-size: 0.9rem;
-
+  font-size: 0.88rem;
   line-height: 1.4;
+  color: var(--muted);
 }
 
-/* Botão de fechar a caixa */
 .app-toast__close {
   width: 28px;
-
   height: 28px;
-
-  border: none;
-
+  flex-shrink: 0;
+  border: 0;
   border-radius: 50%;
-
   background: transparent;
-
-  color: #6b7280;
-
-  font-size: 1.4rem;
-
+  color: var(--muted);
+  font-size: 1.3rem;
   line-height: 1;
-
   cursor: pointer;
-
-  transition: 0.2s ease;
 }
 
-/* Hover do botão de fechar */
 .app-toast__close:hover {
-  background: #f3f4f6;
-
-  color: #111827;
+  background: var(--paper);
+  color: var(--ink);
 }
 
-/* Animação de entrada da caixa */
 @keyframes toast-enter {
   from {
     opacity: 0;
-
-    transform: translateY(16px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
+    transform: translateY(14px);
   }
 }
 
-/* Responsividade da caixa em telas menores */
-@media (max-width: 640px) {
-  .app-toast {
-    width: calc(100% - 2rem);
+/* ---------- Telas menores: a barra vira um topo ---------- */
 
-    right: 1rem;
+@media (max-width: 900px) {
+  .app-navbar__content {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 0.9rem 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    overflow: visible;
+  }
 
-    bottom: 1rem;
+  .app-user-card {
+    display: none;
+  }
+
+  .app-navbar__links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+    gap: 0.25rem;
+  }
+
+  .app-navbar__link,
+  .app-navbar__perfil {
+    width: auto;
+    min-height: 40px;
+    padding: 0.45rem 0.8rem;
+  }
+
+  .app-navbar__footer {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .app-main {
+    margin-left: 0;
+    padding: 1.5rem 1rem 2.5rem;
   }
 }
 
-/* Área que contém os links do menu */
-.app-navbar__perfil {
-  width: 100%;
+/* Celulares: a marca ocupa a primeira linha e o menu fica logo abaixo */
+@media (max-width: 560px) {
+  .app-navbar__brand {
+    flex-basis: 100%;
+  }
 
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  gap: 0.8rem;
-
-  position: relative;
-
-  top: 0;
-
-  flex-shrink: 0;
-}
-
-/* Estilo padrão de cada link do menu */
-.app-navbar__perfil {
-  width: 170px;
-
-  min-height: 50px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  color: #ffffff;
-
-  border: 1px solid #ffffff;
-
-  border-radius: 6px;
-
-  padding: 10px 18px;
-
-  text-align: center;
-
-  text-decoration: none;
-
-  font-size: 1.05rem;
-
-  font-weight: 500;
-
-  transition: 0.2s ease;
-}
-
-/* Efeito quando o mouse passa por cima do link */
-.app-navbar__perfil:hover {
-  background: rgba(255, 255, 255, 0.08);
-
-  text-decoration: underline;
-
-  transform: translateY(-2px);
-}
-
-/* Link ativo com cores invertidas */
-.app-navbar__perfil--active {
-  background: rgb(231, 231, 231);
-
-  color: rgb(19, 33, 70);
-
-  border-color: rgb(231, 231, 231);
-
-  font-weight: 800;
-
-  text-decoration: none;
-
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
-}
-
-/* Hover do link ativo */
-.app-navbar__perfil--active:hover {
-  background: #ffffff;
-
-  color: rgb(19, 33, 70);
-
-  text-decoration: none;
-
-  transform: translateY(-2px);
+  .app-navbar__links {
+    flex: 1 1 auto;
+  }
 }

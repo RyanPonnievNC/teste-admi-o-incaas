@@ -1,26 +1,30 @@
-<!-- Container principal da página de clientes -->
+<!-- Tela de clientes -->
 <div class="clientes">
 
-  <!-- Cabeçalho com título e card total -->
-  <div class="clientes__header">
+  <!-- Título e total de clientes -->
+  <header class="clientes__header">
     <div>
       <h1 class="clientes__title">Clientes</h1>
       <p class="clientes__subtitle">Lista de clientes cadastrados e seus processos</p>
     </div>
 
     <div class="clientes-total-card">
-      <p class="clientes-total-card__label">Total de clientes</p>
-      <p class="clientes-total-card__value">{{ totalClientes }}</p>
+      <span class="clientes-total-card__value">{{ totalClientes }}</span>
+      <span class="clientes-total-card__label">
+        {{ totalClientes === 1 ? 'cliente cadastrado' : 'clientes cadastrados' }}
+      </span>
     </div>
-  </div>
+  </header>
 
-  <!-- Painel de busca -->
-  <div class="clientes-panel">
+  <!-- Busca -->
+  <section class="clientes-panel">
     <h2 class="clientes-panel__title">Buscar cliente</h2>
 
     <div class="clientes-search">
-      <div class="form-field form-field--wide">
+      <div class="form-field">
+        <label class="form-field__label" for="buscaCliente">Nome do cliente</label>
         <input
+          id="buscaCliente"
           type="text"
           [(ngModel)]="busca"
           (input)="aplicarBusca()"
@@ -29,55 +33,77 @@
         />
       </div>
 
-      <div>
-        <p-button
-          label="Limpar busca"
-          severity="secondary"
-          (onClick)="limparBusca()"
-        ></p-button>
-      </div>
+      <button
+        type="button"
+        class="ui-btn ui-btn--ghost clientes-search__clear"
+        (click)="limparBusca()"
+      >
+        Limpar busca
+      </button>
     </div>
-  </div>
+  </section>
 
-  <!-- Tabela de clientes -->
-  <div class="clientes-panel">
+  <!-- Lista de clientes -->
+  <section class="clientes-panel">
     <h2 class="clientes-panel__title">Lista de clientes</h2>
 
-    <p-table
-      [value]="clientesFiltrados"
-      [paginator]="true"
-      [rows]="5"
-      [tableStyle]="{ 'min-width': '40rem' }"
-      responsiveLayout="scroll"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Nome do cliente</th>
-          <th>Ações</th>
-        </tr>
-      </ng-template>
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Nome do cliente</th>
+            <th class="ui-col-acoes">Ações</th>
+          </tr>
+        </thead>
 
-      <ng-template pTemplate="body" let-cliente>
-        <tr>
-          <td>{{ cliente }}</td>
-          <td>
-            <p-button
-              label="Ver processos"
-              icon="pi pi-search"
-              [text]="true"
-              (onClick)="selecionarCliente(cliente)"
-            ></p-button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+        <tbody>
+          <tr *ngFor="let cliente of clientesDaPagina">
+            <td>{{ cliente }}</td>
+            <td class="ui-col-acoes">
+              <button
+                type="button"
+                class="ui-btn ui-btn--ghost ui-btn--sm"
+                (click)="selecionarCliente(cliente)"
+              >
+                <i class="pi pi-search" aria-hidden="true"></i>
+                Ver processos
+              </button>
+            </td>
+          </tr>
 
-  <!-- Painel que mostra os processos do cliente selecionado -->
-  <div
-    *ngIf="clienteSelecionado"
-    class="clientes-panel"
-  >
+          <tr *ngIf="clientesFiltrados.length === 0">
+            <td class="ui-table__empty" colspan="2">Nenhum cliente encontrado.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ui-pager" *ngIf="clientesFiltrados.length > porPagina">
+      <span>Página {{ paginaClientes }} de {{ totalPaginasClientes }}</span>
+
+      <div class="ui-pager__buttons">
+        <button
+          type="button"
+          class="ui-btn ui-btn--ghost ui-btn--sm"
+          [disabled]="paginaClientes <= 1"
+          (click)="mudarPaginaClientes(-1)"
+        >
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="ui-btn ui-btn--ghost ui-btn--sm"
+          [disabled]="paginaClientes >= totalPaginasClientes"
+          (click)="mudarPaginaClientes(1)"
+        >
+          Próxima
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Processos do cliente selecionado -->
+  <section class="clientes-panel" *ngIf="clienteSelecionado">
     <div class="clientes-detail-header">
       <div>
         <h2 class="clientes-panel__title">Processos de {{ clienteSelecionado }}</h2>
@@ -86,42 +112,61 @@
         </p>
       </div>
 
-      <p-button
-        label="Fechar"
-        severity="secondary"
-        (onClick)="fecharDetalhes()"
-      ></p-button>
+      <button
+        type="button"
+        class="ui-btn ui-btn--ghost ui-btn--sm"
+        (click)="fecharDetalhes()"
+      >
+        Fechar
+      </button>
     </div>
 
-    <p-table
-      [value]="processosDoCliente"
-      [paginator]="true"
-      [rows]="5"
-      [tableStyle]="{ 'min-width': '60rem' }"
-      responsiveLayout="scroll"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Número</th>
-          <th>Descrição</th>
-          <th>Status</th>
-          <th>Criação</th>
-        </tr>
-      </ng-template>
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Criação</th>
+          </tr>
+        </thead>
 
-      <ng-template pTemplate="body" let-p>
-        <tr>
-          <td>{{ p.numero }}</td>
-          <td>{{ p.descricao }}</td>
-          <td>
-            <p-tag
-              [value]="p.status"
-              [severity]="getStatusSeverity(p.status)"
-            ></p-tag>
-          </td>
-          <td>{{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+        <tbody>
+          <tr *ngFor="let p of processosDaPagina">
+            <td>{{ p.numero }}</td>
+            <td>{{ p.descricao }}</td>
+            <td>
+              <span class="ui-badge" [ngClass]="classeStatus(p.status)">{{ p.status }}</span>
+            </td>
+            <td>{{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ui-pager" *ngIf="processosDoCliente.length > porPagina">
+      <span>Página {{ paginaProcessos }} de {{ totalPaginasProcessos }}</span>
+
+      <div class="ui-pager__buttons">
+        <button
+          type="button"
+          class="ui-btn ui-btn--ghost ui-btn--sm"
+          [disabled]="paginaProcessos <= 1"
+          (click)="mudarPaginaProcessos(-1)"
+        >
+          Anterior
+        </button>
+        <button
+          type="button"
+          class="ui-btn ui-btn--ghost ui-btn--sm"
+          [disabled]="paginaProcessos >= totalPaginasProcessos"
+          (click)="mudarPaginaProcessos(1)"
+        >
+          Próxima
+        </button>
+      </div>
+    </div>
+  </section>
+
 </div>

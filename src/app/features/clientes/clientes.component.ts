@@ -1,116 +1,80 @@
-// Importa recursos do Angular
+// Tela de clientes: lista os clientes cadastrados e mostra os processos de cada um.
+
 import { Component, OnInit, inject } from '@angular/core';
-
-// Importa recursos básicos do Angular
 import { CommonModule } from '@angular/common';
-
-// Importa FormsModule para usar ngModel
 import { FormsModule } from '@angular/forms';
 
-// Importa módulos do PrimeNG usados na tela
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-
-// Importa o service dos processos
 import { ProcessoService } from '../../core/services/processo.service';
-
-// Importa o model Processo
 import { Processo } from '../../models/processo.model';
 
-// Tipo dos status do processo
-type StatusProcesso = 'ATIVO' | 'FINALIZADO' | 'SUSPENSO';
-
 @Component({
-  // Nome da tag do componente
   selector: 'app-clientes',
-
-  // Define como standalone
   standalone: true,
-
-  // Módulos usados no HTML
-  imports: [
-    CommonModule,
-    FormsModule,
-    TableModule,
-    ButtonModule,
-    TagModule
-  ],
-
-  // Arquivo HTML
+  imports: [CommonModule, FormsModule],
   templateUrl: './clientes.component.html',
-
-  // Arquivo SCSS
   styleUrl: './clientes.component.scss'
 })
 export class ClientesComponent implements OnInit {
-  // Injeta service dos processos
   private service = inject(ProcessoService);
 
-  // Lista completa de processos
+  // Quantos itens aparecem por página nas duas tabelas.
+  readonly porPagina = 5;
+
   processos: Processo[] = [];
-
-  // Lista de nomes únicos de clientes
   clientes: string[] = [];
-
-  // Lista filtrada pela busca
   clientesFiltrados: string[] = [];
-
-  // Texto digitado na busca
   busca = '';
 
-  // Cliente atualmente selecionado
   clienteSelecionado: string | null = null;
-
-  // Processos pertencentes ao cliente selecionado
   processosDoCliente: Processo[] = [];
-
-  // Total de clientes únicos
   totalClientes = 0;
 
-  // Executa quando a tela abre
+  // Página atual de cada tabela (começa em 1).
+  paginaClientes = 1;
+  paginaProcessos = 1;
+
   ngOnInit() {
-    // Escuta todos os processos
     this.service.getAll().subscribe(data => {
       this.processos = data;
 
-      // Gera lista única de nomes de clientes
+      // Lista de nomes sem repetição, em ordem alfabética.
       this.clientes = [...new Set(
         data
           .map(processo => processo.cliente.trim())
           .filter(cliente => cliente.length > 0)
       )].sort((a, b) => a.localeCompare(b));
 
-      // Conta total de clientes únicos
       this.totalClientes = this.clientes.length;
-
-      // Aplica busca inicial
       this.aplicarBusca();
 
-      // Se já havia cliente selecionado, atualiza processos dele
+      // Mantém o cliente aberto atualizado quando os processos mudam.
       if (this.clienteSelecionado) {
         this.selecionarCliente(this.clienteSelecionado);
       }
     });
   }
 
-  // Filtra clientes pela busca digitada
   aplicarBusca() {
     const termo = this.busca.trim().toLowerCase();
 
     this.clientesFiltrados = this.clientes.filter(cliente =>
       cliente.toLowerCase().includes(termo)
     );
+
+    this.paginaClientes = 1;
   }
 
-  // Limpa campo de busca
   limparBusca() {
     this.busca = '';
     this.aplicarBusca();
   }
 
-  // Mostra os processos do cliente clicado
   selecionarCliente(nomeCliente: string) {
+    // Só volta para a primeira página quando troca de cliente.
+    if (nomeCliente !== this.clienteSelecionado) {
+      this.paginaProcessos = 1;
+    }
+
     this.clienteSelecionado = nomeCliente;
 
     this.processosDoCliente = this.processos
@@ -121,21 +85,49 @@ export class ClientesComponent implements OnInit {
       );
   }
 
-  // Fecha o painel de detalhes
   fecharDetalhes() {
     this.clienteSelecionado = null;
     this.processosDoCliente = [];
   }
 
-  // Define cor da tag conforme status
-  getStatusSeverity(status: StatusProcesso): 'success' | 'danger' | 'warn' {
-    switch (status) {
-      case 'ATIVO':
-        return 'success';
-      case 'FINALIZADO':
-        return 'danger';
-      case 'SUSPENSO':
-        return 'warn';
-    }
+  // ---------- Paginação ----------
+
+  get totalPaginasClientes(): number {
+    return Math.max(1, Math.ceil(this.clientesFiltrados.length / this.porPagina));
+  }
+
+  get totalPaginasProcessos(): number {
+    return Math.max(1, Math.ceil(this.processosDoCliente.length / this.porPagina));
+  }
+
+  get clientesDaPagina(): string[] {
+    const pagina = Math.min(this.paginaClientes, this.totalPaginasClientes);
+    const inicio = (pagina - 1) * this.porPagina;
+    return this.clientesFiltrados.slice(inicio, inicio + this.porPagina);
+  }
+
+  get processosDaPagina(): Processo[] {
+    const pagina = Math.min(this.paginaProcessos, this.totalPaginasProcessos);
+    const inicio = (pagina - 1) * this.porPagina;
+    return this.processosDoCliente.slice(inicio, inicio + this.porPagina);
+  }
+
+  mudarPaginaClientes(passo: number) {
+    this.paginaClientes = Math.min(
+      Math.max(1, this.paginaClientes + passo),
+      this.totalPaginasClientes
+    );
+  }
+
+  mudarPaginaProcessos(passo: number) {
+    this.paginaProcessos = Math.min(
+      Math.max(1, this.paginaProcessos + passo),
+      this.totalPaginasProcessos
+    );
+  }
+
+  // Nome da variação de cor da etiqueta de status.
+  classeStatus(status: string): string {
+    return 'ui-badge--' + status.toLowerCase();
   }
 }

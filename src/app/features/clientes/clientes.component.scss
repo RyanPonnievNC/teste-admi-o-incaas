@@ -1,116 +1,95 @@
-/* Área principal da página */
+/* Clientes: o visual de campos, botões e tabelas vem do styles.scss */
+
 .clientes {
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-/* Cabeçalho superior */
+/* Título à esquerda e total à direita, alinhados pela base */
 .clientes__header {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 1rem;
 }
 
-/* Título principal */
 .clientes__title {
-  font-size: 1.5rem;
+  margin: 0;
+  font-size: 2rem;
   font-weight: 700;
-  
-  /*Bordas*/
-  border: 2px solid black;
-  border-radius: 5px;
-
-  /*Dimenções*/
-  padding: 5px 10px;
-
-  /*Tamanho*/
-  width: fit-content;
+  line-height: 1.15;
 }
 
-/* Texto auxiliar */
 .clientes__subtitle {
-  color: #6b7280;
+  margin: 0.25rem 0 0;
+  color: var(--muted);
 }
 
-/* Card com total de clientes */
 .clientes-total-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 0.75rem 1rem;
-  width: fit-content;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* Texto pequeno do card */
-.clientes-total-card__label {
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-/* Número principal do card */
 .clientes-total-card__value {
-  font-size: 1.5rem;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.clientes-total-card__label {
+  font-size: 0.92rem;
+}
+
+.clientes-panel {
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.clientes-panel__title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
-/* Painéis brancos */
-.clientes-panel {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 1rem;
-}
-
-/* Título dos painéis */
-.clientes-panel__title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-/* Área da busca */
+/* Campo de busca e botão na mesma linha, com a mesma altura */
 .clientes-search {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
   gap: 1rem;
 }
 
-/* Campo mais largo */
-.form-field--wide {
-  width: 100%;
-}
-
-/* Cabeçalho da área de detalhes */
 .clientes-detail-header {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-/* Estilo do campo de input */
-.form-field__input {
-  width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
-  background-color: #ffffff;
+.clientes-detail-header .clientes-panel__title {
+  margin-bottom: 0;
 }
 
-/* Em telas médias, melhora layout do topo e da busca */
-@media (min-width: 768px) {
-  .clientes__header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+@media (max-width: 560px) {
+  .clientes__title {
+    font-size: 1.65rem;
   }
 
   .clientes-search {
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

@@ -92,7 +92,10 @@ export class DashboardComponent implements OnInit {
       datasets: [
         {
           label: 'Quantidade de Processos',
-          data: [this.ativos, this.finalizados, this.suspensos]
+          data: [this.ativos, this.finalizados, this.suspensos],
+          backgroundColor: ['#1d7a4e', '#b4372b', '#d79a1e'],
+          borderRadius: 8,
+          maxBarThickness: 72
         }
       ]
     };
@@ -100,7 +103,12 @@ export class DashboardComponent implements OnInit {
     // Configurações visuais básicas do gráfico
     this.chartOptions = {
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { beginAtZero: true, ticks: { precision: 0 } }
+      }
     };
   }
 }

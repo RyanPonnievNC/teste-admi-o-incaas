@@ -126,8 +126,28 @@
             </button>
           </ng-container>
           <ng-template #semSugestao>
-            A IA ainda não tem certeza da área.
+            {{ pessoasCitadas.length > 0
+              ? 'A IA reconheceu o nome, mas precisa de mais detalhes sobre o assunto para sugerir a área.'
+              : 'A IA ainda não tem certeza da área.' }}
           </ng-template>
+        </p>
+
+        <!-- Nomes de pessoas encontrados na descrição -->
+        <p class="form-field__ia" *ngIf="pessoasCitadas.length > 0">
+          <span>Pessoas citadas:</span>
+
+          <ng-container *ngFor="let pessoa of pessoasCitadas">
+            <strong>{{ pessoa.nome }}</strong>
+            <span>({{ pessoa.tipo === 'publica' ? 'pessoa pública' : 'nome comum' }})</span>
+
+            <button
+              class="form-field__ia-button form-field__ia-button--inline"
+              type="button"
+              (click)="usarComoCliente(pessoa)"
+            >
+              Usar como cliente
+            </button>
+          </ng-container>
         </p>
       </div>
 
@@ -359,7 +379,7 @@
               Criação
             </th>
 
-            <th *ngIf="podeAlterarProcessos()">
+            <th class="processos-table__col-acoes" *ngIf="podeAlterarProcessos()">
               Ações
             </th>
           </tr>
@@ -397,7 +417,7 @@
               {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}
             </td>
 
-            <td *ngIf="podeAlterarProcessos()">
+            <td class="processos-table__col-acoes" *ngIf="podeAlterarProcessos()">
               <div class="processos-table__actions">
 
                 <!-- Botão editar com símbolo de lápis -->
@@ -408,7 +428,7 @@
                   aria-label="Editar processo"
                   (click)="editar(p)"
                 >
-                  ✎
+                  <i class="pi pi-pencil" aria-hidden="true"></i>
                 </button>
 
                 <!-- Botão excluir com símbolo de lixeira -->
@@ -419,7 +439,7 @@
                   aria-label="Excluir processo"
                   (click)="abrirModalExclusao(p)"
                 >
-                  🗑
+                  <i class="pi pi-trash" aria-hidden="true"></i>
                 </button>
               </div>
             </td>

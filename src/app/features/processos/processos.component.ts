@@ -34,6 +34,7 @@ import { AuthService } from '../../core/services/auth.service';
 
 // Importa o serviço da IA.
 import { IaService, SugestaoIa } from '../../core/services/ia.service';
+import { PessoaCitada, identificarPessoas } from '../../core/utils/pessoas';
 
 // Importa o model de processo.
 import { Processo } from '../../models/processo.model';
@@ -91,6 +92,9 @@ export class ProcessosComponent implements OnInit {
 
   // Última sugestão da IA (null = nada para mostrar).
   sugestaoIa: SugestaoIa | null = null;
+
+  // Nomes de pessoas encontrados na descrição (nomes comuns e pessoas conhecidas).
+  pessoasCitadas: PessoaCitada[] = [];
 
   // Áreas disponíveis (valor = o que a IA devolve, nome = o que aparece na tela).
   readonly areas = [
@@ -171,6 +175,13 @@ export class ProcessosComponent implements OnInit {
         )
     });
 
+    // Procura nomes de pessoas na descrição (funciona mesmo sem o servidor da IA).
+    this.form.controls.descricao.valueChanges
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+      .subscribe(texto => {
+        this.pessoasCitadas = identificarPessoas(texto);
+      });
+
     // Pede sugestão de área à IA enquanto a descrição é digitada.
     this.form.controls.descricao.valueChanges
       .pipe(
@@ -230,6 +241,12 @@ export class ProcessosComponent implements OnInit {
       return '-';
     }
     return this.areas.find(a => a.valor === area)?.nome ?? area;
+  }
+
+  // Coloca no campo Cliente o nome de uma pessoa encontrada na descrição.
+  usarComoCliente(pessoa: PessoaCitada): void {
+    this.form.controls.cliente.setValue(pessoa.nome);
+    this.form.controls.cliente.markAsTouched();
   }
 
   // Aplica no formulário a área sugerida pela IA.
