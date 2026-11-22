@@ -55,9 +55,34 @@ const VERBOS_DO_AUTOR = new Set([
 // se uma delas vier antes (ex.: "Fulano foi citado como testemunha", "Fulano é o autor").
 const LIGACOES = new Set(['como', 'sao', 'foram', 'foi', 'sera', 'serao', 'e']);
 
+// Verbos logo depois do nome que indicam testemunha ("Fulano testemunhou", "Fulano depôs").
+const VERBOS_DA_TESTEMUNHA = new Set([
+  'testemunhou', 'testemunharam', 'depoe', 'depos', 'depuseram', 'presenciou', 'presenciaram'
+]);
+
+// "foi processado por Fulano": quem vem depois do "por" é quem move a ação.
+const PARTICIPIOS_DO_REU = new Set([
+  'processado', 'processada', 'processados', 'processadas',
+  'demandado', 'demandada', 'demandados', 'demandadas',
+  'acionado', 'acionada', 'acionados', 'acionadas',
+  'acusado', 'acusada', 'acusados', 'acusadas',
+  'denunciado', 'denunciada', 'denunciados', 'denunciadas'
+]);
+
+// Palavras que dizem o papel DEPOIS do nome: "Fulano, réu,", "Fulano (autora)",
+// "Fulano é o autor", "Fulano foi acusado".
 const NOMES_DEPOIS: Record<Exclude<PapelPessoa, 'citado'>, Set<string>> = {
-  autor: new Set(['autor', 'autora', 'autores', 'autoras', 'requerente', 'requerentes']),
-  reu: new Set(['reu', 'reus', 're', 'res', 'requerido', 'requerida', 'requeridos', 'requeridas']),
+  autor: new Set([
+    'autor', 'autora', 'autores', 'autoras', 'requerente', 'requerentes',
+    'reclamante', 'reclamantes', 'demandante', 'demandantes', 'exequente', 'impetrante'
+  ]),
+  reu: new Set([
+    'reu', 'reus', 're', 'res', 'requerido', 'requerida', 'requeridos', 'requeridas',
+    'reclamado', 'reclamada', 'reclamados', 'reclamadas',
+    'demandado', 'demandada', 'demandados', 'demandadas',
+    'executado', 'executada', 'acusado', 'acusada', 'acusados', 'acusadas',
+    'denunciado', 'denunciada', 'processado', 'processada', 'processados', 'processadas'
+  ]),
   testemunha: new Set(['testemunha', 'testemunhas', 'informante'])
 };
 
@@ -135,12 +160,50 @@ function ehConectivoE(palavra: Palavra): boolean {
   return palavra.limpa === 'e' && palavra.original.toLowerCase() !== 'é';
 }
 
+// Pistas coladas ao nome, que valem mais que as palavras mais distantes:
+//   "Fulano processou ...", "Fulano testemunhou ...",
+//   "Fulano, réu, ...", "Fulano (autora) ...", "Fulano, autor da ação, ..."
+function papelColado(palavras: Palavra[], fim: number): PapelPessoa | null {
+  const ultima = palavras[fim];
+  const proxima = palavras[fim + 1];
+
+  if (!proxima || proxima.usada || /[.;]$/.test(ultima.bruto)) {
+    return null;
+  }
+
+  if (VERBOS_DO_AUTOR.has(proxima.limpa)) {
+    return 'autor';
+  }
+
+  if (VERBOS_DA_TESTEMUNHA.has(proxima.limpa)) {
+    return 'testemunha';
+  }
+
+  // Aposto: o papel vem logo depois de uma vírgula ou entre parênteses.
+  if (/,$/.test(ultima.bruto) || proxima.bruto.startsWith('(')) {
+    for (const papel of PAPEIS) {
+      if (NOMES_DEPOIS[papel].has(proxima.limpa)) {
+        return papel;
+      }
+    }
+  }
+
+  return null;
+}
+
 // Procura uma pista de papel perto do nome. Para quando a frase termina (. ou ;).
 function papelPorPistas(
   palavras: Palavra[],
   inicio: number,
   fim: number
 ): PapelPessoa {
+  // 0) Pistas coladas ao nome (verbo logo depois, ou aposto entre vírgulas/parênteses).
+  const colado = papelColado(palavras, fim);
+
+  if (colado) {
+    return colado;
+  }
+
   // 1) Pistas antes do nome. Pula "e" e outros nomes (lista: "contra Ana e Bia").
   let vistas = 0;
 
@@ -155,9 +218,14 @@ function papelPorPistas(
       continue;
     }
 
-    // Palavra com vírgula (ex.: "testemunha,") pertence ao nome anterior, não a este.
-    if (/,$/.test(p.bruto)) {
+    // Palavra com vírgula ou parêntese (ex.: "testemunha," ou "(autora)") pertence ao nome anterior.
+    if (/[,)]$/.test(p.bruto)) {
       break;
+    }
+
+    // "foi processado por Fulano": Fulano é quem move a ação.
+    if (p.limpa === 'por' && k > 0 && PARTICIPIOS_DO_REU.has(palavras[k - 1].limpa)) {
+      return 'autor';
     }
 
     for (const papel of PAPEIS) {
