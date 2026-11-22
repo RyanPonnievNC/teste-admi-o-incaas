@@ -1,77 +1,47 @@
-// Importa o tipo Routes do Angular
 import { Routes } from '@angular/router';
-
-// Importa o componente da página de clientes
-import { ClientesComponent } from './features/clientes/clientes.component';
-
-// Importa o componente da página dashboard
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-
-// Importa o componente da página de login
 import { LoginComponent } from './features/login/login.component';
-
-// Importa o componente da página de processos
-import { ProcessosComponent } from './features/processos/processos.component';
-
-// Importa o componente da página de perfil
-import { PerfilComponent } from './features/perfil/perfil.component';
-
-// Importa o componente de recuperar senha
 import { RecuperarSenhaComponent } from './features/recuperar-senha/recuperar-senha.component';
-
-// Importa o guard que permite admin e visitante
 import { authGuard } from './core/guards/auth.guard';
-
-// Importa o guard que permite apenas admin
 import { adminGuard } from './core/guards/admin.guard';
 
-// Cria e exporta a lista de rotas
+// Login e recuperar senha carregam junto com o site.
+// As outras telas só são baixadas quando a pessoa abre cada uma.
 export const routes: Routes = [
-
-  // Rota inicial do sistema
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
-
-  // Rota da tela de login
   {
     path: 'login',
     component: LoginComponent
   },
-
-  // Rota de recuperar senha
   {
     path: 'recuperar-senha',
     component: RecuperarSenhaComponent
   },
-
-  // Rota do Dashboard
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    loadComponent: () =>
+      import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard]
   },
-
-  // Rota de Clientes
   {
     path: 'clientes',
-    component: ClientesComponent,
+    loadComponent: () =>
+      import('./features/clientes/clientes.component').then(m => m.ClientesComponent),
     canActivate: [authGuard]
   },
-
-  // Rota de Perfil
   {
     path: 'perfil',
-    component: PerfilComponent,
+    loadComponent: () =>
+      import('./features/perfil/perfil.component').then(m => m.PerfilComponent),
     canActivate: [authGuard]
   },
-
-  // Rota de Processos
   {
     path: 'processos',
-    component: ProcessosComponent,
+    loadComponent: () =>
+      import('./features/processos/processos.component').then(m => m.ProcessosComponent),
     canActivate: [adminGuard]
   },
 
@@ -80,5 +50,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'login'
   }
-
 ];

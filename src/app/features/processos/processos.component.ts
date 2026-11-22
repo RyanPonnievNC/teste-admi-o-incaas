@@ -22,9 +22,6 @@ import {
 import { catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 
 // Importa módulos do PrimeNG usados na tela.
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
 
 // Importa o serviço de processos.
 import { ProcessoService } from '../../core/services/processo.service';
@@ -80,9 +77,6 @@ function juntarNomes(nomes: string[]): string {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TableModule,
-    ButtonModule,
-    TagModule
   ],
 
   // Arquivo HTML do componente.
