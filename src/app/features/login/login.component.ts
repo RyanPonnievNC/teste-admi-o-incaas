@@ -91,8 +91,7 @@ export class LoginComponent implements OnInit {
     this.senha = '';
     this.senhaLoginVisivel = false;
 
-    localStorage.setItem(
-      'appToast',
+    this.salvarToast(
       JSON.stringify({
         titulo: 'Acesso administrativo liberado',
         mensagem: 'Você entrou como administrador do Jurídico Pro.',
@@ -107,8 +106,7 @@ export class LoginComponent implements OnInit {
     this.limparTelaLogin();
     this.authService.entrarComoVisitante();
 
-    localStorage.setItem(
-      'appToast',
+    this.salvarToast(
       JSON.stringify({
         titulo: 'Acesso como visitante',
         mensagem: 'Você pode visualizar o painel e os clientes.',
@@ -117,6 +115,15 @@ export class LoginComponent implements OnInit {
     );
 
     this.router.navigate(['/dashboard']);
+  }
+
+  // Guarda o aviso sem quebrar o login se o armazenamento estiver cheio
+  private salvarToast(conteudo: string): void {
+    try {
+      localStorage.setItem('appToast', conteudo);
+    } catch {
+      // sem espaço: o aviso é opcional
+    }
   }
 
   abrirCadastroAdmin(): void {

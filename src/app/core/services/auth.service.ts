@@ -62,15 +62,64 @@ export class AuthService {
     fotoUrl: ''
   };
 
+  // Deixa o usuário pronto para comparar: sem espaços nas pontas e em minúsculas
+  // (assim "Ryan", "ryan" e "ryan " são tratados como o mesmo usuário)
+  private normalizarUsuario(usuario: string): string {
+    return usuario.trim().toLowerCase();
+  }
+
+  // Deixa a senha pronta para comparar: sem espaços nas pontas
+  // (teclado de celular, autocompletar e copiar/colar costumam deixar um espaço no fim)
+  private normalizarSenha(senha: string): string {
+    return senha.trim();
+  }
+
+  // Grava no localStorage sem estourar erro quando o armazenamento está cheio
+  private gravar(chave: string, valor: string): boolean {
+    try {
+      localStorage.setItem(chave, valor);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Salva o usuário atual; se estiver cheio, libera o toast e tenta sem a foto
+  private salvarUsuarioAtual(dados: UsuarioLogado): boolean {
+    if (this.gravar('usuarioAtual', JSON.stringify(dados))) {
+      return true;
+    }
+
+    try {
+      localStorage.removeItem('appToast');
+    } catch {
+      // ignora
+    }
+
+    return this.gravar('usuarioAtual', JSON.stringify({ ...dados, fotoUrl: '' }));
+  }
+
   // Faz login de administrador verificando usuário e senha
   login(usuario: string, senha: string): boolean {
+
+    // Limpa o que foi digitado antes de comparar
+    const usuarioDigitado = this.normalizarUsuario(usuario);
+    const senhaDigitada = this.normalizarSenha(senha);
+
+    // Campos vazios nunca entram
+    if (!usuarioDigitado || !senhaDigitada) {
+      return false;
+    }
 
     // Busca todas as contas administradoras disponíveis
     const administradores = this.listarAdministradores();
 
     // Procura uma conta com usuário e senha iguais aos digitados
+    // (as contas salvas também são limpas, para contas criadas em versões antigas funcionarem)
     const usuarioEncontrado = administradores.find(
-      item => item.usuario === usuario && item.senha === senha
+      item =>
+        this.normalizarUsuario(item.usuario) === usuarioDigitado &&
+        this.normalizarSenha(item.senha) === senhaDigitada
     );
 
     // Se não encontrar administrador, retorna falso
@@ -89,11 +138,13 @@ export class AuthService {
       fotoUrl: usuarioEncontrado.fotoUrl || ''
     };
 
-    // Salva que existe alguém logado
-    localStorage.setItem('logado', 'true');
+    // Salva primeiro os dados do usuário (se a foto não couber, tenta sem ela)
+    if (!this.salvarUsuarioAtual(dadosUsuario)) {
+      return false;
+    }
 
-    // Salva os dados do usuário atual
-    localStorage.setItem('usuarioAtual', JSON.stringify(dadosUsuario));
+    // Só depois marca que existe alguém logado
+    this.gravar('logado', 'true');
 
     // Retorna verdadeiro para indicar login correto
     return true;
@@ -113,11 +164,11 @@ export class AuthService {
       fotoUrl: ''
     };
 
-    // Salva que existe alguém logado
-    localStorage.setItem('logado', 'true');
-
     // Salva os dados do visitante
-    localStorage.setItem('usuarioAtual', JSON.stringify(dadosUsuario));
+    this.salvarUsuarioAtual(dadosUsuario);
+
+    // Salva que existe alguém logado
+    this.gravar('logado', 'true');
   }
 
   // Cria uma nova conta administradora
@@ -180,8 +231,8 @@ export class AuthService {
       };
     }
 
-    // Verifica se a senha tem pelo menos 6 caracteres
-    if (!senha || senha.length < 6) {
+    // Verifica se a senha tem pelo menos 6 caracteres (sem contar espaços nas pontas)
+    if (this.normalizarSenha(senha).length < 6) {
       return {
         sucesso: false,
         mensagem: 'A senha precisa ter pelo menos 6 caracteres.'
@@ -193,7 +244,7 @@ export class AuthService {
 
     // Verifica se já existe usuário com o mesmo login
     const usuarioJaExiste = administradores.some(
-      item => item.usuario.toLowerCase() === usuario.toLowerCase()
+      item => this.normalizarUsuario(item.usuario) === this.normalizarUsuario(usuario)
     );
 
     // Se o usuário já existir, bloqueia cadastro
@@ -224,7 +275,7 @@ export class AuthService {
       idade,
       cpf: cpf.trim(),
       usuario: usuario.trim(),
-      senha,
+      senha: this.normalizarSenha(senha),
       perfil: 'admin',
       fotoUrl
     };
@@ -314,8 +365,8 @@ export class AuthService {
       };
     }
 
-    // Valida senha
-    if (!dadosAtualizados.senha || dadosAtualizados.senha.length < 6) {
+    // Valida senha (sem contar espaços nas pontas)
+    if (this.normalizarSenha(dadosAtualizados.senha).length < 6) {
       return {
         sucesso: false,
         mensagem: 'A senha precisa ter pelo menos 6 caracteres.'
@@ -341,7 +392,7 @@ export class AuthService {
     // Verifica se o novo usuário já está sendo usado por outra conta
     const usuarioJaExiste = administradores.some(
       conta =>
-        conta.usuario.toLowerCase() === dadosAtualizados.usuario.toLowerCase() &&
+        this.normalizarUsuario(conta.usuario) === this.normalizarUsuario(dadosAtualizados.usuario) &&
         conta.usuario !== usuarioAtual.usuario
     );
 
@@ -375,7 +426,7 @@ export class AuthService {
       idade: dadosAtualizados.idade,
       cpf: dadosAtualizados.cpf.trim(),
       usuario: dadosAtualizados.usuario.trim(),
-      senha: dadosAtualizados.senha,
+      senha: this.normalizarSenha(dadosAtualizados.senha),
       perfil: 'admin',
       fotoUrl: dadosAtualizados.fotoUrl
     };
@@ -384,7 +435,12 @@ export class AuthService {
     administradores[indiceContaAtual] = contaAtualizada;
 
     // Salva a lista atualizada
-    localStorage.setItem('contasAdmin', JSON.stringify(administradores));
+    if (!this.gravar('contasAdmin', JSON.stringify(administradores))) {
+      return {
+        sucesso: false,
+        mensagem: 'Não foi possível salvar: o armazenamento do navegador está cheio. Use uma foto menor.'
+      };
+    }
 
     // Atualiza também os dados do usuário logado
     const novoUsuarioAtual: UsuarioLogado = {
@@ -398,7 +454,7 @@ export class AuthService {
     };
 
     // Salva os dados atualizados do usuário atual
-    localStorage.setItem('usuarioAtual', JSON.stringify(novoUsuarioAtual));
+    this.salvarUsuarioAtual(novoUsuarioAtual);
 
     // Retorna sucesso
     return {
@@ -635,7 +691,7 @@ export class AuthService {
   verificarUsuarioParaRecuperacao(usuario: string): boolean {
     const administradores = this.listarAdministradores();
     const encontrado = administradores.find(
-      item => item.usuario.toLowerCase() === usuario.toLowerCase()
+      item => this.normalizarUsuario(item.usuario) === this.normalizarUsuario(usuario)
     );
     return !!encontrado;
   }
@@ -643,8 +699,9 @@ export class AuthService {
   // Redefine a senha de um administrador pelo nome de usuário
   redefinirSenha(usuario: string, novaSenha: string): { sucesso: boolean; mensagem: string } {
 
-    // Bloqueia redefinição do admin padrão
-    if (usuario === this.usuarioAdminPadrao) {
+    // Bloqueia redefinição do admin padrão (sem diferenciar maiúsculas de minúsculas,
+    // senão digitar "Admin" liberaria a troca da senha dele)
+    if (this.normalizarUsuario(usuario) === this.normalizarUsuario(this.usuarioAdminPadrao)) {
       return {
         sucesso: false,
         mensagem: 'A senha do administrador padrão não pode ser redefinida.'
@@ -656,7 +713,7 @@ export class AuthService {
 
     // Procura o índice da conta
     const indice = administradores.findIndex(
-      item => item.usuario.toLowerCase() === usuario.toLowerCase()
+      item => this.normalizarUsuario(item.usuario) === this.normalizarUsuario(usuario)
     );
 
     // Se não encontrar, retorna erro
@@ -667,8 +724,8 @@ export class AuthService {
       };
     }
 
-    // Valida o tamanho da senha
-    if (!novaSenha || novaSenha.length < 6) {
+    // Valida o tamanho da senha (sem contar espaços nas pontas)
+    if (this.normalizarSenha(novaSenha).length < 6) {
       return {
         sucesso: false,
         mensagem: 'A nova senha precisa ter pelo menos 6 caracteres.'
@@ -676,7 +733,7 @@ export class AuthService {
     }
 
     // Atualiza a senha
-    administradores[indice].senha = novaSenha;
+    administradores[indice].senha = this.normalizarSenha(novaSenha);
 
     // Salva a lista atualizada
     localStorage.setItem('contasAdmin', JSON.stringify(administradores));

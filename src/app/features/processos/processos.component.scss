@@ -285,8 +285,42 @@
   }
 }
 
-/* Botão "Usar como cliente" junto de cada nome, sem ir para a ponta da linha */
-.form-field__ia-button--inline {
-  margin-left: 0;
-  margin-right: 0.6rem;
+/* Pessoas citadas, juntas por papel (autores, réus, testemunhas...) */
+.pessoas-citadas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #ecd9a3;
+  border-radius: var(--radius-sm);
+  background: #fdf7e6;
+  font-size: 0.88rem;
+  color: #5c4513;
+}
+
+.pessoas-citadas__titulo {
+  margin: 0;
+  font-weight: 600;
+}
+
+.pessoas-citadas__grupo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid #ecd9a3;
+}
+
+.pessoas-citadas__papel {
+  min-width: 6.5rem;
+  font-weight: 600;
+}
+
+.pessoas-citadas__nomes {
+  flex: 1 1 14rem;
+}
+
+.pessoas-citadas__tipo {
+  opacity: 0.8;
 }

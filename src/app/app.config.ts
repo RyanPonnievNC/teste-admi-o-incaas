@@ -27,6 +27,10 @@ import {
 import { provideHttpClient } from '@angular/common/http';
 
 
+// Necessário para a animação de troca de página ([@routeAnimations])
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+
 // Importa suas rotas cadastradas
 import { routes } from './app.routes';
 
@@ -47,6 +51,9 @@ export const appConfig: ApplicationConfig = {
 
     // Libera uso de APIs
     provideHttpClient(),
+
+    // Habilita as animações de página
+    provideAnimations(),
 
     // Ativa rotas + transição suave entre páginas
     provideRouter(

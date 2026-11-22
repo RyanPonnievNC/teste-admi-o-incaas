@@ -1,4 +1,5 @@
 // Procura nomes de pessoas em um texto (primeiros nomes comuns e pessoas conhecidas).
+// Também tenta descobrir o papel de cada um (autor, réu, testemunha) pelas palavras ao redor.
 // Não usa internet: só reconhece o que está nas listas de data/nomes.ts.
 
 import {
@@ -9,9 +10,13 @@ import {
   type TipoPessoa
 } from '../data/nomes';
 
+// Papel da pessoa no processo. "citado" = a IA não achou pistas no texto.
+export type PapelPessoa = 'autor' | 'reu' | 'testemunha' | 'citado';
+
 export interface PessoaCitada {
   nome: string;
   tipo: TipoPessoa;
+  papel: PapelPessoa;
 }
 
 interface Palavra {
@@ -22,6 +27,41 @@ interface Palavra {
 }
 
 const CONECTORES = new Set(['de', 'da', 'do', 'das', 'dos']);
+
+// Palavras que indicam o papel da pessoa (já sem acento e em minúsculas).
+// ANTES = a pista vem antes do nome ("movida por Fulano", "contra Fulano").
+const ANTES: Record<Exclude<PapelPessoa, 'citado'>, Set<string>> = {
+  autor: new Set([
+    'movida', 'movido', 'ajuizada', 'ajuizado', 'proposta', 'proposto', 'ingressada', 'ingressado',
+    'autor', 'autora', 'autores', 'autoras', 'requerente', 'requerentes', 'reclamante', 'reclamantes',
+    'demandante', 'demandantes', 'exequente', 'impetrante'
+  ]),
+  reu: new Set([
+    'contra', 'processou', 'processa', 'processaram', 'acionou', 'demandou',
+    'reu', 'reus', 're', 'res', 'requerido', 'requerida', 'requeridos', 'requeridas',
+    'reclamado', 'reclamada', 'reclamados', 'demandado', 'demandada', 'executado', 'executada',
+    'acusado', 'acusada', 'denunciado', 'denunciada'
+  ]),
+  testemunha: new Set(['testemunha', 'testemunhas', 'informante'])
+};
+
+// Verbos logo depois do nome que indicam quem move a ação ("Fulano processou", "Fulano pede").
+const VERBOS_DO_AUTOR = new Set([
+  'processou', 'processa', 'pede', 'pediu', 'requer', 'requereu', 'ajuizou', 'move', 'moveu',
+  'propoe', 'propos', 'ingressou', 'reclama', 'reclamou'
+]);
+
+// Palavras de ligação ("como", "são", "foi", "é"...). Depois do nome, o papel só vale
+// se uma delas vier antes (ex.: "Fulano foi citado como testemunha", "Fulano é o autor").
+const LIGACOES = new Set(['como', 'sao', 'foram', 'foi', 'sera', 'serao', 'e']);
+
+const NOMES_DEPOIS: Record<Exclude<PapelPessoa, 'citado'>, Set<string>> = {
+  autor: new Set(['autor', 'autora', 'autores', 'autoras', 'requerente', 'requerentes']),
+  reu: new Set(['reu', 'reus', 're', 'res', 'requerido', 'requerida', 'requeridos', 'requeridas']),
+  testemunha: new Set(['testemunha', 'testemunhas', 'informante'])
+};
+
+const PAPEIS = ['autor', 'reu', 'testemunha'] as const;
 
 function normalizar(texto: string): string {
   return texto
@@ -90,6 +130,91 @@ function embelezar(palavras: Palavra[]): string {
     .join(' ');
 }
 
+// O conectivo "e" (Ana e Bia), e não o verbo "é" (Ana é ré).
+function ehConectivoE(palavra: Palavra): boolean {
+  return palavra.limpa === 'e' && palavra.original.toLowerCase() !== 'é';
+}
+
+// Procura uma pista de papel perto do nome. Para quando a frase termina (. ou ;).
+function papelPorPistas(
+  palavras: Palavra[],
+  inicio: number,
+  fim: number
+): PapelPessoa {
+  // 1) Pistas antes do nome. Pula "e" e outros nomes (lista: "contra Ana e Bia").
+  let vistas = 0;
+
+  for (let k = inicio - 1; k >= 0 && vistas < 3; k--) {
+    const p = palavras[k];
+
+    if (/[.;]$/.test(p.bruto)) {
+      break;
+    }
+
+    if (p.usada || ehConectivoE(p)) {
+      continue;
+    }
+
+    // Palavra com vírgula (ex.: "testemunha,") pertence ao nome anterior, não a este.
+    if (/,$/.test(p.bruto)) {
+      break;
+    }
+
+    for (const papel of PAPEIS) {
+      if (ANTES[papel].has(p.limpa)) {
+        return papel;
+      }
+    }
+
+    vistas++;
+  }
+
+  // 2) Pistas depois do nome (e depois da lista de nomes, se houver).
+  let k = fim;
+
+  while (true) {
+    if (/[.;]$/.test(palavras[k].bruto) || k + 1 >= palavras.length) {
+      return 'citado';
+    }
+
+    k++;
+
+    if (!palavras[k].usada && !ehConectivoE(palavras[k])) {
+      break;
+    }
+  }
+
+  // Verbo logo depois do nome: "Fulano processou ...", "Fulano pede ..."
+  if (VERBOS_DO_AUTOR.has(palavras[k].limpa)) {
+    return 'autor';
+  }
+
+  // "como testemunha", "são réus", "é o autor"... até 5 palavras depois, sem passar de vírgula ou ponto.
+  let ligou = false;
+
+  for (let n = 0; n < 5 && k < palavras.length; n++, k++) {
+    const p = palavras[k];
+
+    if (ligou) {
+      for (const papel of PAPEIS) {
+        if (NOMES_DEPOIS[papel].has(p.limpa)) {
+          return papel;
+        }
+      }
+    }
+
+    if (LIGACOES.has(p.limpa)) {
+      ligou = true;
+    }
+
+    if (/[.;,]$/.test(p.bruto)) {
+      break;
+    }
+  }
+
+  return 'citado';
+}
+
 export function identificarPessoas(texto: string): PessoaCitada[] {
   const palavras: Palavra[] = texto
     .split(/\s+/)
@@ -101,7 +226,7 @@ export function identificarPessoas(texto: string): PessoaCitada[] {
     }))
     .filter(p => p.limpa.length > 0);
 
-  const encontradas: { inicio: number; pessoa: PessoaCitada }[] = [];
+  const encontradas: { inicio: number; fim: number; pessoa: PessoaCitada }[] = [];
 
   // 1) Pessoas conhecidas (aceita erros de digitação)
   for (const figura of PESSOAS_PUBLICAS) {
@@ -121,7 +246,11 @@ export function identificarPessoas(texto: string): PessoaCitada[] {
 
         if (trecho.every((p, k) => parecido(p.limpa, alvo[k]))) {
           trecho.forEach(p => (p.usada = true));
-          encontradas.push({ inicio: i, pessoa: { nome: figura.nome, tipo: 'publica' } });
+          encontradas.push({
+            inicio: i,
+            fim: i + alvo.length - 1,
+            pessoa: { nome: figura.nome, tipo: 'publica', papel: 'citado' }
+          });
         }
       }
     }
@@ -169,17 +298,31 @@ export function identificarPessoas(texto: string): PessoaCitada[] {
 
     const trecho = palavras.slice(i, fim + 1);
     trecho.forEach(p => (p.usada = true));
-    encontradas.push({ inicio: i, pessoa: { nome: embelezar(trecho), tipo: 'comum' } });
+    encontradas.push({
+      inicio: i,
+      fim,
+      pessoa: { nome: embelezar(trecho), tipo: 'comum', papel: 'citado' }
+    });
   }
 
-  // Na ordem em que aparecem no texto, sem repetir
-  const vistos = new Set<string>();
+  // Agora que todos os nomes estão marcados, descobre o papel de cada um.
+  for (const e of encontradas) {
+    e.pessoa.papel = papelPorPistas(palavras, e.inicio, e.fim);
+  }
 
-  return encontradas
-    .sort((a, b) => a.inicio - b.inicio)
-    .map(e => e.pessoa)
-    .filter(p => {
-      const chave = p.nome.toLowerCase();
-      return vistos.has(chave) ? false : (vistos.add(chave), true);
-    });
+  // Na ordem em que aparecem no texto, sem repetir (se repetir, vale o papel que tiver pista)
+  const vistos = new Map<string, PessoaCitada>();
+
+  for (const e of encontradas.sort((a, b) => a.inicio - b.inicio)) {
+    const chave = e.pessoa.nome.toLowerCase();
+    const anterior = vistos.get(chave);
+
+    if (!anterior) {
+      vistos.set(chave, e.pessoa);
+    } else if (anterior.papel === 'citado') {
+      anterior.papel = e.pessoa.papel;
+    }
+  }
+
+  return [...vistos.values()];
 }

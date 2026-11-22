@@ -128,10 +128,51 @@ export class PerfilComponent implements OnInit {
     const leitor = new FileReader();
 
     leitor.onload = () => {
-      this.editarFotoUrl = String(leitor.result);
+      this.reduzirFoto(String(leitor.result))
+        .then(foto => {
+          this.editarFotoUrl = foto;
+          this.mensagemErro = '';
+        })
+        .catch(() => {
+          this.mensagemErro = 'Não foi possível ler essa imagem.';
+        });
     };
 
     leitor.readAsDataURL(arquivo);
+  }
+
+  // Reduz a foto para no máximo 256px (JPEG) para caber no armazenamento do navegador
+  private reduzirFoto(origem: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const imagem = new Image();
+
+      imagem.onload = () => {
+        const lado = 256;
+        const escala = Math.min(1, lado / Math.max(imagem.width, imagem.height));
+        const largura = Math.max(1, Math.round(imagem.width * escala));
+        const altura = Math.max(1, Math.round(imagem.height * escala));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = largura;
+        canvas.height = altura;
+
+        const contexto = canvas.getContext('2d');
+
+        if (!contexto) {
+          reject(new Error('canvas indisponível'));
+          return;
+        }
+
+        contexto.fillStyle = '#ffffff';
+        contexto.fillRect(0, 0, largura, altura);
+        contexto.drawImage(imagem, 0, 0, largura, altura);
+
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+
+      imagem.onerror = () => reject(new Error('imagem inválida'));
+      imagem.src = origem;
+    });
   }
 
   // Remove foto da edição

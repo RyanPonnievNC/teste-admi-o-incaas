@@ -132,23 +132,31 @@
           </ng-template>
         </p>
 
-        <!-- Nomes de pessoas encontrados na descrição -->
-        <p class="form-field__ia" *ngIf="pessoasCitadas.length > 0">
-          <span>Pessoas citadas:</span>
+        <!-- Pessoas encontradas na descrição, juntas por papel -->
+        <div class="pessoas-citadas" *ngIf="gruposPessoas.length > 0">
+          <p class="pessoas-citadas__titulo">Pessoas citadas</p>
 
-          <ng-container *ngFor="let pessoa of pessoasCitadas">
-            <strong>{{ pessoa.nome }}</strong>
-            <span>({{ pessoa.tipo === 'publica' ? 'pessoa pública' : 'nome comum' }})</span>
+          <div class="pessoas-citadas__grupo" *ngFor="let grupo of gruposPessoas">
+            <span class="pessoas-citadas__papel">{{ grupo.titulo }}:</span>
+
+            <span class="pessoas-citadas__nomes">
+              <ng-container *ngFor="let pessoa of grupo.pessoas; let ultimo = last">
+                <strong>{{ pessoa.nome }}</strong>
+                <span class="pessoas-citadas__tipo">
+                  ({{ pessoa.tipo === 'publica' ? 'pessoa pública' : 'nome comum' }})</span
+                ><ng-container *ngIf="!ultimo">, </ng-container>
+              </ng-container>
+            </span>
 
             <button
-              class="form-field__ia-button form-field__ia-button--inline"
+              class="form-field__ia-button"
               type="button"
-              (click)="usarComoCliente(pessoa)"
+              (click)="usarGrupoComoCliente(grupo)"
             >
               Usar como cliente
             </button>
-          </ng-container>
-        </p>
+          </div>
+        </div>
       </div>
 
       <!-- Campo área -->

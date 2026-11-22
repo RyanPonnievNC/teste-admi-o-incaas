@@ -34,7 +34,7 @@ import { AuthService } from '../../core/services/auth.service';
 
 // Importa o serviço da IA.
 import { IaService, SugestaoIa } from '../../core/services/ia.service';
-import { PessoaCitada, identificarPessoas } from '../../core/utils/pessoas';
+import { PapelPessoa, PessoaCitada, identificarPessoas } from '../../core/utils/pessoas';
 
 // Importa o model de processo.
 import { Processo } from '../../models/processo.model';
@@ -44,6 +44,28 @@ type StatusProcesso = 'ATIVO' | 'FINALIZADO' | 'SUSPENSO';
 
 // Tipo usado no formulário, incluindo a opção inicial NENHUM.
 type StatusFormulario = 'NENHUM' | StatusProcesso;
+
+// Um bloco da tela: todas as pessoas que têm o mesmo papel (ex.: todos os autores).
+interface GrupoPessoas {
+  papel: PapelPessoa;
+  titulo: string;
+  pessoas: PessoaCitada[];
+}
+
+// Título de cada bloco: [quando tem 1 pessoa, quando tem 2 ou mais].
+const TITULOS_DOS_PAPEIS: Record<PapelPessoa, [string, string]> = {
+  autor: ['Autor', 'Autores'],
+  reu: ['Réu', 'Réus'],
+  testemunha: ['Testemunha', 'Testemunhas'],
+  citado: ['Citado', 'Citados']
+};
+
+// Junta os nomes em texto: "Ana", "Ana e Bia", "Ana, Bia e Caio".
+function juntarNomes(nomes: string[]): string {
+  return nomes.length > 1
+    ? `${nomes.slice(0, -1).join(', ')} e ${nomes[nomes.length - 1]}`
+    : (nomes[0] ?? '');
+}
 
 // Define o componente da tela de processos.
 @Component({
@@ -95,6 +117,9 @@ export class ProcessosComponent implements OnInit {
 
   // Nomes de pessoas encontrados na descrição (nomes comuns e pessoas conhecidas).
   pessoasCitadas: PessoaCitada[] = [];
+
+  // As mesmas pessoas, separadas por papel (autores juntos, réus juntos...).
+  gruposPessoas: GrupoPessoas[] = [];
 
   // Áreas disponíveis (valor = o que a IA devolve, nome = o que aparece na tela).
   readonly areas = [
@@ -180,6 +205,15 @@ export class ProcessosComponent implements OnInit {
       .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
       .subscribe(texto => {
         this.pessoasCitadas = identificarPessoas(texto);
+
+        const ordem: PapelPessoa[] = ['autor', 'reu', 'testemunha', 'citado'];
+
+        this.gruposPessoas = ordem
+          .map(papel => {
+            const pessoas = this.pessoasCitadas.filter(p => p.papel === papel);
+            return { papel, titulo: TITULOS_DOS_PAPEIS[papel][pessoas.length > 1 ? 1 : 0], pessoas };
+          })
+          .filter(grupo => grupo.pessoas.length > 0);
       });
 
     // Pede sugestão de área à IA enquanto a descrição é digitada.
@@ -243,10 +277,29 @@ export class ProcessosComponent implements OnInit {
     return this.areas.find(a => a.valor === area)?.nome ?? area;
   }
 
-  // Coloca no campo Cliente o nome de uma pessoa encontrada na descrição.
-  usarComoCliente(pessoa: PessoaCitada): void {
-    this.form.controls.cliente.setValue(pessoa.nome);
+  // Coloca no campo Cliente todos os nomes de um bloco (ex.: os dois autores).
+  usarGrupoComoCliente(grupo: GrupoPessoas): void {
+    const nomes: string[] = [];
+
+    // A API aceita no máximo 150 caracteres no cliente, então para antes de passar disso.
+    for (const pessoa of grupo.pessoas) {
+      if (juntarNomes([...nomes, pessoa.nome]).length > 150) {
+        break;
+      }
+
+      nomes.push(pessoa.nome);
+    }
+
+    this.form.controls.cliente.setValue(juntarNomes(nomes));
     this.form.controls.cliente.markAsTouched();
+
+    const ficaramDeFora = grupo.pessoas.length - nomes.length;
+
+    if (ficaramDeFora > 0) {
+      this.mostrarAviso(
+        `O campo Cliente aceita até 150 caracteres. ${ficaramDeFora} nome(s) ficaram de fora.`
+      );
+    }
   }
 
   // Aplica no formulário a área sugerida pela IA.

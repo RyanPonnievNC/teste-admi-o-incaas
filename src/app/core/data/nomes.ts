@@ -1,6 +1,8 @@
 // Listas usadas para reconhecer nomes de pessoas na descrição do processo.
 // Para ensinar um nome novo à IA, basta acrescentar na lista certa (sem acentos e em minúsculas).
 
+import { PESSOAS_EXTRAS, PRIMEIROS_NOMES_EXTRAS, SOBRENOMES_EXTRAS } from './nomes-extras';
+
 export type TipoPessoa = 'comum' | 'publica';
 
 // Pessoas conhecidas. "apelidos" são as formas pelas quais a pessoa pode ser escrita.
@@ -60,3 +62,9 @@ export const SOBRENOMES = new Set(
 // Nomes que também são palavras do dia a dia ("rosa", "vitória", "paz").
 // Só são tratados como nome de pessoa quando escritos com letra maiúscula.
 export const NOMES_AMBIGUOS = new Set(['rosa', 'vitoria', 'gloria', 'esperanca', 'paz', 'luz', 'cesar', 'sara']);
+
+
+// --- Nomes extras (ver nomes-extras.ts) ---
+PESSOAS_PUBLICAS.push(...PESSOAS_EXTRAS);
+PRIMEIROS_NOMES_EXTRAS.split(' ').forEach(n => PRIMEIROS_NOMES.add(n));
+SOBRENOMES_EXTRAS.split(' ').forEach(n => SOBRENOMES.add(n));
