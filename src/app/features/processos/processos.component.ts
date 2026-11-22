@@ -7,6 +7,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // Importa recursos básicos como *ngIf, *ngFor, date pipe e outros.
 import { CommonModule } from '@angular/common';
 
+// Importa o tipo de erro das chamadas HTTP.
+import { HttpErrorResponse } from '@angular/common/http';
+
 // Importa recursos de formulário do Angular.
 import {
   FormsModule,
@@ -83,6 +86,9 @@ export class ProcessosComponent implements OnInit {
   // Usado para encerrar a escuta do formulário quando a tela fechar.
   private destroyRef = inject(DestroyRef);
 
+  // Guarda o temporizador do aviso, para um aviso novo não ser apagado pelo antigo.
+  private temporizadorAviso: ReturnType<typeof setTimeout> | undefined;
+
   // Última sugestão da IA (null = nada para mostrar).
   sugestaoIa: SugestaoIa | null = null;
 
@@ -104,6 +110,9 @@ export class ProcessosComponent implements OnInit {
   // Guarda o ID do processo que está sendo editado.
   editandoId: number | null = null;
 
+  // Indica que um salvamento está em andamento (evita clique duplo).
+  salvando = false;
+
   // Guarda o texto digitado no filtro por cliente.
   filtroCliente = '';
 
@@ -113,7 +122,7 @@ export class ProcessosComponent implements OnInit {
   // Guarda a área selecionada no filtro.
   filtroArea = '';
 
-  // Mensagem exibida quando o visitante tenta fazer uma ação bloqueada.
+  // Mensagem exibida no painel de aviso (permissão ou erro da API).
   mensagemPermissao = '';
 
   // Guarda o processo selecionado para exclusão.
@@ -124,8 +133,8 @@ export class ProcessosComponent implements OnInit {
 
   // Formulário reativo usado para cadastrar e editar processos.
   form = this.fb.group({
-    // Campo número do processo.
-    numero: ['', Validators.required],
+    // Campo número do processo: gerado pelo sistema, por isso fica desabilitado.
+    numero: [{ value: '', disabled: true }],
 
     // Campo nome do cliente.
     cliente: ['', Validators.required],
@@ -147,8 +156,19 @@ export class ProcessosComponent implements OnInit {
       // Guarda todos os processos.
       this.processos = data;
 
-      // Aplica os filtros iniciais.
+      // Aplica os filtros.
       this.aplicarFiltros();
+
+      // Mostra no formulário o próximo número disponível.
+      this.atualizarNumero();
+    });
+
+    // Pede a lista à API.
+    this.service.carregar().subscribe({
+      error: erro =>
+        this.mostrarAviso(
+          this.mensagemDoErro(erro, 'Não foi possível carregar os processos.')
+        )
     });
 
     // Pede sugestão de área à IA enquanto a descrição é digitada.
@@ -169,6 +189,39 @@ export class ProcessosComponent implements OnInit {
       .subscribe(sugestao => {
         this.sugestaoIa = sugestao;
       });
+  }
+
+  // Calcula o próximo número: maior sequência do ano atual + 1 (ex.: 0004-2026).
+  // É só uma prévia: o número definitivo é gerado pelo servidor ao salvar.
+  private proximoNumero(): string {
+    const ano = new Date().getFullYear();
+    const regra = new RegExp(`^(\\d+)-${ano}$`);
+
+    // Procura a maior sequência já usada neste ano.
+    const maior = this.processos.reduce((atual, processo) => {
+      const achou = regra.exec(processo.numero);
+      return achou ? Math.max(atual, Number(achou[1])) : atual;
+    }, 0);
+
+    return `${String(maior + 1).padStart(4, '0')}-${ano}`;
+  }
+
+  // Mostra o próximo número no formulário (só quando não está editando).
+  private atualizarNumero(): void {
+    if (this.editandoId === null) {
+      this.form.controls.numero.setValue(this.proximoNumero());
+    }
+  }
+
+  // Valores de um formulário em branco, já com o próximo número.
+  private formularioVazio() {
+    return {
+      numero: this.proximoNumero(),
+      cliente: '',
+      descricao: '',
+      area: '',
+      status: 'NENHUM' as StatusFormulario
+    };
   }
 
   // Converte o código da área para o nome exibido na tela.
@@ -198,15 +251,44 @@ export class ProcessosComponent implements OnInit {
     return this.authService.ehVisitante();
   }
 
+  // Mostra uma mensagem no painel de aviso e a remove depois de alguns segundos.
+  mostrarAviso(texto: string, milissegundos = 5000): void {
+    // Cancela o temporizador anterior, se existir.
+    clearTimeout(this.temporizadorAviso);
+
+    // Define a mensagem.
+    this.mensagemPermissao = texto;
+
+    // Remove a mensagem depois do tempo combinado.
+    this.temporizadorAviso = setTimeout(() => {
+      this.mensagemPermissao = '';
+    }, milissegundos);
+  }
+
   // Mostra uma mensagem quando visitante tenta fazer algo bloqueado.
   mostrarAvisoPermissao(): void {
-    // Define a mensagem de permissão.
-    this.mensagemPermissao = 'Visitantes podem visualizar os processos, mas não podem criar, editar ou excluir.';
+    this.mostrarAviso(
+      'Visitantes podem visualizar os processos, mas não podem criar, editar ou excluir.',
+      3500
+    );
+  }
 
-    // Remove a mensagem depois de alguns segundos.
-    setTimeout(() => {
-      this.mensagemPermissao = '';
-    }, 3500);
+  // Transforma o erro da API em uma mensagem para a tela.
+  private mensagemDoErro(erro: unknown, padrao: string): string {
+    if (erro instanceof HttpErrorResponse) {
+      // Status 0 = não houve resposta (API desligada ou bloqueada).
+      if (erro.status === 0) {
+        return 'Não consegui falar com o servidor. A API está ligada?';
+      }
+
+      // A API devolve { erro: 'mensagem' } quando recusa os dados.
+      const texto = erro.error?.erro;
+      if (typeof texto === 'string') {
+        return texto;
+      }
+    }
+
+    return padrao;
   }
 
   // Salva um novo processo ou atualiza um processo existente.
@@ -214,6 +296,11 @@ export class ProcessosComponent implements OnInit {
     // Se não tiver permissão, bloqueia a ação.
     if (!this.podeAlterarProcessos()) {
       this.mostrarAvisoPermissao();
+      return;
+    }
+
+    // Se já estiver salvando, ignora o clique.
+    if (this.salvando) {
       return;
     }
 
@@ -226,9 +313,17 @@ export class ProcessosComponent implements OnInit {
       return;
     }
 
+    // Dados que vão para a API (o número é gerado pelo servidor).
+    const dados = {
+      cliente: valor.cliente,
+      descricao: valor.descricao,
+      area: valor.area,
+      status: valor.status as StatusProcesso
+    };
+
     // Se estiver editando um processo existente.
     if (this.editandoId !== null) {
-      // Busca o processo antigo pelo ID.
+      // Busca o processo antigo na lista carregada.
       const processoExistente = this.service.getById(this.editandoId);
 
       // Se não encontrar o processo, para a função.
@@ -236,45 +331,44 @@ export class ProcessosComponent implements OnInit {
         return;
       }
 
-      // Atualiza os dados mantendo id e data de criação.
-      this.service.update({
-        ...processoExistente,
-        numero: valor.numero,
-        cliente: valor.cliente,
-        descricao: valor.descricao,
-        area: valor.area,
-        status: valor.status as StatusProcesso
+      this.salvando = true;
+
+      // Atualiza os dados mantendo id, número e data de criação.
+      this.service.update({ ...processoExistente, ...dados }).subscribe({
+        next: () => {
+          this.salvando = false;
+
+          // Sai do modo edição.
+          this.cancelarEdicao();
+        },
+        error: erro => {
+          this.salvando = false;
+          this.mostrarAviso(
+            this.mensagemDoErro(erro, 'Não foi possível atualizar o processo.')
+          );
+        }
       });
-
-      // Sai do modo edição.
-      this.cancelarEdicao();
-
-      // Atualiza a lista filtrada.
-      this.aplicarFiltros();
 
       return;
     }
 
+    this.salvando = true;
+
     // Se não estiver editando, cria um novo processo.
-    this.service.add({
-      numero: valor.numero,
-      cliente: valor.cliente,
-      descricao: valor.descricao,
-      area: valor.area,
-      status: valor.status as StatusProcesso
-    });
+    this.service.add(dados).subscribe({
+      next: () => {
+        this.salvando = false;
 
-    // Limpa o formulário depois de salvar.
-    this.form.reset({
-      numero: '',
-      cliente: '',
-      descricao: '',
-      area: '',
-      status: 'NENHUM'
+        // Limpa o formulário depois de salvar (já com o próximo número).
+        this.form.reset(this.formularioVazio());
+      },
+      error: erro => {
+        this.salvando = false;
+        this.mostrarAviso(
+          this.mensagemDoErro(erro, 'Não foi possível salvar o processo.')
+        );
+      }
     });
-
-    // Atualiza a lista filtrada.
-    this.aplicarFiltros();
   }
 
   // Preenche o formulário com os dados do processo selecionado.
@@ -303,14 +397,8 @@ export class ProcessosComponent implements OnInit {
     // Remove o ID de edição.
     this.editandoId = null;
 
-    // Reseta os campos do formulário.
-    this.form.reset({
-      numero: '',
-      cliente: '',
-      descricao: '',
-      area: '',
-      status: 'NENHUM'
-    });
+    // Reseta os campos do formulário (já com o próximo número).
+    this.form.reset(this.formularioVazio());
   }
 
   // Abre o modal de confirmação antes de excluir.
@@ -348,19 +436,25 @@ export class ProcessosComponent implements OnInit {
     // Guarda o ID do processo selecionado.
     const id = this.processoSelecionadoParaExcluir.id;
 
-    // Se estiver editando esse mesmo processo, cancela a edição.
-    if (this.editandoId === id) {
-      this.cancelarEdicao();
-    }
+    // Exclui o processo na API.
+    this.service.delete(id).subscribe({
+      next: () => {
+        // Se estiver editando esse mesmo processo, cancela a edição.
+        if (this.editandoId === id) {
+          this.cancelarEdicao();
+        }
 
-    // Exclui o processo.
-    this.service.delete(id);
-
-    // Atualiza a lista.
-    this.aplicarFiltros();
-
-    // Fecha o modal.
-    this.cancelarExclusao();
+        // Fecha o modal.
+        this.cancelarExclusao();
+      },
+      error: erro => {
+        // Fecha o modal e avisa o que houve.
+        this.cancelarExclusao();
+        this.mostrarAviso(
+          this.mensagemDoErro(erro, 'Não foi possível excluir o processo.')
+        );
+      }
+    });
   }
 
   // Filtra processos por cliente, status e área.

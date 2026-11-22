@@ -311,3 +311,67 @@ tributario;sonegacao e cobranca de tributos
 tributario;contribuinte quer anular a multa fiscal
 tributario;taxa cobrada pelo municipio sem motivo
 tributario;pis e cofins pagos a mais
+
+criminal;ele roubou o celular de uma senhora na rua
+criminal;roubou um colar de uma idosa e fugiu
+criminal;furtou dinheiro da carteira de um colega
+criminal;assaltaram o mercado e levaram o dinheiro do caixa
+criminal;ele agrediu a esposa e foi preso
+criminal;ameacou matar o vizinho com uma faca
+criminal;bateu em um homem na rua e fugiu
+criminal;falsificou documento para enganar o banco
+criminal;aplicou golpe e enganou varias pessoas pela internet
+criminal;prenderam meu irmao por roubo de moto
+criminal;foi detido pela policia por furtar uma bolsa
+criminal;roubaram minha casa e a policia abriu inquerito
+criminal;o acusado invadiu a casa e roubou joias
+criminal;matou o vizinho em uma briga e foi preso
+criminal;ele furtou roupas da loja e o seguranca chamou a policia
+trabalhista;o patrao me demitiu e nao pagou nada
+trabalhista;trabalhei dois anos sem carteira assinada
+trabalhista;a empresa descontou meu salario sem avisar
+trabalhista;fui mandado embora e nao recebi as ferias
+trabalhista;meu chefe me humilhou na frente de todos no trabalho
+trabalhista;a empresa nao depositou meu fgts
+trabalhista;trabalhava ate tarde todos os dias e nunca recebi extras
+trabalhista;me machuquei trabalhando e a empresa me demitiu
+trabalhista;o dono da loja nao me pagou o salario do mes
+trabalhista;fui demitida quando descobriram que estava gravida
+trabalhista;trabalhei de motorista e a empresa nao pagou as horas
+trabalhista;a empresa fechou e deixou os funcionarios sem receber
+civel;comprei um celular na loja e ele veio com defeito
+civel;o vizinho bateu no meu carro e nao quer pagar o conserto
+civel;a empresa cobrou duas vezes no meu cartao
+civel;o inquilino nao paga o aluguel ha tres meses
+civel;a construtora atrasou a entrega do apartamento
+civel;meu nome foi negativado por uma divida que nao e minha
+civel;o banco descontou valores da minha conta sem autorizacao
+civel;a companhia aerea perdeu minha mala na viagem
+civel;o plano de saude se recusou a cobrir a cirurgia
+civel;comprei um curso online e nao recebi o acesso
+civel;a loja vendeu um produto diferente do anunciado
+civel;cai no piso molhado do mercado e machuquei a perna
+familia;meu marido saiu de casa e nao ajuda com os filhos
+familia;quero a guarda da minha filha depois da separacao
+familia;meu ex nao paga a pensao do nosso filho
+familia;minha mae morreu e meus irmaos brigam pela casa
+familia;queremos nos divorciar e dividir o apartamento
+familia;meu pai faleceu e preciso abrir o inventario
+familia;ele nao quer reconhecer o filho como dele
+familia;minha esposa me deixou e levou as criancas
+familia;quero visitar meu filho que mora com a mae
+familia;meus avos querem cuidar do neto que ficou orfao
+familia;moramos juntos ha anos e agora queremos nos separar
+familia;quero aumentar a pensao porque meu filho cresceu e gasta mais
+tributario;a prefeitura cobrou um imposto que eu ja paguei
+tributario;recebi uma multa da receita por erro na declaracao
+tributario;minha empresa pagou imposto a mais e quer o dinheiro de volta
+tributario;o estado cobra icms em dobro da minha empresa
+tributario;a fazenda penhorou minha conta por divida de imposto
+tributario;quero parcelar o imposto atrasado da empresa
+tributario;o iptu da minha casa veio com valor errado
+tributario;fui autuado pela fiscalizacao por falta de nota fiscal
+tributario;nao consigo a certidao negativa por causa de divida de imposto
+tributario;a prefeitura cobra iss de um servico que nao presto
+tributario;minha restituicao do imposto de renda caiu na malha fina
+tributario;querem cobrar imposto de uma divida que ja prescreveu
