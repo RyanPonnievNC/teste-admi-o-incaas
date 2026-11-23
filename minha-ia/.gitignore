@@ -17,3 +17,5 @@ xor.cpp
 # Excecoes: o servidor e o modelo vao para o GitHub, para o projeto rodar em qualquer PC
 !servidor.exe
 !dados/modelo.txt
+
+dados/modelo-backup-*.txt

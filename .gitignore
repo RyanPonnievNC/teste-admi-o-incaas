@@ -44,3 +44,7 @@ __screenshots__/
 Thumbs.db
 
 *.bak
+
+# Arquivos de apoio da IA (nao precisam ir para o GitHub)
+backup-ia-*/
+diagnostico-ia-codigo.txt
