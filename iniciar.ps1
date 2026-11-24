@@ -2,6 +2,11 @@
 # Na primeira vez instala tudo e pergunta a senha do MySQL, tudo na mesma execucao.
 # Antes de subir, confere os requisitos (Windows, Node.js, MySQL, portas)
 # e explica o que esta faltando, em vez de abrir um site que nao funciona.
+# Se a instalacao das dependencias estiver incompleta ou desatualizada, refaz sozinho.
+# As linhas cinzas "[ 1,2s]" mostram quanto tempo cada etapa levou.
+
+# Cronometro: conta desde que este script comecou a rodar
+$relogio = [System.Diagnostics.Stopwatch]::StartNew()
 
 # Pastas deste projeto
 $pastaIa  = Join-Path $PSScriptRoot "minha-ia"
@@ -17,6 +22,11 @@ $env:NPM_CONFIG_FUND            = "false"
 # Funcoes de apoio
 # ---------------------------------------------------------------------------
 
+# Mostra, em cinza, quantos segundos se passaram ate esta etapa
+function Marcar([string]$etapa) {
+    Write-Host ("  [{0,5:N1}s] {1}" -f $relogio.Elapsed.TotalSeconds, $etapa) -ForegroundColor DarkGray
+}
+
 # Mostra o problema em vermelho e encerra
 function Falhar([string[]]$linhas) {
     Write-Host ""
@@ -27,7 +37,8 @@ function Falhar([string[]]$linhas) {
     exit 1
 }
 
-# Diz se alguem esta escutando nesse endereco e porta (espera no maximo $espera ms)
+# Diz se alguem esta escutando nesse endereco e porta (espera no maximo $espera ms).
+# Usado so para o MySQL: quando ele esta ligado, a resposta e instantanea.
 function Porta-Aberta([string]$endereco, [int]$porta, [int]$espera = 1500) {
     $cliente = New-Object System.Net.Sockets.TcpClient
     try {
@@ -44,6 +55,19 @@ function Porta-Aberta([string]$endereco, [int]$porta, [int]$espera = 1500) {
     }
 }
 
+# Diz se algum programa deste computador ja esta usando a porta.
+# Pergunta direto ao Windows, sem tentar conectar, entao responde na hora
+# (conectar numa porta fechada pode demorar ate o tempo limite).
+function Porta-Em-Uso([int]$porta) {
+    try {
+        $escutas = [System.Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties().GetActiveTcpListeners()
+        foreach ($escuta in $escutas) {
+            if ($escuta.Port -eq $porta) { return $true }
+        }
+    } catch { }
+    return $false
+}
+
 # Le um valor do arquivo .env (por exemplo DB_PORT). Se nao achar, devolve o padrao.
 function Ler-Env([string]$arquivo, [string]$chave, [string]$padrao) {
     if (Test-Path $arquivo) {
@@ -57,35 +81,126 @@ function Ler-Env([string]$arquivo, [string]$chave, [string]$padrao) {
     return $padrao
 }
 
-# Instala as dependencias de uma pasta (npm ci e mais rapido que npm install)
-# O '| Out-Host' mostra o texto do npm sem misturar com o valor que a funcao devolve
-function Instalar-Dependencias($pasta, $nome) {
-    Write-Host "Instalando as dependencias $nome (so na primeira vez, pode levar alguns minutos)..." -ForegroundColor Cyan
-    Push-Location $pasta
-
-    if (Test-Path "package-lock.json") {
-        npm.cmd ci --no-audit --no-fund --loglevel=error | Out-Host
-        if ($LASTEXITCODE -ne 0) {
-            npm.cmd install --no-audit --no-fund --loglevel=error | Out-Host
-        }
-    } else {
-        npm.cmd install --no-audit --no-fund --loglevel=error | Out-Host
+# Espaco livre (em MB) no disco da pasta. Devolve -1 se nao conseguir descobrir.
+function Espaco-Livre-Mb([string]$pasta) {
+    try {
+        $raiz = [System.IO.Path]::GetPathRoot($pasta)
+        $disco = New-Object System.IO.DriveInfo($raiz)
+        return [int]($disco.AvailableFreeSpace / 1MB)
+    } catch {
+        return -1
     }
-
-    $codigo = $LASTEXITCODE
-    Pop-Location
-    return $codigo
 }
 
-# Confere se todos estes arquivos existem dentro de uma pasta node_modules.
-# So existir a pasta nao basta: uma instalacao interrompida deixa a pasta pela metade.
-function Dependencias-Completas([string]$pasta, [string[]]$arquivos) {
-    foreach ($arquivo in $arquivos) {
-        if (-not (Test-Path (Join-Path $pasta ("node_modules\" + $arquivo)))) {
-            return $false
+# Impressao digital do package-lock.json: muda quando o projeto ganha ou troca uma dependencia.
+# Usa o .NET direto, porque o comando Get-FileHash nao existe em PowerShell mais antigo.
+function Hash-Lock([string]$pasta) {
+    $lock = Join-Path $pasta "package-lock.json"
+    if (-not (Test-Path $lock)) { return "sem-lock" }
+
+    try {
+        $sha = [System.Security.Cryptography.SHA256]::Create()
+        try {
+            $bytes = [System.IO.File]::ReadAllBytes($lock)
+            return ([System.BitConverter]::ToString($sha.ComputeHash($bytes))).Replace("-", "")
+        } finally {
+            $sha.Clear()
+        }
+    } catch {
+        return "indisponivel"
+    }
+}
+
+# Confere se TODAS as dependencias do package.json (dependencies e devDependencies)
+# existem dentro de node_modules.
+function Pacotes-Presentes([string]$pasta) {
+    $pacote  = Join-Path $pasta "package.json"
+    $modulos = Join-Path $pasta "node_modules"
+
+    if (-not (Test-Path $pacote)) { return $false }
+
+    try {
+        $json = Get-Content -Path $pacote -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+        return $false
+    }
+
+    foreach ($grupo in @($json.dependencies, $json.devDependencies)) {
+        if ($null -eq $grupo) { continue }
+        foreach ($item in $grupo.PSObject.Properties) {
+            $arquivo = Join-Path $modulos (($item.Name -replace "/", "\") + "\package.json")
+            if (-not (Test-Path $arquivo)) { return $false }
         }
     }
     return $true
+}
+
+# A instalacao so vale se: existe o marcador de "terminou com sucesso", o marcador
+# bate com o package-lock.json atual e todas as dependencias estao presentes.
+# Instalacao interrompida = sem marcador = o script refaz tudo.
+function Dependencias-Completas([string]$pasta) {
+    $marcador = Join-Path $pasta "node_modules\.instalado"
+    if (-not (Test-Path $marcador)) { return $false }
+
+    $salvo = Get-Content -Path $marcador -Raw -ErrorAction SilentlyContinue
+    if ($null -eq $salvo) { return $false }
+    if ($salvo.Trim() -ne (Hash-Lock $pasta)) { return $false }
+
+    return (Pacotes-Presentes $pasta)
+}
+
+# Instala as dependencias de uma pasta (npm ci e mais rapido que npm install).
+# Devolve 0 se deu tudo certo. So grava o marcador de sucesso no final.
+# O '| Out-Host' mostra o texto do npm sem misturar com o valor que a funcao devolve
+function Instalar-Dependencias([string]$pasta, [string]$nome) {
+    Write-Host "Instalando as dependencias $nome (pode levar alguns minutos). Nao feche esta janela..." -ForegroundColor Cyan
+
+    # Avisos de coisas que costumam estragar a instalacao
+    if ($pasta -match "OneDrive") {
+        Write-Host "Aviso: o projeto esta dentro do OneDrive. A sincronizacao pode corromper a instalacao; prefira uma pasta fora dele (ex.: C:\projetos)." -ForegroundColor Yellow
+    }
+    if ($PSScriptRoot.Length -gt 100) {
+        Write-Host "Aviso: o caminho da pasta do projeto e muito longo. O Windows pode falhar ao criar arquivos; prefira algo curto (ex.: C:\projetos)." -ForegroundColor Yellow
+    }
+
+    $livre = Espaco-Livre-Mb $pasta
+    if ($livre -ge 0 -and $livre -lt 1500) {
+        Write-Host "Pouco espaco no disco: so $livre MB livres. Libere pelo menos 1,5 GB e tente de novo." -ForegroundColor Red
+        return 1
+    }
+
+    # Tira o marcador antes: se a instalacao for interrompida, a proxima execucao refaz tudo
+    Remove-Item -Path (Join-Path $pasta "node_modules\.instalado") -Force -ErrorAction SilentlyContinue
+
+    $opcoes = @("--no-audit", "--no-fund", "--loglevel=error", "--fetch-retries=5", "--fetch-retry-mintimeout=2000")
+    $codigo = 1
+
+    Push-Location $pasta
+
+    if (Test-Path "package-lock.json") {
+        npm.cmd ci @opcoes | Out-Host
+        $codigo = $LASTEXITCODE
+    }
+    if ($codigo -ne 0) {
+        if (Test-Path "package-lock.json") {
+            Write-Host "O 'npm ci' nao deu certo. Tentando de outro jeito (npm install)..." -ForegroundColor Yellow
+        }
+        npm.cmd install @opcoes | Out-Host
+        $codigo = $LASTEXITCODE
+    }
+
+    Pop-Location
+
+    if ($codigo -ne 0) { return $codigo }
+
+    # O npm disse que deu certo: confere se esta tudo la mesmo antes de gravar o marcador
+    if (-not (Pacotes-Presentes $pasta)) {
+        Write-Host "O npm terminou, mas ainda faltam pacotes na pasta node_modules." -ForegroundColor Red
+        return 1
+    }
+
+    Set-Content -Path (Join-Path $pasta "node_modules\.instalado") -Value (Hash-Lock $pasta) -Encoding ASCII
+    return 0
 }
 
 # ---------------------------------------------------------------------------
@@ -133,6 +248,7 @@ if (-not (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
         "npm nao encontrado. Reinstale o Node.js em https://nodejs.org (versao LTS)."
     )
 }
+Marcar "Windows, Node.js e npm conferidos"
 
 # ---------------------------------------------------------------------------
 # 2. MySQL ligado
@@ -182,6 +298,7 @@ if (-not (Porta-Aberta $hostDb $portaDb)) {
         "Depois rode o iniciar.cmd de novo."
     )
 }
+Marcar "MySQL respondendo"
 
 # ---------------------------------------------------------------------------
 # 3. Portas livres
@@ -189,42 +306,45 @@ if (-not (Porta-Aberta $hostDb $portaDb)) {
 
 $portaApi = [int](Ler-Env $fonteEnv "PORT" "3000")
 
-if (Porta-Aberta "127.0.0.1" $portaApi 500) {
+if (Porta-Em-Uso $portaApi) {
     Falhar @(
         "A porta $portaApi (API) ja esta em uso.",
         "Feche outras janelas deste projeto que estejam abertas (ou o programa que usa essa porta) e tente de novo."
     )
 }
-if (Porta-Aberta "localhost" 4200 500) {
+if (Porta-Em-Uso 4200) {
     Falhar @(
         "A porta 4200 (site) ja esta em uso.",
         "Feche outras janelas deste projeto que estejam abertas e tente de novo."
     )
 }
+Marcar "Portas livres"
 
 # ---------------------------------------------------------------------------
-# 4. Dependencias (so instala se faltar alguma coisa)
+# 4. Dependencias (so instala se estiver incompleto, interrompido ou desatualizado)
 # ---------------------------------------------------------------------------
 
-$arquivosAngular = @("@angular\cli\bin\ng.js", "@angular\core\package.json", "primeng\package.json", "rxjs\package.json")
-$arquivosApi     = @("express\package.json", "mysql2\package.json", "dotenv\package.json", "cors\package.json")
-
-if (-not (Dependencias-Completas $PSScriptRoot $arquivosAngular)) {
+if (-not (Dependencias-Completas $PSScriptRoot)) {
     if ((Instalar-Dependencias $PSScriptRoot "do Angular") -ne 0) {
         Falhar @(
             "A instalacao do Angular falhou. Veja a mensagem acima.",
-            "Confira se o computador esta com internet e rode o iniciar.cmd de novo."
+            "Causas comuns: sem internet, pouco espaco no disco, antivirus bloqueando arquivos,",
+            "projeto dentro do OneDrive ou em um caminho muito longo.",
+            "Feche outros programas que usem a pasta e rode o iniciar.cmd de novo: ele refaz a instalacao do zero."
         )
     }
+    Marcar "Dependencias do Angular instaladas"
 }
 
-if (-not (Dependencias-Completas $pastaApi $arquivosApi)) {
+if (-not (Dependencias-Completas $pastaApi)) {
     if ((Instalar-Dependencias $pastaApi "da API") -ne 0) {
         Falhar @(
             "A instalacao da API falhou. Veja a mensagem acima.",
-            "Confira se o computador esta com internet e rode o iniciar.cmd de novo."
+            "Causas comuns: sem internet, pouco espaco no disco ou antivirus bloqueando arquivos.",
+            "Rode o iniciar.cmd de novo: ele refaz a instalacao do zero."
         )
     }
+    Marcar "Dependencias da API instaladas"
 }
 
 # ---------------------------------------------------------------------------
@@ -265,11 +385,12 @@ Write-Host "Iniciando a API (banco de dados)..." -ForegroundColor Cyan
 $api = Start-Process -FilePath "node" -ArgumentList "server.js" `
     -WorkingDirectory $pastaApi -NoNewWindow -PassThru
 
+# Olha a cada 0,2 s se a API ja abriu a porta (ate 30 s)
 $apiPronta = $false
-for ($i = 0; $i -lt 60; $i++) {
+for ($i = 0; $i -lt 150; $i++) {
     if ($api.HasExited) { break }
-    if (Porta-Aberta "127.0.0.1" $portaApi 300) { $apiPronta = $true; break }
-    Start-Sleep -Milliseconds 500
+    if (Porta-Em-Uso $portaApi) { $apiPronta = $true; break }
+    Start-Sleep -Milliseconds 200
 }
 
 if (-not $apiPronta) {
@@ -280,6 +401,7 @@ if (-not $apiPronta) {
         "apague o arquivo backend\.env e rode o iniciar.cmd de novo para digitar a senha outra vez."
     )
 }
+Marcar "API pronta"
 
 # ---------------------------------------------------------------------------
 # 7. Sobe o servidor da IA, se der (sem ele o site abre, so sem a sugestao)
@@ -292,7 +414,7 @@ if (-not (Test-Path $exeIa)) {
     Write-Host "servidor.exe nao encontrado: o site abre, mas sem a sugestao da IA." -ForegroundColor Yellow
 } elseif (-not [Environment]::Is64BitOperatingSystem) {
     Write-Host "O servidor da IA so roda em Windows de 64 bits: o site abre, mas sem a sugestao da IA." -ForegroundColor Yellow
-} elseif (Porta-Aberta "127.0.0.1" 8080 500) {
+} elseif (Porta-Em-Uso 8080) {
     Write-Host "A porta 8080 ja esta em uso (talvez a IA ja esteja aberta). Nao vou abrir outra." -ForegroundColor Yellow
 } else {
     # Tira a marca de 'baixado da internet' dos arquivos da IA, para o Windows nao bloquear
@@ -303,7 +425,9 @@ if (-not (Test-Path $exeIa)) {
     try {
         $servidor = Start-Process -FilePath $exeIa -WorkingDirectory $pastaIa `
             -NoNewWindow -PassThru -ErrorAction Stop
-        Start-Sleep -Seconds 2
+
+        # Se o programa for bloqueado ou nao conseguir abrir a porta, ele fecha quase na hora
+        Start-Sleep -Milliseconds 500
         if ($servidor.HasExited) {
             Write-Host "O servidor da IA fechou logo ao abrir (antivirus ou politica do Windows podem ter bloqueado)." -ForegroundColor Yellow
             Write-Host "O site abre normalmente, so sem a sugestao da IA." -ForegroundColor Yellow
@@ -315,6 +439,7 @@ if (-not (Test-Path $exeIa)) {
         $servidor = $null
     }
 }
+Marcar "Servidor da IA conferido"
 
 # ---------------------------------------------------------------------------
 # 8. Sobe o site (Angular)
@@ -323,6 +448,7 @@ if (-not (Test-Path $exeIa)) {
 try {
     # Sobe o Angular direto pelo Node (mais rapido que passar pelo npx)
     Set-Location $PSScriptRoot
+    Marcar "Tudo pronto. Agora o Angular vai compilar o site (e a etapa mais demorada)"
     Write-Host "Iniciando o Angular... quando aparecer 'Local: http://localhost:4200', abra esse endereco no navegador." -ForegroundColor Cyan
 
     $angular = Join-Path $PSScriptRoot "node_modules\@angular\cli\bin\ng.js"
