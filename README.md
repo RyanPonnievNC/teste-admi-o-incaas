@@ -5,12 +5,25 @@ Sistema de gestão de processos jurídicos feito em Angular, com uma IA em C++ q
 ## Como usar (Windows)
 
 1. Instale o Node.js (versão LTS) em https://nodejs.org
-2. Baixe o projeto: neste repositório, clique no botão verde **Code** e depois em **Download ZIP**. Extraia a pasta.
-3. Abra a pasta extraída e dê dois cliques em **iniciar.cmd**.
-4. Espere. Na primeira vez leva alguns minutos, porque ele instala as dependências.
-5. Abra http://localhost:4200 no navegador.
+2. Instale e ligue o MySQL Server (https://dev.mysql.com/downloads/installer/). Guarde a senha do usuário `root`: o `iniciar.cmd` vai pedir na primeira vez.
+3. Baixe o projeto: neste repositório, clique no botão verde **Code** e depois em **Download ZIP**. Extraia a pasta.
+4. Abra a pasta extraída e dê dois cliques em **iniciar.cmd**.
+5. Espere. Na primeira vez leva alguns minutos, porque ele instala as dependências (precisa de internet).
+6. Abra http://localhost:4200 no navegador.
 
 Para parar, feche a janela ou aperte Ctrl + C.
+
+## Requisitos
+
+| O quê | Versão | Observação |
+|---|---|---|
+| Windows | 10 ou 11, 64 bits | Windows 7/8 não funcionam com o Node.js 20+. Em 32 bits o site abre, mas sem a IA. |
+| Node.js | 20.19 ou mais novo (ou 22.12+, ou 24+) | O `iniciar.cmd` confere a versão e avisa se estiver antiga. |
+| MySQL Server | 8 ou mais novo, ligado | Padrão: `127.0.0.1`, porta `3306`, usuário `root`. Para mudar, edite `backend\.env`. |
+| Internet | só na primeira vez | Para baixar as dependências do npm. |
+| Portas livres | 3000, 4200 e 8080 | A 8080 é da IA; se estiver ocupada, o site abre sem ela. |
+
+O `iniciar.cmd` confere esses itens antes de abrir o sistema e explica na tela o que estiver faltando.
 
 ## Abrindo pelo terminal
 
@@ -49,6 +62,10 @@ Ao abrir o `iniciar.cmd` ou o `servidor.exe`, pode aparecer "O Windows protegeu 
 
 ## Problemas comuns
 
-- **Node.js não encontrado:** instale o Node.js e abra um terminal novo (ou clique de novo no `iniciar.cmd`).
-- **Porta 4200 ou 8080 em uso:** feche outras janelas do projeto que estejam abertas e tente de novo.
+- **Node.js não encontrado ou antigo:** instale o Node.js LTS e abra um terminal novo (ou clique de novo no `iniciar.cmd`).
+- **Não consegui falar com o MySQL:** instale o MySQL Server e ligue o serviço (`Win + R`, digite `services.msc` e inicie o serviço que começa com "MySQL").
+- **Acesso negado ao MySQL (senha errada):** apague o arquivo `backend\.env` e rode o `iniciar.cmd` de novo para digitar a senha outra vez.
+- **A instalação travou ou foi interrompida:** é só rodar o `iniciar.cmd` de novo. Ele detecta a instalação incompleta e refaz.
+- **Computador de empresa ou escola:** uma política do Windows pode bloquear scripts do PowerShell ou o `servidor.exe`. Nesse caso peça liberação ao suporte de TI; sem o `servidor.exe` o site funciona, só sem a sugestão da IA.
+- **Porta 3000, 4200 ou 8080 em uso:** feche outras janelas do projeto que estejam abertas e tente de novo.
 - **A primeira abertura demora:** é a instalação das dependências, e só acontece uma vez.
